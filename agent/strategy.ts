@@ -14,6 +14,7 @@ import { AssetSnapshot, PoolSnapshot, StrategyOutput, SwapPlan, VaultState } fro
 
 const MIN_TARGET_BPS = 200;
 const MAX_TARGET_BPS = 7000;
+const TRADE_CAP_HEADROOM_BPS = 9900;
 
 function bigintMin(a: bigint, b: bigint): bigint {
   return a < b ? a : b;
@@ -205,16 +206,15 @@ export function computeSwapPlan(state: VaultState, newTargets: Record<string, nu
     const desiredTrade = (BigInt(Math.abs(delta)) * state.nav) / 10_000n;
     const capBps = Math.min(asset.maxTradeBps, state.maxNavTradeBps);
     const maxTrade = (state.nav * BigInt(capBps)) / 10_000n;
-    const amountIn = bigintMin(desiredTrade, maxTrade);
+    const maxTradeWithHeadroom = (maxTrade * BigInt(TRADE_CAP_HEADROOM_BPS)) / 10_000n;
+    const effectiveMaxTrade = maxTradeWithHeadroom > 0n ? maxTradeWithHeadroom : maxTrade;
+    const amountIn = bigintMin(desiredTrade, effectiveMaxTrade);
 
     if (amountIn === 0n) continue;
 
     const expectedSlippageBps = asset.maxSlippageBps;
 
     if (delta > 0) {
-      const grossOut = (amountIn * asset.balance * 0n) / (asset.balance + 1n);
-      void grossOut;
-
       const estimatedOut = (amountIn * (10_000n - BigInt(expectedSlippageBps))) / 10_000n;
 
       swaps.push({
