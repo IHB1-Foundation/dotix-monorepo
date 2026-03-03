@@ -93,6 +93,10 @@ async function main(): Promise<void> {
   );
   await vault.waitForDeployment();
 
+  const XcmDemo = await ethers.getContractFactory("XcmDemo");
+  const xcmDemo = await XcmDemo.deploy(deployer.address);
+  await xcmDemo.waitForDeployment();
+
   const minterRole = await pdot.MINTER_ROLE();
   await (await pdot.grantRole(minterRole, await vault.getAddress())).wait();
 
@@ -103,6 +107,9 @@ async function main(): Promise<void> {
   await (await vault.grantRole(strategistRole, deployer.address)).wait();
   await (await vault.grantRole(keeperRole, keeperAddress)).wait();
   await (await vault.grantRole(pauserRole, deployer.address)).wait();
+
+  const xcmKeeperRole = await xcmDemo.KEEPER_ROLE();
+  await (await xcmDemo.grantRole(xcmKeeperRole, keeperAddress)).wait();
 
   const assetAToken = await ethers.getContractAt("MockERC20", tokens.assetA, deployer);
   const assetBToken = await ethers.getContractAt("MockERC20", tokens.assetB, deployer);
@@ -130,6 +137,7 @@ async function main(): Promise<void> {
     pdotToken: await pdot.getAddress(),
     tokenRegistry: await registry.getAddress(),
     indexVault: await vault.getAddress(),
+    xcmDemo: await xcmDemo.getAddress(),
   };
 
   saveDeployments(deployments);
@@ -137,11 +145,13 @@ async function main(): Promise<void> {
   const pdotTx = pdot.deploymentTransaction();
   const registryTx = registry.deploymentTransaction();
   const vaultTx = vault.deploymentTransaction();
+  const xcmTx = xcmDemo.deploymentTransaction();
 
   console.log("\n=== Core Deployment Summary ===");
   console.log(`PDOTToken:     ${await pdot.getAddress()}`);
   console.log(`TokenRegistry: ${await registry.getAddress()}`);
   console.log(`IndexVault:    ${await vault.getAddress()}`);
+  console.log(`XcmDemo:       ${await xcmDemo.getAddress()}`);
 
   if (pdotTx) {
     console.log(`PDOT tx: ${pdotTx.hash}`);
@@ -155,10 +165,15 @@ async function main(): Promise<void> {
     console.log(`Vault tx: ${vaultTx.hash}`);
     console.log(`Vault tx link: ${txLink(vaultTx.hash)}`);
   }
+  if (xcmTx) {
+    console.log(`XcmDemo tx: ${xcmTx.hash}`);
+    console.log(`XcmDemo tx link: ${txLink(xcmTx.hash)}`);
+  }
 
   console.log(`PDOT explorer: ${addressLink(await pdot.getAddress())}`);
   console.log(`Registry explorer: ${addressLink(await registry.getAddress())}`);
   console.log(`Vault explorer: ${addressLink(await vault.getAddress())}`);
+  console.log(`XcmDemo explorer: ${addressLink(await xcmDemo.getAddress())}`);
   console.log(`\nUpdated ${DEPLOYMENTS_PATH}`);
 }
 
