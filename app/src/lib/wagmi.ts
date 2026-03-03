@@ -1,5 +1,6 @@
-import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import { defineChain, http } from "viem";
+import { createConfig } from "wagmi";
+import { injected } from "wagmi/connectors";
 
 export const polkadotHub = defineChain({
   id: 420420417,
@@ -26,10 +27,9 @@ export const polkadotHub = defineChain({
   testnet: true,
 });
 
-export const wagmiConfig = getDefaultConfig({
-  appName: "Dotix",
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? "dotix-local-project-id",
+export const wagmiConfig = createConfig({
   chains: [polkadotHub],
+  connectors: [injected()],
   transports: {
     [polkadotHub.id]: http(polkadotHub.rpcUrls.default.http[0]),
   },

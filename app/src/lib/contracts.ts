@@ -3,6 +3,7 @@ import pdotArtifact from "../../../artifacts/contracts/PDOTToken.sol/PDOTToken.j
 import registryArtifact from "../../../artifacts/contracts/TokenRegistry.sol/TokenRegistry.json";
 import routerArtifact from "../../../artifacts/contracts/uniswap/UniswapV2Router02.sol/UniswapV2Router02.json";
 import deploymentsJson from "../../../deployments/testnet.json";
+import type { Abi } from "viem";
 
 type Deployments = {
   uniswap?: {
@@ -22,7 +23,7 @@ export const PDOT_ADDRESS = deployments.core?.pdotToken ?? "0x000000000000000000
 export const REGISTRY_ADDRESS = deployments.core?.tokenRegistry ?? "0x0000000000000000000000000000000000000000";
 export const ROUTER_ADDRESS = deployments.uniswap?.router ?? "0x0000000000000000000000000000000000000000";
 
-export const INDEX_VAULT_ABI = indexVaultArtifact.abi;
-export const PDOT_ABI = pdotArtifact.abi;
-export const REGISTRY_ABI = registryArtifact.abi;
-export const ROUTER_ABI = routerArtifact.abi;
+export const INDEX_VAULT_ABI = indexVaultArtifact.abi as Abi;
+export const PDOT_ABI = pdotArtifact.abi as Abi;
+export const REGISTRY_ABI = registryArtifact.abi as Abi;
+export const ROUTER_ABI = routerArtifact.abi as Abi;

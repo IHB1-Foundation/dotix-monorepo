@@ -1,0 +1,55 @@
+"use client";
+
+import { useMemo } from "react";
+import { useReadContracts } from "wagmi";
+
+import { REGISTRY_ABI, REGISTRY_ADDRESS } from "@/lib/contracts";
+
+export type TokenMeta = {
+  name: string;
+  symbol: string;
+  decimals: number;
+  enabled: boolean;
+};
+
+export function useTokenMeta(tokens: string[]) {
+  const validTokens = useMemo(
+    () => tokens.filter((token) => token !== "0x0000000000000000000000000000000000000000"),
+    [tokens]
+  );
+
+  const { data, isLoading, error } = useReadContracts({
+    contracts: validTokens.map((token) => ({
+      address: REGISTRY_ADDRESS as `0x${string}`,
+      abi: REGISTRY_ABI,
+      functionName: "getTokenMeta",
+      args: [token as `0x${string}`],
+    })) as any,
+    query: {
+      enabled: validTokens.length > 0,
+      refetchInterval: 10_000,
+    },
+  });
+
+  const byToken = useMemo<Record<string, TokenMeta>>(() => {
+    const out: Record<string, TokenMeta> = {};
+
+    validTokens.forEach((token, index) => {
+      const row = data?.[index];
+      if (row?.status !== "success" || !row.result) {
+        return;
+      }
+
+      const [name, symbol, decimals, enabled] = row.result as [string, string, number, boolean];
+      out[token] = { name, symbol, decimals, enabled };
+    });
+
+    return out;
+  }, [data, validTokens]);
+
+  return {
+    byToken,
+    isLoading,
+    error,
+  };
+}

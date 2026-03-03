@@ -1,10 +1,11 @@
+import dynamic from "next/dynamic";
 import type { Metadata } from "next";
 
-import { NavBar } from "@/components/NavBar";
-import { NetworkGuard } from "@/components/NetworkGuard";
-import { Providers } from "@/components/Providers";
-
 import "./globals.css";
+
+const AppShellClient = dynamic(() => import("@/components/AppShellClient").then((mod) => mod.AppShellClient), {
+  ssr: false,
+});
 
 export const metadata: Metadata = {
   title: "Dotix",
@@ -15,13 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <Providers>
-          <main className="mx-auto max-w-6xl px-4 py-8">
-            <NavBar />
-            <NetworkGuard />
-            {children}
-          </main>
-        </Providers>
+        <AppShellClient>{children}</AppShellClient>
       </body>
     </html>
   );
