@@ -1,0 +1,21 @@
+{
+  "name": "dotix-monorepo",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:uniswap": "hardhat run scripts/deploy-uniswap.ts --network polkadotHub",
+    "deploy:core": "hardhat run scripts/deploy-core.ts --network polkadotHub",
+    "seed": "hardhat run scripts/seed-liquidity.ts --network polkadotHub",
+    "verify:precompile": "hardhat run scripts/verify-precompile-mapping.ts --network polkadotHub"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.0.2",
+    "@types/node": "^20.0.0",
+    "dotenv": "^16.4.0",
+    "hardhat": "^2.22.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.0"
+  }
+}
