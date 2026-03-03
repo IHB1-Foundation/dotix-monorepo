@@ -8,5 +8,7 @@ coverage/
 app/.next/
 app/node_modules/
 agent/sample-output/*.json
+!agent/sample-output/dry-run-sample.json
+!agent/sample-output/execute-sample.json
 .DS_Store
 .idea/

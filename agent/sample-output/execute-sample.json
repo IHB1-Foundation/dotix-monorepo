@@ -1,0 +1,66 @@
+{
+  "mode": "execute",
+  "timestamp": "2026-03-03T06:07:11.313Z",
+  "vaultState": {
+    "vault": "0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE",
+    "baseAsset": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    "nav": "0",
+    "totalSupply": "0",
+    "assets": [
+      {
+        "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+        "symbol": "ASTA",
+        "decimals": 18,
+        "balance": "0",
+        "currentWeightBps": 0,
+        "targetBps": 5000,
+        "maxSlippageBps": 300,
+        "maxTradeBps": 1000
+      },
+      {
+        "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+        "symbol": "ASTB",
+        "decimals": 18,
+        "balance": "0",
+        "currentWeightBps": 0,
+        "targetBps": 5000,
+        "maxSlippageBps": 300,
+        "maxTradeBps": 1000
+      }
+    ],
+    "pools": [
+      {
+        "token": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+        "reserveToken": "99999003009939990898291",
+        "reserveBase": "100001000000000000000000",
+        "spotPriceInBase": "1000019970099699999"
+      },
+      {
+        "token": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+        "reserveToken": "100000000000000000000000",
+        "reserveBase": "100000000000000000000000",
+        "spotPriceInBase": "1000000000000000000"
+      }
+    ],
+    "cooldownSeconds": 300,
+    "lastRebalanceAt": 0,
+    "maxNavTradeBps": 1000,
+    "paused": false
+  },
+  "newTargets": {
+    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9": 5000,
+    "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707": 5000
+  },
+  "swaps": [],
+  "explanation": [
+    "Pool depth comparison: top asset has 1.00x reserveBase vs second; targets now 50.00% and 50.00%.",
+    "Portfolio already within target range. No swaps needed."
+  ],
+  "halted": true,
+  "reason": "No swaps needed",
+  "txHash": "0xb642240fe21923b1b2c537a32c11449d208f7bef733ff6f77345dd0c449e7eff",
+  "blockNumber": 29,
+  "navBefore": "0",
+  "navAfter": "0",
+  "blockscout": "https://blockscout-testnet.polkadot.io/tx/0xb642240fe21923b1b2c537a32c11449d208f7bef733ff6f77345dd0c449e7eff"
+}
