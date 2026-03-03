@@ -49,6 +49,14 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         bool enabled;
     }
 
+    struct Swap {
+        address tokenIn;
+        address tokenOut;
+        uint256 amountIn;
+        uint256 minAmountOut;
+        address[] path;
+    }
+
     address public immutable baseAsset;
     address public immutable uniswapRouter;
     TokenRegistry public immutable registry;
@@ -63,6 +71,10 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
 
     event Deposit(address indexed user, uint256 baseIn, uint256 sharesOut);
     event Redeem(address indexed user, uint256 sharesIn, uint256 baseOut);
+    event TargetsUpdated(address[] tokens, uint16[] bps);
+    event SwapExecuted(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut);
+    event Rebalanced(uint64 timestamp, uint256 navBefore, uint256 navAfter);
+    event GuardrailsUpdated(uint32 cooldown, uint16 maxNavTrade);
 
     constructor(
         address admin,
@@ -120,6 +132,34 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         uint256 indexPlusOne = _assetIndexPlusOne[token];
         require(indexPlusOne != 0, "missing");
         assets[indexPlusOne - 1].enabled = enabled;
+    }
+
+    function setTargetWeights(address[] calldata tokens, uint16[] calldata bps)
+        external
+        onlyRole(STRATEGIST_ROLE)
+    {
+        require(tokens.length == bps.length, "length");
+
+        uint256 sum;
+        for (uint256 i = 0; i < tokens.length; i++) {
+            address token = tokens[i];
+            uint256 indexPlusOne = _assetIndexPlusOne[token];
+            require(indexPlusOne != 0, "unknown");
+            require(registry.isEnabled(token), "not enabled");
+
+            assets[indexPlusOne - 1].targetBps = bps[i];
+            sum += bps[i];
+        }
+
+        require(sum == 10000, "sum");
+        emit TargetsUpdated(tokens, bps);
+    }
+
+    function setGuardrails(uint32 cooldown, uint16 maxNavTrade) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(maxNavTrade <= 10000, "bps");
+        cooldownSeconds = cooldown;
+        maxNavTradeBps = maxNavTrade;
+        emit GuardrailsUpdated(cooldown, maxNavTrade);
     }
 
     function pause() external onlyRole(PAUSER_ROLE) {
@@ -260,6 +300,65 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         return (uint256(reserve1) * 1e18) / uint256(reserve0);
     }
 
+    function calcMaxTradeSize(address token) public view returns (uint256) {
+        uint256 nav = calcNAV();
+        if (nav == 0) {
+            return 0;
+        }
+
+        uint16 effectiveBps = maxNavTradeBps;
+        if (token != baseAsset) {
+            uint256 indexPlusOne = _assetIndexPlusOne[token];
+            if (indexPlusOne != 0) {
+                uint16 perAsset = assets[indexPlusOne - 1].maxTradeBps;
+                if (perAsset > 0 && perAsset < effectiveBps) {
+                    effectiveBps = perAsset;
+                }
+            }
+        }
+
+        return (nav * effectiveBps) / 10000;
+    }
+
+    function rebalance(Swap[] calldata swaps)
+        external
+        onlyRole(KEEPER_ROLE)
+        whenNotPaused
+        nonReentrant
+    {
+        require(block.timestamp >= uint256(lastRebalanceAt) + uint256(cooldownSeconds), "cooldown");
+
+        uint256 navBefore = calcNAV();
+        uint256 len = swaps.length;
+
+        for (uint256 i = 0; i < len; i++) {
+            Swap calldata swapItem = swaps[i];
+            require(_isSwapTokenEnabled(swapItem.tokenIn), "token");
+            require(_isSwapTokenEnabled(swapItem.tokenOut), "token");
+            require(swapItem.path.length >= 2, "path");
+            require(swapItem.path[0] == swapItem.tokenIn, "path in");
+            require(swapItem.path[swapItem.path.length - 1] == swapItem.tokenOut, "path out");
+            require(swapItem.amountIn <= calcMaxTradeSize(swapItem.tokenIn), "trade cap");
+
+            IERC20(swapItem.tokenIn).forceApprove(uniswapRouter, swapItem.amountIn);
+
+            uint256[] memory amounts = IUniswapV2RouterLike(uniswapRouter).swapExactTokensForTokens(
+                swapItem.amountIn,
+                swapItem.minAmountOut,
+                swapItem.path,
+                address(this),
+                block.timestamp + 1 hours
+            );
+
+            uint256 amountOut = amounts[amounts.length - 1];
+            require(amountOut >= swapItem.minAmountOut, "slippage");
+            emit SwapExecuted(swapItem.tokenIn, swapItem.tokenOut, swapItem.amountIn, amountOut);
+        }
+
+        lastRebalanceAt = uint64(block.timestamp);
+        emit Rebalanced(lastRebalanceAt, navBefore, calcNAV());
+    }
+
     function _ensureBaseLiquidity(uint256 targetBase) internal {
         uint256 baseBalance = IERC20(baseAsset).balanceOf(address(this));
         if (baseBalance >= targetBase) {
@@ -298,5 +397,18 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
                 break;
             }
         }
+    }
+
+    function _isSwapTokenEnabled(address token) internal view returns (bool) {
+        if (token == baseAsset) {
+            return true;
+        }
+
+        uint256 indexPlusOne = _assetIndexPlusOne[token];
+        if (indexPlusOne == 0) {
+            return false;
+        }
+
+        return assets[indexPlusOne - 1].enabled && registry.isEnabled(token);
     }
 }
