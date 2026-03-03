@@ -12,3 +12,7 @@ agent/sample-output/*.json
 !agent/sample-output/execute-sample.json
 .DS_Store
 .idea/
+HACKATHON.md
+PROJECT.md
+TICKET.md
+DONE_TICKET.md
