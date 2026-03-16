@@ -17,8 +17,8 @@ describe("TokenRegistry", function () {
     await expect(
       registry.connect(admin).setTokenMeta(token, "Token A", "TKA", 18, true)
     )
-      .to.emit(registry, "TokenMetaSet")
-      .withArgs(token, "TKA", true);
+      .to.emit(registry, "TokenMetaUpdated")
+      .withArgs(token, "", "TKA", false, true);
 
     const meta = await registry.getTokenMeta(token);
     expect(meta.name).to.equal("Token A");

@@ -17,7 +17,13 @@ contract TokenRegistry is AccessControl {
     mapping(address => bool) private _known;
     address[] private _tokenList;
 
-    event TokenMetaSet(address indexed token, string symbol, bool enabled);
+    event TokenMetaUpdated(
+        address indexed token,
+        string oldSymbol,
+        string newSymbol,
+        bool oldEnabled,
+        bool newEnabled
+    );
 
     /// @notice Deploys the registry with an admin that can manage token metadata.
     /// @param admin Address receiving the default admin role.
@@ -39,6 +45,7 @@ contract TokenRegistry is AccessControl {
         bool enabled
     ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(token != address(0), "zero token");
+        TokenMeta memory previous = tokens[token];
 
         if (!_known[token]) {
             _known[token] = true;
@@ -52,7 +59,7 @@ contract TokenRegistry is AccessControl {
             enabled: enabled
         });
 
-        emit TokenMetaSet(token, symbol, enabled);
+        emit TokenMetaUpdated(token, previous.symbol, symbol, previous.enabled, enabled);
     }
 
     /// @notice Reads the stored metadata for a token.
