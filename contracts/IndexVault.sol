@@ -70,9 +70,9 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
     AssetConfig[] public assets;
     mapping(address => uint256) private _assetIndexPlusOne;
 
+    uint64 public lastRebalanceAt;
     uint32 public cooldownSeconds;
     uint32 public maxDeadlineSeconds;
-    uint64 public lastRebalanceAt;
     uint16 public maxNavTradeBps;
 
     event Deposit(address indexed user, uint256 baseIn, uint256 sharesOut);
