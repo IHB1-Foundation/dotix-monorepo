@@ -94,11 +94,11 @@ export function useXcmDemo(messageHex: `0x${string}`) {
       const maxProofSize = (result.proofSize * 12n) / 10n;
 
       await executeWrite.writeContractAsync({
-        address: XCM_DEMO_ADDRESS as `0x${string}`,
+        address: XCM_DEMO_ADDRESS,
         abi: XCM_DEMO_ABI,
         functionName: "demoExecute",
         args: [messageHex, maxRefTime, maxProofSize],
-      } as any);
+      });
     } catch (e) {
       setError(mapContractError(e));
     }

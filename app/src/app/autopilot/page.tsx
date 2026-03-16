@@ -42,11 +42,11 @@ export default function AutopilotPage() {
       const bps = Object.values(plan.newTargets).map((value) => Number(value));
 
       await applyWrite.writeContractAsync({
-        address: VAULT_ADDRESS as `0x${string}`,
+        address: VAULT_ADDRESS,
         abi: INDEX_VAULT_ABI,
         functionName: "setTargetWeights",
         args: [tokens, bps],
-      } as any);
+      });
     } catch (e) {
       setActionError(mapContractError(e));
     }
@@ -58,19 +58,19 @@ export default function AutopilotPage() {
 
     try {
       const swaps = plan.swaps.map((swap) => ({
-        tokenIn: swap.tokenIn,
-        tokenOut: swap.tokenOut,
+        tokenIn: swap.tokenIn as `0x${string}`,
+        tokenOut: swap.tokenOut as `0x${string}`,
         amountIn: BigInt(swap.amountIn),
         minAmountOut: BigInt(swap.minAmountOut),
-        path: swap.path,
+        path: swap.path.map((hop) => hop as `0x${string}`),
       }));
 
       await executeWrite.writeContractAsync({
-        address: VAULT_ADDRESS as `0x${string}`,
+        address: VAULT_ADDRESS,
         abi: INDEX_VAULT_ABI,
         functionName: "rebalance",
         args: [swaps],
-      } as any);
+      });
     } catch (e) {
       setActionError(mapContractError(e));
     }

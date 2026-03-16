@@ -78,11 +78,11 @@ export function useRedeem(amount: string, slippagePct: number) {
 
     try {
       const hash = await redeemWrite.writeContractAsync({
-        address: VAULT_ADDRESS as `0x${string}`,
+        address: VAULT_ADDRESS,
         abi: INDEX_VAULT_ABI,
         functionName: "redeem",
         args: [sharesIn, minBaseOut],
-      } as any);
+      });
       setRedeemHash(hash);
     } catch (e) {
       setError(mapContractError(e));
@@ -95,11 +95,11 @@ export function useRedeem(amount: string, slippagePct: number) {
 
     try {
       const hash = await emergencyWrite.writeContractAsync({
-        address: VAULT_ADDRESS as `0x${string}`,
+        address: VAULT_ADDRESS,
         abi: INDEX_VAULT_ABI,
         functionName: "emergencyRedeemToUnderlying",
         args: [sharesIn],
-      } as any);
+      });
       setEmergencyHash(hash);
     } catch (e) {
       setError(mapContractError(e));

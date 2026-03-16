@@ -13,34 +13,36 @@ export function useDeposit(amount: string, slippagePct: number) {
   const [depositHash, setDepositHash] = useState<`0x${string}` | undefined>();
   const [error, setError] = useState<string | undefined>();
 
+  const vaultReadContracts = [
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "baseAsset",
+    },
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "calcNAV",
+    },
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "paused",
+    },
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "assetsLength",
+    },
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "lastRebalanceAt",
+    },
+  ] as const;
+
   const vaultReads = useReadContracts({
-    contracts: [
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "baseAsset",
-      },
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "calcNAV",
-      },
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "paused",
-      },
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "assetsLength",
-      },
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "lastRebalanceAt",
-      },
-    ] as any,
+    contracts: vaultReadContracts,
   });
 
   const baseAsset = (vaultReads.data?.[0]?.status === "success" ? (vaultReads.data[0].result as string) : undefined) as
@@ -67,41 +69,43 @@ export function useDeposit(amount: string, slippagePct: number) {
         inputs: [],
         outputs: [{ name: "", type: "uint256" }],
       },
-    ],
+    ] as const,
     functionName: "totalSupply",
     query: {
       enabled: Boolean(pdotAddress),
     },
   });
 
+  const baseMetaContracts =
+    baseAsset && address
+      ? [
+          {
+            address: baseAsset,
+            abi: erc20Abi,
+            functionName: "decimals" as const,
+          },
+          {
+            address: baseAsset,
+            abi: erc20Abi,
+            functionName: "symbol" as const,
+          },
+          {
+            address: baseAsset,
+            abi: erc20Abi,
+            functionName: "balanceOf" as const,
+            args: [address] as const,
+          },
+          {
+            address: baseAsset,
+            abi: erc20Abi,
+            functionName: "allowance" as const,
+            args: [address, VAULT_ADDRESS] as const,
+          },
+        ]
+      : [];
+
   const baseMetaRead = useReadContracts({
-    contracts:
-      baseAsset && address
-        ? [
-            {
-              address: baseAsset,
-              abi: erc20Abi,
-              functionName: "decimals",
-            },
-            {
-              address: baseAsset,
-              abi: erc20Abi,
-              functionName: "symbol",
-            },
-            {
-              address: baseAsset,
-              abi: erc20Abi,
-              functionName: "balanceOf",
-              args: [address],
-            },
-            {
-              address: baseAsset,
-              abi: erc20Abi,
-              functionName: "allowance",
-              args: [address, VAULT_ADDRESS as `0x${string}`],
-            },
-          ]
-        : ([] as any),
+    contracts: baseMetaContracts,
     query: {
       enabled: Boolean(baseAsset && address),
       refetchInterval: 6_000,
@@ -173,11 +177,11 @@ export function useDeposit(amount: string, slippagePct: number) {
     setError(undefined);
     try {
       const hash = await depositWrite.writeContractAsync({
-        address: VAULT_ADDRESS as `0x${string}`,
+        address: VAULT_ADDRESS,
         abi: INDEX_VAULT_ABI,
         functionName: "deposit",
         args: [amountIn, minSharesOut],
-      } as any);
+      });
       setDepositHash(hash);
     } catch (e) {
       setError(mapContractError(e));

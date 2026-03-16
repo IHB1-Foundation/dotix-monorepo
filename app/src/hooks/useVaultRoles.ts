@@ -8,19 +8,21 @@ import { INDEX_VAULT_ABI, VAULT_ADDRESS } from "@/lib/contracts";
 export function useVaultRoles() {
   const { address } = useAccount();
 
+  const roleContracts = [
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "STRATEGIST_ROLE",
+    },
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "KEEPER_ROLE",
+    },
+  ] as const;
+
   const roleReads = useReadContracts({
-    contracts: [
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "STRATEGIST_ROLE",
-      },
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "KEEPER_ROLE",
-      },
-    ] as any,
+    contracts: roleContracts,
   });
 
   const strategistRole = roleReads.data?.[0]?.status === "success" ? (roleReads.data[0].result as string) : undefined;
@@ -31,19 +33,19 @@ export function useVaultRoles() {
       address && strategistRole && keeperRole
         ? [
             {
-              address: VAULT_ADDRESS as `0x${string}`,
+              address: VAULT_ADDRESS,
               abi: INDEX_VAULT_ABI,
-              functionName: "hasRole",
-              args: [strategistRole, address],
+              functionName: "hasRole" as const,
+              args: [strategistRole as `0x${string}`, address] as const,
             },
             {
-              address: VAULT_ADDRESS as `0x${string}`,
+              address: VAULT_ADDRESS,
               abi: INDEX_VAULT_ABI,
-              functionName: "hasRole",
-              args: [keeperRole, address],
+              functionName: "hasRole" as const,
+              args: [keeperRole as `0x${string}`, address] as const,
             },
           ]
-        : ([] as any),
+        : [],
     query: {
       enabled: Boolean(address && strategistRole && keeperRole),
       refetchInterval: 8_000,

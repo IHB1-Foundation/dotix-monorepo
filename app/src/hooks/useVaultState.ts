@@ -30,39 +30,41 @@ export type VaultState = {
 };
 
 export function useVaultState(): VaultState {
+  const baseReadContracts = [
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "calcNAV",
+    },
+    {
+      address: PDOT_ADDRESS,
+      abi: PDOT_ABI,
+      functionName: "totalSupply",
+    },
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "lastRebalanceAt",
+    },
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "cooldownSeconds",
+    },
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "paused",
+    },
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "assetsLength",
+    },
+  ] as const;
+
   const baseReads = useReadContracts({
-    contracts: [
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "calcNAV",
-      },
-      {
-        address: PDOT_ADDRESS as `0x${string}`,
-        abi: PDOT_ABI,
-        functionName: "totalSupply",
-      },
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "lastRebalanceAt",
-      },
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "cooldownSeconds",
-      },
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "paused",
-      },
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "assetsLength",
-      },
-    ] as any,
+    contracts: baseReadContracts,
     query: {
       refetchInterval: 6_000,
     },
@@ -79,13 +81,15 @@ export function useVaultState(): VaultState {
   const assetsLength =
     (baseReads.data?.[5]?.status === "success" ? Number(baseReads.data[5].result) : 0) ?? 0;
 
+  const assetsConfigContracts = Array.from({ length: assetsLength }, (_, index) => ({
+    address: VAULT_ADDRESS,
+    abi: INDEX_VAULT_ABI,
+    functionName: "assets" as const,
+    args: [BigInt(index)] as const,
+  }));
+
   const assetsConfigReads = useReadContracts({
-    contracts: Array.from({ length: assetsLength }, (_, index) => ({
-      address: VAULT_ADDRESS as `0x${string}`,
-      abi: INDEX_VAULT_ABI,
-      functionName: "assets",
-      args: [BigInt(index)],
-    })) as any,
+    contracts: assetsConfigContracts,
     query: {
       enabled: assetsLength > 0,
       refetchInterval: 6_000,
@@ -123,21 +127,23 @@ export function useVaultState(): VaultState {
     [assetsConfigReads.data]
   );
 
+  const balancePriceContracts = assetsConfig.flatMap((asset) => [
+    {
+      address: asset.token as `0x${string}`,
+      abi: erc20Abi,
+      functionName: "balanceOf" as const,
+      args: [VAULT_ADDRESS] as const,
+    },
+    {
+      address: VAULT_ADDRESS,
+      abi: INDEX_VAULT_ABI,
+      functionName: "getSpotPrice" as const,
+      args: [asset.token as `0x${string}`] as const,
+    },
+  ]);
+
   const balancePriceReads = useReadContracts({
-    contracts: assetsConfig.flatMap((asset) => [
-      {
-        address: asset.token as `0x${string}`,
-        abi: erc20Abi,
-        functionName: "balanceOf",
-        args: [VAULT_ADDRESS as `0x${string}`],
-      },
-      {
-        address: VAULT_ADDRESS as `0x${string}`,
-        abi: INDEX_VAULT_ABI,
-        functionName: "getSpotPrice",
-        args: [asset.token as `0x${string}`],
-      },
-    ]) as any,
+    contracts: balancePriceContracts,
     query: {
       enabled: assetsConfig.length > 0,
       refetchInterval: 6_000,

@@ -20,11 +20,11 @@ export function useTokenMeta(tokens: string[]) {
 
   const { data, isLoading, error } = useReadContracts({
     contracts: validTokens.map((token) => ({
-      address: REGISTRY_ADDRESS as `0x${string}`,
+      address: REGISTRY_ADDRESS,
       abi: REGISTRY_ABI,
-      functionName: "getTokenMeta",
-      args: [token as `0x${string}`],
-    })) as any,
+      functionName: "getTokenMeta" as const,
+      args: [token as `0x${string}`] as const,
+    })),
     query: {
       enabled: validTokens.length > 0,
       refetchInterval: 10_000,
@@ -40,7 +40,12 @@ export function useTokenMeta(tokens: string[]) {
         return;
       }
 
-      const [name, symbol, decimals, enabled] = row.result as [string, string, number, boolean];
+      const { name, symbol, decimals, enabled } = row.result as {
+        name: string;
+        symbol: string;
+        decimals: number;
+        enabled: boolean;
+      };
       out[token] = { name, symbol, decimals, enabled };
     });
 
