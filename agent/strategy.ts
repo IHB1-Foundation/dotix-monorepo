@@ -11,11 +11,9 @@ import erc20Artifact from "../artifacts/contracts/test/MockERC20.sol/MockERC20.j
 import deployments from "../deployments/testnet.json";
 import { getRpcUrl } from "../shared/config";
 
+import { MAX_TARGET_BPS, MIN_TARGET_BPS, TRADE_CAP_HEADROOM_BPS } from "./config";
 import { AssetSnapshot, PoolSnapshot, StrategyOutput, SwapPlan, VaultState } from "./types";
 
-const MIN_TARGET_BPS = 200;
-const MAX_TARGET_BPS = 7000;
-const TRADE_CAP_HEADROOM_BPS = 9900;
 const PRICE_SCALE = 10n ** 18n;
 
 function bigintMin(a: bigint, b: bigint): bigint {
