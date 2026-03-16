@@ -51,6 +51,24 @@ const config: HardhatUserConfig = {
       accounts,
     },
   },
+  etherscan: {
+    apiKey: {
+      polkadotHub: process.env.BLOCKSCOUT_API_KEY ?? "abc",
+    },
+    customChains: [
+      {
+        network: "polkadotHub",
+        chainId: 420420417,
+        urls: {
+          apiURL: "https://blockscout-testnet.polkadot.io/api",
+          browserURL: "https://blockscout-testnet.polkadot.io",
+        },
+      },
+    ],
+  },
+  sourcify: {
+    enabled: true,
+  },
 };
 
 export default config;

@@ -319,7 +319,8 @@ dotix-monorepo/
 
 ## Demo Video
 
-- Placeholder: `https://youtu.be/TBD-DOTIX-DEMO`
+- Video: [docs/dotix-demo.mp4](docs/dotix-demo.mp4)
+- Verification helper: `bunx hardhat run scripts/verify-core.ts --network polkadotHub`
 
 ## Submission Checklist
 
@@ -327,7 +328,7 @@ dotix-monorepo/
 - [ ] All contracts verified on Blockscout testnet
 - [x] README with network setup, faucet, deploy steps, demo steps, known limitations
 - [x] Sample agent output in `agent/sample-output/`
-- [ ] Demo video (1–3 minutes, narrated) — placeholder link above
+- [x] Demo video (1–3 minutes, narrated)
 
 ---
 
