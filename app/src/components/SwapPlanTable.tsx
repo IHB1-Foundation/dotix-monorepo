@@ -14,8 +14,8 @@ export function SwapPlanTable({ swaps }: { swaps: AgentSwap[] }) {
   }
 
   return (
-    <div className="card overflow-x-auto">
-      <table className="min-w-full text-left text-sm">
+    <div className="card -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+      <table className="min-w-[42rem] text-left text-sm sm:min-w-full">
         <thead className="bg-slate-100 text-slate-700">
           <tr>
             <th className="px-3 py-2">tokenIn</th>

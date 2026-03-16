@@ -9,7 +9,7 @@ import { Providers } from "@/components/Providers";
 export function AppShellClient({ children }: { children: ReactNode }) {
   return (
     <Providers>
-      <main className="mx-auto max-w-6xl px-4 py-8">
+      <main className="mx-auto max-w-6xl px-4 py-6 pb-28 sm:py-8 md:pb-8">
         <NavBar />
         <NetworkGuard />
         {children}

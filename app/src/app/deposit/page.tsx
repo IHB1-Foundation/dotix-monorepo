@@ -28,7 +28,7 @@ export default function DepositPage() {
   const redeem = useRedeem(redeemInput, slippagePct);
 
   return (
-    <section className="grid gap-4 md:grid-cols-2">
+    <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <div className="card p-5">
         <h2 className="mb-3 text-lg font-semibold">Deposit</h2>
         <p className="mb-2 text-sm text-slate-600">Base balance: {formatAmount(deposit.balance, deposit.baseDecimals)} {deposit.baseSymbol}</p>

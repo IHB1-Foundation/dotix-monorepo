@@ -17,8 +17,8 @@ export function WeightBar({ currentBps, targetBps }: Props) {
   const deviationColor = deviation > 1000 ? "bg-red-500" : deviation > 500 ? "bg-warning" : "bg-mint";
 
   return (
-    <div className="space-y-2">
-      <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-slate-200">
+    <div className="min-w-0 space-y-2">
+      <div className="relative h-2.5 min-w-[12rem] w-full overflow-hidden rounded-full bg-slate-200">
         <div className={`h-full ${deviationColor}`} style={{ width: `${currentPct}%` }} />
         <div
           className="absolute top-0 h-full border-l-2 border-dashed border-slate-900/70"

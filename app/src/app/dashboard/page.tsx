@@ -22,7 +22,7 @@ export default function DashboardPage() {
 
   return (
     <section className="space-y-4">
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <article className="card p-4">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">NAV</h2>
           <p className="mt-2 text-2xl font-bold">{formatBase(vault.nav)}</p>
