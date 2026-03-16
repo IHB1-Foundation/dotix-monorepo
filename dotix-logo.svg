@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Dotix logo</title>
+  <desc id="desc">A rounded square mark with a stylized D and index dots.</desc>
+  <defs>
+    <linearGradient id="dotix-bg" x1="72" y1="56" x2="444" y2="456" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0b1f33"/>
+      <stop offset="0.56" stop-color="#0f7ad8"/>
+      <stop offset="1" stop-color="#20c997"/>
+    </linearGradient>
+    <radialGradient id="dotix-glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(388 118) rotate(128.6) scale(174 192)">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.58"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="36" y="36" width="440" height="440" rx="116" fill="url(#dotix-bg)"/>
+  <rect x="36" y="36" width="440" height="440" rx="116" fill="url(#dotix-glow)"/>
+  <rect x="36" y="36" width="440" height="440" rx="116" fill="none" stroke="#ffffff" stroke-opacity="0.1"/>
+  <path
+    fill="#f8fcff"
+    fill-rule="evenodd"
+    d="M142 120c0-8.837 7.163-16 16-16h93c104.382 0 181 76.98 181 182s-76.618 182-181 182h-93c-8.837 0-16-7.163-16-16V120Zm72 56v160h31c69.036 0 115-49.786 115-114s-45.964-114-115-114h-31Zm0 216v20h35c70.517 0 123-50.504 123-126S319.517 160 249 160h-35v16h31c69.036 0 115 49.786 115 114s-45.964 114-115 114h-31Z"
+    clip-rule="evenodd"
+  />
+  <path d="M314 176c30 25 51 58 62 110-11 52-32 85-62 110" fill="none" stroke="#bfe7ff" stroke-width="12" stroke-linecap="round" opacity="0.55"/>
+  <circle cx="324" cy="176" r="18" fill="#9cf2d4"/>
+  <circle cx="379" cy="286" r="14" fill="#f4fffb"/>
+  <circle cx="324" cy="396" r="18" fill="#9cf2d4"/>
+</svg>
