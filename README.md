@@ -213,6 +213,8 @@ cp .env.example .env
 # Compile contracts first
 bun run compile
 
+# Always pass --network polkadotHub for live testnet deployments.
+
 # Deploy Uniswap V2 (Factory + Router + WETH)
 bun run deploy:uniswap
 
