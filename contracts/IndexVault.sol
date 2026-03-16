@@ -39,6 +39,8 @@ interface IUniswapV2PairLike {
     function token1() external view returns (address);
 }
 
+/// @title IndexVault
+/// @notice Holds the Dotix asset basket, issues PDOT shares, and executes guarded rebalances.
 contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
     using SafeERC20 for IERC20;
 
@@ -83,6 +85,12 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
     event GuardrailsUpdated(uint32 cooldown, uint16 maxNavTrade);
     event MaxDeadlineUpdated(uint32 maxDeadlineSeconds);
 
+    /// @notice Deploys the vault and wires the core protocol contracts together.
+    /// @param admin Address receiving the default admin and pauser roles.
+    /// @param _baseAsset ERC-20 asset accepted for deposits and redemptions.
+    /// @param _registry Token metadata registry used for allowlist checks.
+    /// @param _pdot Share token minted and burned by this vault.
+    /// @param _uniswapRouter Router used for rebalances and redeem liquidity.
     constructor(
         address admin,
         address _baseAsset,
@@ -109,10 +117,17 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         maxNavTradeBps = 1000;
     }
 
+    /// @notice Returns the number of configured vault assets.
+    /// @return Number of asset configs stored by the vault.
     function assetsLength() external view returns (uint256) {
         return assets.length;
     }
 
+    /// @notice Adds a new asset configuration to the vault basket.
+    /// @param token ERC-20 token address for the asset.
+    /// @param targetBps Target allocation in basis points.
+    /// @param maxSlippageBps Maximum allowed slippage in basis points.
+    /// @param maxTradeBps Maximum trade size for the asset in basis points of NAV.
     function addAsset(
         address token,
         uint16 targetBps,
@@ -136,12 +151,18 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         _assetIndexPlusOne[token] = assets.length;
     }
 
+    /// @notice Enables or disables a configured asset.
+    /// @param token Asset token to update.
+    /// @param enabled Whether the asset should remain active.
     function setAssetEnabled(address token, bool enabled) external onlyRole(DEFAULT_ADMIN_ROLE) {
         uint256 indexPlusOne = _assetIndexPlusOne[token];
         require(indexPlusOne != 0, "missing");
         assets[indexPlusOne - 1].enabled = enabled;
     }
 
+    /// @notice Updates the vault target weights for each configured asset.
+    /// @param tokens Asset tokens whose targets should be updated.
+    /// @param bps New target weights expressed in basis points.
     function setTargetWeights(address[] calldata tokens, uint16[] calldata bps)
         external
         onlyRole(STRATEGIST_ROLE)
@@ -163,6 +184,9 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         emit TargetsUpdated(tokens, bps);
     }
 
+    /// @notice Updates the core rebalance guardrails.
+    /// @param cooldown Minimum seconds between rebalances.
+    /// @param maxNavTrade Maximum trade size in basis points of NAV.
     function setGuardrails(uint32 cooldown, uint16 maxNavTrade) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(maxNavTrade <= 10000, "bps");
         cooldownSeconds = cooldown;
@@ -170,20 +194,28 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         emit GuardrailsUpdated(cooldown, maxNavTrade);
     }
 
+    /// @notice Updates the maximum router deadline window used for swaps.
+    /// @param newMaxDeadlineSeconds Maximum number of seconds added to swap deadlines.
     function setMaxDeadlineSeconds(uint32 newMaxDeadlineSeconds) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(newMaxDeadlineSeconds > 0, "deadline");
         maxDeadlineSeconds = newMaxDeadlineSeconds;
         emit MaxDeadlineUpdated(newMaxDeadlineSeconds);
     }
 
+    /// @notice Pauses deposit, redeem, and rebalance entry points.
     function pause() external onlyRole(PAUSER_ROLE) {
         _pause();
     }
 
+    /// @notice Resumes normal vault operations after a pause.
     function unpause() external onlyRole(DEFAULT_ADMIN_ROLE) {
         _unpause();
     }
 
+    /// @notice Deposits base asset and mints PDOT shares pro-rata to vault NAV.
+    /// @param amountIn Base asset amount supplied by the caller.
+    /// @param minSharesOut Minimum acceptable PDOT shares to receive.
+    /// @return sharesOut PDOT shares minted to the caller.
     function deposit(uint256 amountIn, uint256 minSharesOut)
         external
         whenNotPaused
@@ -211,6 +243,10 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         emit Deposit(msg.sender, amountIn, sharesOut);
     }
 
+    /// @notice Redeems PDOT shares back into the base asset.
+    /// @param sharesIn PDOT shares burned from the caller.
+    /// @param minBaseOut Minimum acceptable base asset to receive.
+    /// @return baseOut Base asset transferred to the caller.
     function redeem(uint256 sharesIn, uint256 minBaseOut)
         external
         whenNotPaused
@@ -240,6 +276,8 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         emit Redeem(msg.sender, sharesIn, baseOut);
     }
 
+    /// @notice Redeems the caller into underlying assets while the vault is paused.
+    /// @param sharesIn PDOT shares burned from the caller.
     function emergencyRedeemToUnderlying(uint256 sharesIn)
         external
         whenPaused
@@ -272,10 +310,15 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         }
     }
 
+    /// @notice Returns the total vault NAV denominated in the base asset.
+    /// @return nav Current vault NAV in base asset units.
     function calcNAV() public view returns (uint256 nav) {
         return _calcNAV();
     }
 
+    /// @notice Returns the spot price of an asset denominated in the base asset.
+    /// @param token Asset token to price.
+    /// @return Spot price scaled by 1e18.
     function getSpotPrice(address token) public view returns (uint256) {
         if (token == baseAsset) {
             return 1e18;
@@ -302,10 +345,15 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         return (uint256(reserve1) * 1e18) / uint256(reserve0);
     }
 
+    /// @notice Returns the maximum trade size allowed for a token at current NAV.
+    /// @param token Asset token to inspect.
+    /// @return Maximum allowed trade size in raw token-in units of base NAV value.
     function calcMaxTradeSize(address token) public view returns (uint256) {
         return _calcMaxTradeSize(_calcNAV(), token);
     }
 
+    /// @notice Executes a sequence of guarded swaps through the configured router.
+    /// @param swaps Swap instructions prepared off-chain and enforced on-chain.
     function rebalance(Swap[] calldata swaps)
         external
         onlyRole(KEEPER_ROLE)
