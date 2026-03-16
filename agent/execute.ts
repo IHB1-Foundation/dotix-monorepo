@@ -8,6 +8,7 @@ import vaultArtifact from "../artifacts/contracts/IndexVault.sol/IndexVault.json
 import deployments from "../deployments/testnet.json";
 
 import { explainStrategy } from "./explain";
+import { acquireNonceLock } from "./nonce-lock";
 import { buildStrategyOutput, readVaultState } from "./strategy";
 
 dotenv.config();
@@ -131,9 +132,11 @@ async function main(): Promise<void> {
 
   console.log("[4/4] Sending rebalance transaction");
   const vault = new Contract(vaultAddress, vaultArtifact.abi, keeper);
+  const nonceLock = acquireNonceLock();
 
   try {
-    const tx = await vault.rebalance(output.swaps);
+    const nonce = await provider.getTransactionCount(keeper.address, "pending");
+    const tx = await vault.rebalance(output.swaps, { nonce });
     console.log(`tx hash: ${tx.hash}`);
     console.log(`Blockscout: https://blockscout-testnet.polkadot.io/tx/${tx.hash}`);
 
@@ -143,6 +146,7 @@ async function main(): Promise<void> {
     const payload = {
       ...basePayload,
       txHash: tx.hash,
+      nonce,
       blockNumber: receipt?.blockNumber ?? null,
       navAfter,
     };
@@ -163,6 +167,8 @@ async function main(): Promise<void> {
     console.error(`Saved: ${file}`);
     console.error(jsonWithBigInt(payload));
     throw error;
+  } finally {
+    nonceLock.release();
   }
 }
 
