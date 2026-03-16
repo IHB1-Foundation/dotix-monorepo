@@ -1,32 +1,54 @@
-import { promises as fs } from "node:fs";
-import path from "node:path";
-
 import { NextResponse } from "next/server";
+import { AGENT_PLAN_SAMPLE } from "@/generated/agent-plan-sample.generated";
 
-const SAMPLE_DIR = path.join(process.cwd(), "..", "agent", "sample-output");
+export const dynamic = "force-dynamic";
 
 export async function GET() {
-  try {
-    const files = (await fs.readdir(SAMPLE_DIR)).filter((name) => name.endsWith(".json"));
-    if (files.length === 0) {
-      return NextResponse.json({ error: "No sample output found" }, { status: 404 });
+  const upstreamUrl = process.env.AGENT_PLAN_URL;
+  const upstreamApiKey = process.env.AGENT_PLAN_API_KEY;
+
+  if (upstreamUrl) {
+    try {
+      const headers = new Headers();
+      if (upstreamApiKey) {
+        headers.set("x-api-key", upstreamApiKey);
+      }
+
+      const response = await fetch(upstreamUrl, {
+        method: "GET",
+        cache: "no-store",
+        headers,
+      });
+
+      if (!response.ok) {
+        return NextResponse.json(
+          { error: `Upstream plan API failed (${response.status})` },
+          { status: 502 }
+        );
+      }
+
+      const upstreamJson = (await response.json()) as { file?: string; payload?: unknown };
+      if (upstreamJson.payload !== undefined) {
+        return NextResponse.json({
+          file: upstreamJson.file ?? "railway-live.json",
+          payload: upstreamJson.payload,
+        });
+      }
+
+      return NextResponse.json({
+        file: "railway-live.json",
+        payload: upstreamJson,
+      });
+    } catch (error) {
+      return NextResponse.json({ error: String(error) }, { status: 502 });
     }
+  }
 
-    const entries = await Promise.all(
-      files.map(async (name) => {
-        const fullPath = path.join(SAMPLE_DIR, name);
-        const stat = await fs.stat(fullPath);
-        return { name, fullPath, mtimeMs: stat.mtimeMs };
-      })
-    );
-
-    entries.sort((a, b) => b.mtimeMs - a.mtimeMs);
-    const latest = entries[0];
-
-    const raw = await fs.readFile(latest.fullPath, "utf8");
-    const payload = JSON.parse(raw);
-
-    return NextResponse.json({ file: latest.name, payload });
+  try {
+    return NextResponse.json({
+      file: "local-generated-sample.json",
+      payload: AGENT_PLAN_SAMPLE,
+    });
   } catch (error) {
     return NextResponse.json({ error: String(error) }, { status: 500 });
   }

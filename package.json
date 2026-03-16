@@ -7,7 +7,11 @@
     "deploy:uniswap": "hardhat run scripts/deploy-uniswap.ts --network polkadotHub",
     "deploy:core": "hardhat run scripts/deploy-core.ts --network polkadotHub",
     "seed": "hardhat run scripts/seed-liquidity.ts --network polkadotHub",
-    "verify:precompile": "hardhat run scripts/verify-precompile-mapping.ts --network polkadotHub"
+    "verify:precompile": "hardhat run scripts/verify-precompile-mapping.ts --network polkadotHub",
+    "sync:app": "bun run scripts/sync-app-config.ts",
+    "agent:dry-run": "bun run agent/execute.ts --dry-run",
+    "agent:execute": "bun run agent/execute.ts --execute",
+    "agent:plan-api": "bun run agent/plan-server.ts"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
