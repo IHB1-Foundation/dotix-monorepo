@@ -175,6 +175,22 @@ describe("IndexVault rebalance", function () {
     await expect(vault.connect(keeper).rebalance([swap])).to.be.revertedWith("UniswapV2Router: INSUFFICIENT_OUTPUT_AMOUNT");
   });
 
+  it("lets admin configure the swap deadline window", async function () {
+    const { admin, vault } = await deployFixture();
+
+    await expect(vault.connect(admin).setMaxDeadlineSeconds(45))
+      .to.emit(vault, "MaxDeadlineUpdated")
+      .withArgs(45);
+
+    expect(await vault.maxDeadlineSeconds()).to.equal(45);
+  });
+
+  it("rejects zero deadline windows", async function () {
+    const { admin, vault } = await deployFixture();
+
+    await expect(vault.connect(admin).setMaxDeadlineSeconds(0)).to.be.revertedWith("deadline");
+  });
+
   it("requires KEEPER_ROLE", async function () {
     const { outsider, base, assetA, vault } = await deployFixture();
 

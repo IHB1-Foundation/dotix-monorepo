@@ -71,6 +71,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
     mapping(address => uint256) private _assetIndexPlusOne;
 
     uint32 public cooldownSeconds;
+    uint32 public maxDeadlineSeconds;
     uint64 public lastRebalanceAt;
     uint16 public maxNavTradeBps;
 
@@ -80,6 +81,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
     event SwapExecuted(address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut);
     event Rebalanced(uint64 timestamp, uint256 navBefore, uint256 navAfter);
     event GuardrailsUpdated(uint32 cooldown, uint16 maxNavTrade);
+    event MaxDeadlineUpdated(uint32 maxDeadlineSeconds);
 
     constructor(
         address admin,
@@ -103,6 +105,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         pdot = PDOTToken(_pdot);
 
         cooldownSeconds = 300;
+        maxDeadlineSeconds = 300;
         maxNavTradeBps = 1000;
     }
 
@@ -165,6 +168,12 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         cooldownSeconds = cooldown;
         maxNavTradeBps = maxNavTrade;
         emit GuardrailsUpdated(cooldown, maxNavTrade);
+    }
+
+    function setMaxDeadlineSeconds(uint32 newMaxDeadlineSeconds) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(newMaxDeadlineSeconds > 0, "deadline");
+        maxDeadlineSeconds = newMaxDeadlineSeconds;
+        emit MaxDeadlineUpdated(newMaxDeadlineSeconds);
     }
 
     function pause() external onlyRole(PAUSER_ROLE) {
@@ -352,7 +361,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
                 swapItem.minAmountOut,
                 swapItem.path,
                 address(this),
-                block.timestamp + 1 hours
+                block.timestamp + uint256(maxDeadlineSeconds)
             );
 
             uint256 amountOut = amounts[amounts.length - 1];
@@ -371,7 +380,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         }
 
         uint256 len = assets.length;
-        uint256 deadline = block.timestamp + 1 hours;
+        uint256 deadline = block.timestamp + uint256(maxDeadlineSeconds);
 
         for (uint256 i = 0; i < len; i++) {
             AssetConfig memory asset = assets[i];
