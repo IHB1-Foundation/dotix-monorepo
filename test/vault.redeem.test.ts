@@ -203,4 +203,32 @@ describe("IndexVault redeem", function () {
     expect(await base.balanceOf(user.address)).to.equal(ethers.parseUnits("950", 18));
     expect(await asset.balanceOf(user.address)).to.equal(ethers.parseUnits("10", 18));
   });
+
+  it("emergency redeem returns underlying when vault base is fully deployed", async function () {
+    const { admin, user, base, asset, vault } = await deploySwapFixture();
+    const amount = ethers.parseUnits("100", 18);
+    const keeperRole = await vault.KEEPER_ROLE();
+
+    await vault.grantRole(keeperRole, admin.address);
+    await vault.setGuardrails(0, 10000);
+    await vault.connect(user).deposit(amount, 0);
+
+    await vault.connect(admin).rebalance([
+      {
+        tokenIn: await base.getAddress(),
+        tokenOut: await asset.getAddress(),
+        amountIn: amount,
+        minAmountOut: 0,
+        path: [await base.getAddress(), await asset.getAddress()],
+      },
+    ]);
+
+    expect(await base.balanceOf(await vault.getAddress())).to.equal(0);
+
+    await vault.connect(admin).pause();
+    await vault.connect(user).emergencyRedeemToUnderlying(amount);
+
+    expect(await base.balanceOf(user.address)).to.equal(ethers.parseUnits("900", 18));
+    expect(await asset.balanceOf(user.address)).to.be.gt(0);
+  });
 });

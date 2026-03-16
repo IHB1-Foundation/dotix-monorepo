@@ -72,6 +72,19 @@ describe("IndexVault deposit", function () {
     await expect(vault.connect(user1).deposit(amountIn, amountIn + 1n)).to.be.revertedWith("slippage");
   });
 
+  it("reverts when a tiny deposit rounds down to zero shares", async function () {
+    const { admin, user1, user2, base, vault } = await deployFixture();
+    const initialDeposit = ethers.parseUnits("100", 18);
+
+    await vault.connect(user1).deposit(initialDeposit, 0);
+    await base.mint(await vault.getAddress(), initialDeposit);
+
+    await expect(vault.connect(user2).deposit(1n, 0)).to.be.revertedWith("shares");
+    expect(await base.balanceOf(await vault.getAddress())).to.equal(initialDeposit * 2n);
+    expect(await base.balanceOf(user2.address)).to.equal(ethers.parseUnits("1000", 18));
+    expect(await base.balanceOf(admin.address)).to.equal(0);
+  });
+
   it("increases PDOT totalSupply", async function () {
     const { user1, pdot, vault } = await deployFixture();
     const amountIn = ethers.parseUnits("25", 18);
