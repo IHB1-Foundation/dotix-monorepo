@@ -13,6 +13,11 @@ import "./TokenRegistry.sol";
 interface IUniswapV2RouterLike {
     function factory() external view returns (address);
 
+    function getAmountsOut(uint256 amountIn, address[] calldata path)
+        external
+        view
+        returns (uint256[] memory amounts);
+
     function swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -383,10 +388,12 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
             address[] memory path = new address[](2);
             path[0] = asset.token;
             path[1] = baseAsset;
+            uint256 expectedOut = _quoteAmountOut(tokenBal, path);
+            uint256 minOut = (expectedOut * (10000 - uint256(asset.maxSlippageBps))) / 10000;
 
             IUniswapV2RouterLike(uniswapRouter).swapExactTokensForTokens(
                 tokenBal,
-                0,
+                minOut,
                 path,
                 address(this),
                 deadline
@@ -410,5 +417,10 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         }
 
         return assets[indexPlusOne - 1].enabled && registry.isEnabled(token);
+    }
+
+    function _quoteAmountOut(uint256 amountIn, address[] memory path) internal view returns (uint256) {
+        uint256[] memory amounts = IUniswapV2RouterLike(uniswapRouter).getAmountsOut(amountIn, path);
+        return amounts[amounts.length - 1];
     }
 }
