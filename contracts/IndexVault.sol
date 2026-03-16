@@ -193,7 +193,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         require(amountIn > 0, "amount");
 
         uint256 totalSupply = pdot.totalSupply();
-        uint256 nav = calcNAV();
+        uint256 nav = _calcNAV();
 
         IERC20(baseAsset).safeTransferFrom(msg.sender, address(this), amountIn);
 
@@ -222,14 +222,14 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         uint256 supplyBefore = pdot.totalSupply();
         require(supplyBefore > 0, "empty");
 
-        uint256 nav = calcNAV();
+        uint256 nav = _calcNAV();
         uint256 claim = (sharesIn * nav) / supplyBefore;
 
         pdot.burn(msg.sender, sharesIn);
 
         _ensureBaseLiquidity(claim);
 
-        uint256 realizedNav = calcNAV();
+        uint256 realizedNav = _calcNAV();
         uint256 realizedClaim = (sharesIn * realizedNav) / supplyBefore;
         uint256 balance = IERC20(baseAsset).balanceOf(address(this));
         baseOut = realizedClaim > balance ? balance : realizedClaim;
@@ -273,21 +273,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
     }
 
     function calcNAV() public view returns (uint256 nav) {
-        nav = IERC20(baseAsset).balanceOf(address(this));
-
-        uint256 len = assets.length;
-        for (uint256 i = 0; i < len; i++) {
-            AssetConfig memory asset = assets[i];
-            if (!asset.enabled) continue;
-
-            uint256 bal = IERC20(asset.token).balanceOf(address(this));
-            if (bal == 0) continue;
-
-            uint256 spotPrice = getSpotPrice(asset.token);
-            if (spotPrice == 0) continue;
-
-            nav += (bal * spotPrice) / 1e18;
-        }
+        return _calcNAV();
     }
 
     function getSpotPrice(address token) public view returns (uint256) {
@@ -317,23 +303,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
     }
 
     function calcMaxTradeSize(address token) public view returns (uint256) {
-        uint256 nav = calcNAV();
-        if (nav == 0) {
-            return 0;
-        }
-
-        uint16 effectiveBps = maxNavTradeBps;
-        if (token != baseAsset) {
-            uint256 indexPlusOne = _assetIndexPlusOne[token];
-            if (indexPlusOne != 0) {
-                uint16 perAsset = assets[indexPlusOne - 1].maxTradeBps;
-                if (perAsset > 0 && perAsset < effectiveBps) {
-                    effectiveBps = perAsset;
-                }
-            }
-        }
-
-        return (nav * effectiveBps) / 10000;
+        return _calcMaxTradeSize(_calcNAV(), token);
     }
 
     function rebalance(Swap[] calldata swaps)
@@ -344,7 +314,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
     {
         require(block.timestamp >= uint256(lastRebalanceAt) + uint256(cooldownSeconds), "cooldown");
 
-        uint256 navBefore = calcNAV();
+        uint256 navBefore = _calcNAV();
         uint256 len = swaps.length;
 
         for (uint256 i = 0; i < len; i++) {
@@ -354,7 +324,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
             require(swapItem.path.length >= 2, "path");
             require(swapItem.path[0] == swapItem.tokenIn, "path in");
             require(swapItem.path[swapItem.path.length - 1] == swapItem.tokenOut, "path out");
-            require(swapItem.amountIn <= calcMaxTradeSize(swapItem.tokenIn), "trade cap");
+            require(swapItem.amountIn <= _calcMaxTradeSize(navBefore, swapItem.tokenIn), "trade cap");
 
             IERC20(swapItem.tokenIn).forceApprove(uniswapRouter, swapItem.amountIn);
 
@@ -372,7 +342,26 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         }
 
         lastRebalanceAt = uint64(block.timestamp);
-        emit Rebalanced(lastRebalanceAt, navBefore, calcNAV());
+        uint256 navAfter = _calcNAV();
+        emit Rebalanced(lastRebalanceAt, navBefore, navAfter);
+    }
+
+    function _calcNAV() internal view returns (uint256 nav) {
+        nav = IERC20(baseAsset).balanceOf(address(this));
+
+        uint256 len = assets.length;
+        for (uint256 i = 0; i < len; i++) {
+            AssetConfig memory asset = assets[i];
+            if (!asset.enabled) continue;
+
+            uint256 bal = IERC20(asset.token).balanceOf(address(this));
+            if (bal == 0) continue;
+
+            uint256 spotPrice = getSpotPrice(asset.token);
+            if (spotPrice == 0) continue;
+
+            nav += (bal * spotPrice) / 1e18;
+        }
     }
 
     function _ensureBaseLiquidity(uint256 targetBase) internal {
@@ -433,5 +422,24 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
     function _quoteAmountOut(uint256 amountIn, address[] memory path) internal view returns (uint256) {
         uint256[] memory amounts = IUniswapV2RouterLike(uniswapRouter).getAmountsOut(amountIn, path);
         return amounts[amounts.length - 1];
+    }
+
+    function _calcMaxTradeSize(uint256 nav, address token) internal view returns (uint256) {
+        if (nav == 0) {
+            return 0;
+        }
+
+        uint16 effectiveBps = maxNavTradeBps;
+        if (token != baseAsset) {
+            uint256 indexPlusOne = _assetIndexPlusOne[token];
+            if (indexPlusOne != 0) {
+                uint16 perAsset = assets[indexPlusOne - 1].maxTradeBps;
+                if (perAsset > 0 && perAsset < effectiveBps) {
+                    effectiveBps = perAsset;
+                }
+            }
+        }
+
+        return (nav * effectiveBps) / 10000;
     }
 }
