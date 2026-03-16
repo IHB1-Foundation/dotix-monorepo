@@ -15,6 +15,7 @@ import { AssetSnapshot, PoolSnapshot, StrategyOutput, SwapPlan, VaultState } fro
 const MIN_TARGET_BPS = 200;
 const MAX_TARGET_BPS = 7000;
 const TRADE_CAP_HEADROOM_BPS = 9900;
+const PRICE_SCALE = 10n ** 18n;
 
 function bigintMin(a: bigint, b: bigint): bigint {
   return a < b ? a : b;
@@ -24,6 +25,45 @@ function toNumber(value: unknown): number {
   if (typeof value === "number") return value;
   if (typeof value === "bigint") return Number(value);
   return Number(value ?? 0);
+}
+
+function decimalsScale(decimals: number): bigint {
+  return 10n ** BigInt(decimals);
+}
+
+export function convertSpotPriceToBaseValue(
+  balance: bigint,
+  spotPriceInBase: bigint,
+  tokenDecimals: number
+): bigint {
+  const tokenScale = decimalsScale(tokenDecimals);
+  const pricePerWholeTokenInBase = (spotPriceInBase * tokenScale) / PRICE_SCALE;
+  return (balance * pricePerWholeTokenInBase) / tokenScale;
+}
+
+export function convertBaseValueToTokenAmount(
+  amountInBase: bigint,
+  spotPriceInBase: bigint,
+  tokenDecimals: number
+): bigint {
+  const tokenScale = decimalsScale(tokenDecimals);
+  const pricePerWholeTokenInBase = (spotPriceInBase * tokenScale) / PRICE_SCALE;
+
+  if (pricePerWholeTokenInBase === 0n) {
+    return 0n;
+  }
+
+  return (amountInBase * tokenScale) / pricePerWholeTokenInBase;
+}
+
+async function readBaseAssetMeta(baseAsset: string, provider: JsonRpcProvider): Promise<{ symbol: string; decimals: number }> {
+  const baseToken = new Contract(baseAsset, erc20Artifact.abi, provider);
+  const [symbolResult, decimalsResult] = await Promise.allSettled([baseToken.symbol(), baseToken.decimals()]);
+
+  return {
+    symbol: symbolResult.status === "fulfilled" ? String(symbolResult.value) : "BASE",
+    decimals: decimalsResult.status === "fulfilled" ? Number(decimalsResult.value) : 18,
+  };
 }
 
 async function readAssetSnapshot(
@@ -48,6 +88,8 @@ async function readAssetSnapshot(
     pairFactory.getPair(baseAsset, tokenAddress),
   ]);
 
+  const tokenDecimals = Number(meta.decimals);
+
   let reserveToken = 0n;
   let reserveBase = 0n;
 
@@ -64,13 +106,13 @@ async function readAssetSnapshot(
     }
   }
 
-  const valueInBase = ((balance as bigint) * (spotPriceInBase as bigint)) / 10n ** 18n;
+  const valueInBase = convertSpotPriceToBaseValue(balance as bigint, spotPriceInBase as bigint, tokenDecimals);
   const currentWeightBps = nav > 0n ? Number((valueInBase * 10_000n) / nav) : 0;
 
   const asset: AssetSnapshot = {
     address: tokenAddress,
     symbol: meta.symbol,
-    decimals: Number(meta.decimals),
+    decimals: tokenDecimals,
     balance: balance as bigint,
     currentWeightBps,
     targetBps,
@@ -107,6 +149,7 @@ export async function readVaultState(vaultAddress: string, provider: JsonRpcProv
   const router = new Contract(routerAddress, routerArtifact.abi, provider);
   const registry = new Contract(registryAddress, registryArtifact.abi, provider);
   const pdot = new Contract(pdotAddress, [{"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}], provider);
+  const baseMeta = await readBaseAssetMeta(baseAsset, provider);
 
   const [assetsLength, totalSupply, factoryAddress] = await Promise.all([
     vault.assetsLength(),
@@ -141,6 +184,8 @@ export async function readVaultState(vaultAddress: string, provider: JsonRpcProv
   return {
     vault: vaultAddress,
     baseAsset,
+    baseAssetSymbol: baseMeta.symbol,
+    baseAssetDecimals: baseMeta.decimals,
     nav: nav as bigint,
     totalSupply: totalSupply as bigint,
     assets,
@@ -229,7 +274,7 @@ export function computeSwapPlan(state: VaultState, newTargets: Record<string, nu
       const price = state.pools.find((pool) => pool.token.toLowerCase() === asset.address.toLowerCase())?.spotPriceInBase ?? 0n;
       if (price === 0n) continue;
 
-      const rawOut = (amountIn * 10n ** 18n) / price;
+      const rawOut = convertBaseValueToTokenAmount(amountIn, price, asset.decimals);
       const minOut = (rawOut * (10_000n - BigInt(expectedSlippageBps))) / 10_000n;
 
       swaps.push({

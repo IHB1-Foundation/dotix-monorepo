@@ -1,6 +1,6 @@
 import { StrategyOutput, VaultState } from "./types";
 
-function formatWei(amount: bigint, decimals = 18): string {
+function formatAmount(amount: bigint, decimals: number): string {
   const divisor = 10n ** BigInt(decimals);
   const whole = amount / divisor;
   const fraction = amount % divisor;
@@ -52,12 +52,16 @@ export function explainStrategy(state: VaultState, output: StrategyOutput): stri
     const fromAsset = state.assets.find((asset) => asset.address.toLowerCase() === swap.tokenIn.toLowerCase());
     const toAsset = state.assets.find((asset) => asset.address.toLowerCase() === swap.tokenOut.toLowerCase());
 
-    const fromSymbol = fromAsset?.symbol ?? (swap.tokenIn.toLowerCase() === state.baseAsset.toLowerCase() ? "BASE" : "UNKNOWN");
-    const toSymbol = toAsset?.symbol ?? (swap.tokenOut.toLowerCase() === state.baseAsset.toLowerCase() ? "BASE" : "UNKNOWN");
+    const fromIsBase = swap.tokenIn.toLowerCase() === state.baseAsset.toLowerCase();
+    const toIsBase = swap.tokenOut.toLowerCase() === state.baseAsset.toLowerCase();
+    const fromSymbol = fromAsset?.symbol ?? (fromIsBase ? state.baseAssetSymbol : "UNKNOWN");
+    const toSymbol = toAsset?.symbol ?? (toIsBase ? state.baseAssetSymbol : "UNKNOWN");
+    const fromDecimals = fromAsset?.decimals ?? (fromIsBase ? state.baseAssetDecimals : 18);
+    const toDecimals = toAsset?.decimals ?? (toIsBase ? state.baseAssetDecimals : 18);
     const maxSlip = fromAsset?.maxSlippageBps ?? swap.expectedSlippageBps;
 
     lines.push(
-      `Expected swap: ${formatWei(swap.amountIn)} ${fromSymbol} -> at least ${formatWei(swap.minAmountOut)} ${toSymbol} (${formatBps(swap.expectedSlippageBps)} expected, ${formatBps(maxSlip)} max).`
+      `Expected swap: ${formatAmount(swap.amountIn, fromDecimals)} ${fromSymbol} -> at least ${formatAmount(swap.minAmountOut, toDecimals)} ${toSymbol} (${formatBps(swap.expectedSlippageBps)} expected, ${formatBps(maxSlip)} max).`
     );
   }
 

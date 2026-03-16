@@ -19,6 +19,8 @@ export interface PoolSnapshot {
 export interface VaultState {
   vault: string;
   baseAsset: string;
+  baseAssetSymbol: string;
+  baseAssetDecimals: number;
   nav: bigint;
   totalSupply: bigint;
   assets: AssetSnapshot[];
