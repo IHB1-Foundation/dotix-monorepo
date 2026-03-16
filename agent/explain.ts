@@ -18,6 +18,18 @@ function formatSeconds(seconds: number): string {
   return `${mins}m ${secs}s`;
 }
 
+function formatRatio(numerator: bigint, denominator: bigint, decimals = 2): string {
+  if (denominator === 0n) {
+    return `0.${"0".repeat(decimals)}`;
+  }
+
+  const scale = 10n ** BigInt(decimals);
+  const scaled = (numerator * scale) / denominator;
+  const whole = scaled / scale;
+  const fraction = (scaled % scale).toString().padStart(decimals, "0");
+  return `${whole.toString()}.${fraction}`;
+}
+
 export function explainStrategy(state: VaultState, output: StrategyOutput): string[] {
   const lines: string[] = [];
 
@@ -35,11 +47,10 @@ export function explainStrategy(state: VaultState, output: StrategyOutput): stri
   if (sortedPools.length >= 2) {
     const top = sortedPools[0];
     const second = sortedPools[1];
-    const multiplier = second.reserveBase === 0n ? 0 : Number((top.reserveBase * 100n) / second.reserveBase) / 100;
     const topTarget = output.newTargetBps[top.token] ?? 0;
     const secondTarget = output.newTargetBps[second.token] ?? 0;
     lines.push(
-      `Pool depth comparison: top asset has ${multiplier.toFixed(2)}x reserveBase vs second; targets now ${formatBps(topTarget)} and ${formatBps(secondTarget)}.`
+      `Pool depth comparison: top asset has ${formatRatio(top.reserveBase, second.reserveBase)}x reserveBase vs second; targets now ${formatBps(topTarget)} and ${formatBps(secondTarget)}.`
     );
   }
 
