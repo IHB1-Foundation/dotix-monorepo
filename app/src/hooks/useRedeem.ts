@@ -5,6 +5,7 @@ import { parseUnits } from "viem";
 import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 import { INDEX_VAULT_ABI, PDOT_ABI, PDOT_ADDRESS, VAULT_ADDRESS } from "@/lib/contracts";
+import { POLL_FAST } from "@/lib/constants";
 import { mapContractError } from "@/lib/errors";
 
 export function useRedeem(amount: string, slippagePct: number) {
@@ -35,7 +36,7 @@ export function useRedeem(amount: string, slippagePct: number) {
     args: address ? [address] : undefined,
     query: {
       enabled: Boolean(address),
-      refetchInterval: 6_000,
+      refetchInterval: POLL_FAST,
     },
   });
 

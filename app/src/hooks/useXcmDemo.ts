@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useAccount, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
 import { XCM_DEMO_ABI, XCM_DEMO_ADDRESS } from "@/lib/contracts";
+import { POLL_MEDIUM } from "@/lib/constants";
 import { mapContractError } from "@/lib/errors";
 
 export type WeighResult = {
@@ -29,7 +30,7 @@ export function useXcmDemo(messageHex: `0x${string}`) {
     args: keeperRoleRead.data && address ? [keeperRoleRead.data as `0x${string}`, address] : undefined,
     query: {
       enabled: Boolean(keeperRoleRead.data && address),
-      refetchInterval: 8_000,
+      refetchInterval: POLL_MEDIUM,
     },
   });
 

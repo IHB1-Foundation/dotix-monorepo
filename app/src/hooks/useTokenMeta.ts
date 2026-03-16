@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useReadContracts } from "wagmi";
 
 import { REGISTRY_ABI, REGISTRY_ADDRESS } from "@/lib/contracts";
+import { POLL_MEDIUM } from "@/lib/constants";
 
 export type TokenMeta = {
   name: string;
@@ -27,7 +28,7 @@ export function useTokenMeta(tokens: string[]) {
     })),
     query: {
       enabled: validTokens.length > 0,
-      refetchInterval: 10_000,
+      refetchInterval: POLL_MEDIUM,
     },
   });
 

@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useAccount, useReadContracts } from "wagmi";
 
 import { INDEX_VAULT_ABI, VAULT_ADDRESS } from "@/lib/contracts";
+import { POLL_MEDIUM } from "@/lib/constants";
 
 export function useVaultRoles() {
   const { address } = useAccount();
@@ -48,7 +49,7 @@ export function useVaultRoles() {
         : [],
     query: {
       enabled: Boolean(address && strategistRole && keeperRole),
-      refetchInterval: 8_000,
+      refetchInterval: POLL_MEDIUM,
     },
   });
 

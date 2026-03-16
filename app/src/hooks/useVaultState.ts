@@ -5,6 +5,7 @@ import { erc20Abi } from "viem";
 import { useReadContracts } from "wagmi";
 
 import { INDEX_VAULT_ABI, PDOT_ABI, PDOT_ADDRESS, VAULT_ADDRESS } from "@/lib/contracts";
+import { POLL_FAST } from "@/lib/constants";
 
 export type VaultAssetState = {
   token: string;
@@ -66,7 +67,7 @@ export function useVaultState(): VaultState {
   const baseReads = useReadContracts({
     contracts: baseReadContracts,
     query: {
-      refetchInterval: 6_000,
+      refetchInterval: POLL_FAST,
     },
   });
 
@@ -92,7 +93,7 @@ export function useVaultState(): VaultState {
     contracts: assetsConfigContracts,
     query: {
       enabled: assetsLength > 0,
-      refetchInterval: 6_000,
+      refetchInterval: POLL_FAST,
     },
   });
 
@@ -146,7 +147,7 @@ export function useVaultState(): VaultState {
     contracts: balancePriceContracts,
     query: {
       enabled: assetsConfig.length > 0,
-      refetchInterval: 6_000,
+      refetchInterval: POLL_FAST,
     },
   });
 
