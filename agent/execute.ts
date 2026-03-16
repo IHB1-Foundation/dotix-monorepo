@@ -45,9 +45,9 @@ function getVaultAddress(): string {
 }
 
 function getKeeperKey(): string {
-  const key = process.env.KEEPER_PRIVATE_KEY ?? process.env.PRIVATE_KEY;
+  const key = process.env.KEEPER_PRIVATE_KEY;
   if (!key) {
-    throw new Error("KEEPER_PRIVATE_KEY (or PRIVATE_KEY) is required");
+    throw new Error("KEEPER_PRIVATE_KEY is required");
   }
 
   return key;
