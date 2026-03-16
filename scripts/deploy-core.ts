@@ -1,8 +1,11 @@
 import { ethers, network } from "hardhat";
-import fs from "node:fs";
-import path from "node:path";
-
-const DEPLOYMENTS_PATH = path.join(process.cwd(), "deployments", "testnet.json");
+import {
+  DEPLOYMENTS_PATH,
+  explorerAddressUrl,
+  explorerTxUrl,
+  loadDeployments,
+  saveDeployments,
+} from "../shared/config";
 
 type Deployments = {
   uniswap?: {
@@ -23,26 +26,6 @@ type Deployments = {
   };
   [key: string]: unknown;
 };
-
-function loadDeployments(): Deployments {
-  try {
-    return JSON.parse(fs.readFileSync(DEPLOYMENTS_PATH, "utf8")) as Deployments;
-  } catch {
-    return {};
-  }
-}
-
-function saveDeployments(next: Deployments): void {
-  fs.writeFileSync(DEPLOYMENTS_PATH, `${JSON.stringify(next, null, 2)}\n`, "utf8");
-}
-
-function txLink(txHash: string): string {
-  return `https://blockscout-testnet.polkadot.io/tx/${txHash}`;
-}
-
-function addressLink(address: string): string {
-  return `https://blockscout-testnet.polkadot.io/address/${address}`;
-}
 
 async function resolveKeeperAddress(defaultAddress: string): Promise<string> {
   if (process.env.KEEPER_ADDRESS) {
@@ -155,25 +138,25 @@ async function main(): Promise<void> {
 
   if (pdotTx) {
     console.log(`PDOT tx: ${pdotTx.hash}`);
-    console.log(`PDOT tx link: ${txLink(pdotTx.hash)}`);
+    console.log(`PDOT tx link: ${explorerTxUrl(pdotTx.hash)}`);
   }
   if (registryTx) {
     console.log(`Registry tx: ${registryTx.hash}`);
-    console.log(`Registry tx link: ${txLink(registryTx.hash)}`);
+    console.log(`Registry tx link: ${explorerTxUrl(registryTx.hash)}`);
   }
   if (vaultTx) {
     console.log(`Vault tx: ${vaultTx.hash}`);
-    console.log(`Vault tx link: ${txLink(vaultTx.hash)}`);
+    console.log(`Vault tx link: ${explorerTxUrl(vaultTx.hash)}`);
   }
   if (xcmTx) {
     console.log(`XcmDemo tx: ${xcmTx.hash}`);
-    console.log(`XcmDemo tx link: ${txLink(xcmTx.hash)}`);
+    console.log(`XcmDemo tx link: ${explorerTxUrl(xcmTx.hash)}`);
   }
 
-  console.log(`PDOT explorer: ${addressLink(await pdot.getAddress())}`);
-  console.log(`Registry explorer: ${addressLink(await registry.getAddress())}`);
-  console.log(`Vault explorer: ${addressLink(await vault.getAddress())}`);
-  console.log(`XcmDemo explorer: ${addressLink(await xcmDemo.getAddress())}`);
+  console.log(`PDOT explorer: ${explorerAddressUrl(await pdot.getAddress())}`);
+  console.log(`Registry explorer: ${explorerAddressUrl(await registry.getAddress())}`);
+  console.log(`Vault explorer: ${explorerAddressUrl(await vault.getAddress())}`);
+  console.log(`XcmDemo explorer: ${explorerAddressUrl(await xcmDemo.getAddress())}`);
   console.log(`\nUpdated ${DEPLOYMENTS_PATH}`);
 }
 

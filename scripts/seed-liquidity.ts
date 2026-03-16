@@ -1,8 +1,6 @@
 import { ethers, network } from "hardhat";
-import fs from "node:fs";
-import path from "node:path";
+import { DEPLOYMENTS_PATH, loadDeployments, saveDeployments } from "../shared/config";
 
-const DEPLOYMENTS_PATH = path.join(process.cwd(), "deployments", "testnet.json");
 const MAX_UINT256 = (1n << 256n) - 1n;
 const DECIMALS = 18;
 
@@ -22,19 +20,6 @@ interface Deployments {
     baseAsset_assetB: string;
   };
   [key: string]: unknown;
-}
-
-function loadDeployments(): Deployments {
-  try {
-    const raw = fs.readFileSync(DEPLOYMENTS_PATH, "utf8");
-    return JSON.parse(raw) as Deployments;
-  } catch {
-    return {};
-  }
-}
-
-function saveDeployments(next: Deployments): void {
-  fs.writeFileSync(DEPLOYMENTS_PATH, `${JSON.stringify(next, null, 2)}\n`, "utf8");
 }
 
 function asAmount(n: string): bigint {

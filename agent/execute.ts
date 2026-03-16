@@ -6,6 +6,7 @@ import * as dotenv from "dotenv";
 
 import vaultArtifact from "../artifacts/contracts/IndexVault.sol/IndexVault.json";
 import deployments from "../deployments/testnet.json";
+import { explorerTxUrl, getRpcUrl } from "../shared/config";
 
 import { explainStrategy } from "./explain";
 import { acquireNonceLock } from "./nonce-lock";
@@ -41,10 +42,6 @@ function getVaultAddress(): string {
   }
 
   return addr;
-}
-
-function getRpcUrl(): string {
-  return process.env.RPC_URL ?? "http://127.0.0.1:8545";
 }
 
 function getKeeperKey(): string {
@@ -138,7 +135,7 @@ async function main(): Promise<void> {
     const nonce = await provider.getTransactionCount(keeper.address, "pending");
     const tx = await vault.rebalance(output.swaps, { nonce });
     console.log(`tx hash: ${tx.hash}`);
-    console.log(`Blockscout: https://blockscout-testnet.polkadot.io/tx/${tx.hash}`);
+    console.log(`Blockscout: ${explorerTxUrl(tx.hash)}`);
 
     const receipt = await tx.wait();
     const navAfter = await vault.calcNAV();

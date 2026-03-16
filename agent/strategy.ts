@@ -9,6 +9,7 @@ import routerArtifact from "../artifacts/contracts/uniswap/UniswapV2Router02.sol
 import pairArtifact from "../artifacts/contracts/uniswap/UniswapV2Pair.sol/UniswapV2Pair.json";
 import erc20Artifact from "../artifacts/contracts/test/MockERC20.sol/MockERC20.json";
 import deployments from "../deployments/testnet.json";
+import { getRpcUrl } from "../shared/config";
 
 import { AssetSnapshot, PoolSnapshot, StrategyOutput, SwapPlan, VaultState } from "./types";
 
@@ -332,7 +333,7 @@ async function runCli(): Promise<void> {
     return;
   }
 
-  const rpcUrl = parseArg("--rpc") ?? process.env.RPC_URL ?? "http://127.0.0.1:8545";
+  const rpcUrl = parseArg("--rpc") ?? getRpcUrl();
   const vaultAddress = parseArg("--vault") ?? deployments.core?.indexVault;
 
   if (!vaultAddress) {

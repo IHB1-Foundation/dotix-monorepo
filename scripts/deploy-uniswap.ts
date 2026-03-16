@@ -1,8 +1,11 @@
 import { ethers, network } from "hardhat";
-import fs from "node:fs";
-import path from "node:path";
-
-const DEPLOYMENTS_PATH = path.join(process.cwd(), "deployments", "testnet.json");
+import {
+  DEPLOYMENTS_PATH,
+  explorerAddressUrl,
+  explorerTxUrl,
+  loadDeployments,
+  saveDeployments,
+} from "../shared/config";
 
 type Deployments = {
   uniswap?: {
@@ -12,29 +15,6 @@ type Deployments = {
   };
   [key: string]: unknown;
 };
-
-function loadDeployments(): Deployments {
-  try {
-    const raw = fs.readFileSync(DEPLOYMENTS_PATH, "utf8");
-    return JSON.parse(raw) as Deployments;
-  } catch {
-    return {};
-  }
-}
-
-function saveDeployments(next: Deployments): void {
-  fs.writeFileSync(DEPLOYMENTS_PATH, `${JSON.stringify(next, null, 2)}\n`, "utf8");
-}
-
-function explorerLink(address: string): string {
-  const base = "https://blockscout-testnet.polkadot.io/address";
-  return `${base}/${address}`;
-}
-
-function txLink(txHash: string): string {
-  const base = "https://blockscout-testnet.polkadot.io/tx";
-  return `${base}/${txHash}`;
-}
 
 async function main(): Promise<void> {
   const [deployer] = await ethers.getSigners();
@@ -75,20 +55,20 @@ async function main(): Promise<void> {
 
   if (wethTx) {
     console.log(`WETH tx:    ${wethTx.hash}`);
-    console.log(`WETH tx link: ${txLink(wethTx.hash)}`);
+    console.log(`WETH tx link: ${explorerTxUrl(wethTx.hash)}`);
   }
   if (factoryTx) {
     console.log(`Factory tx: ${factoryTx.hash}`);
-    console.log(`Factory tx link: ${txLink(factoryTx.hash)}`);
+    console.log(`Factory tx link: ${explorerTxUrl(factoryTx.hash)}`);
   }
   if (routerTx) {
     console.log(`Router tx:  ${routerTx.hash}`);
-    console.log(`Router tx link: ${txLink(routerTx.hash)}`);
+    console.log(`Router tx link: ${explorerTxUrl(routerTx.hash)}`);
   }
 
-  console.log(`WETH explorer:    ${explorerLink(wethAddress)}`);
-  console.log(`Factory explorer: ${explorerLink(factoryAddress)}`);
-  console.log(`Router explorer:  ${explorerLink(routerAddress)}`);
+  console.log(`WETH explorer:    ${explorerAddressUrl(wethAddress)}`);
+  console.log(`Factory explorer: ${explorerAddressUrl(factoryAddress)}`);
+  console.log(`Router explorer:  ${explorerAddressUrl(routerAddress)}`);
   console.log(`\nUpdated ${DEPLOYMENTS_PATH}`);
 }
 

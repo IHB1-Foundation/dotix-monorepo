@@ -2,6 +2,8 @@ import "@nomicfoundation/hardhat-toolbox";
 import * as dotenv from "dotenv";
 import { HardhatUserConfig } from "hardhat/config";
 
+import { getRpcUrl } from "./shared/config";
+
 dotenv.config();
 
 const accounts = process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [];
@@ -44,7 +46,7 @@ const config: HardhatUserConfig = {
     },
     polkadotHub: {
       chainId: 420420417,
-      url: process.env.RPC_URL || "https://eth-rpc-testnet.polkadot.io/",
+      url: getRpcUrl(),
       accounts,
     },
   },

@@ -4,6 +4,7 @@ import { JsonRpcProvider } from "ethers";
 import * as dotenv from "dotenv";
 
 import deployments from "../deployments/testnet.json";
+import { getRpcUrl } from "../shared/config";
 
 import { explainStrategy } from "./explain";
 import { isAuthorizedRequest } from "./plan-auth";
@@ -13,10 +14,6 @@ dotenv.config();
 
 function jsonWithBigInt(value: unknown): string {
   return JSON.stringify(value, (_, v) => (typeof v === "bigint" ? v.toString() : v), 2);
-}
-
-function getRpcUrl(): string {
-  return process.env.RPC_URL ?? "https://eth-rpc-testnet.polkadot.io/";
 }
 
 function getVaultAddress(): string {
