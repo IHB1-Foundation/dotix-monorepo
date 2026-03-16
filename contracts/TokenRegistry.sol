@@ -56,4 +56,25 @@ contract TokenRegistry is AccessControl {
     function allTokens() external view returns (address[] memory) {
         return _tokenList;
     }
+
+    function tokenCount() external view returns (uint256) {
+        return _tokenList.length;
+    }
+
+    function getTokens(uint256 offset, uint256 limit) external view returns (address[] memory page) {
+        uint256 length = _tokenList.length;
+        if (offset >= length || limit == 0) {
+            return new address[](0);
+        }
+
+        uint256 end = offset + limit;
+        if (end > length) {
+            end = length;
+        }
+
+        page = new address[](end - offset);
+        for (uint256 i = offset; i < end; i++) {
+            page[i - offset] = _tokenList[i];
+        }
+    }
 }

@@ -51,6 +51,23 @@ describe("TokenRegistry", function () {
     expect(list).to.deep.equal([token1, token2]);
   });
 
+  it("supports paginated token reads", async function () {
+    const { registry, admin } = await deployFixture();
+    const tokens = [
+      "0x0000000000000000000000000000000000001010",
+      "0x0000000000000000000000000000000000001011",
+      "0x0000000000000000000000000000000000001012",
+    ];
+
+    for (const token of tokens) {
+      await registry.connect(admin).setTokenMeta(token, `Token-${token.slice(-2)}`, "TOK", 18, true);
+    }
+
+    expect(await registry.tokenCount()).to.equal(3);
+    expect(await registry.getTokens(1, 2)).to.deep.equal(tokens.slice(1));
+    expect(await registry.getTokens(10, 2)).to.deep.equal([]);
+  });
+
   it("unregistered token is disabled", async function () {
     const { registry } = await deployFixture();
     const unknown = "0x0000000000000000000000000000000000009999";
