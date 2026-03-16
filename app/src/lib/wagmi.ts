@@ -2,8 +2,10 @@ import { defineChain, http } from "viem";
 import { createConfig } from "wagmi";
 import { injected } from "wagmi/connectors";
 
+import { APP_CHAIN_ID, APP_EXPLORER_URL, APP_RPC_URL } from "@/lib/network";
+
 export const polkadotHub = defineChain({
-  id: 420420417,
+  id: APP_CHAIN_ID,
   name: "Polkadot Hub TestNet",
   nativeCurrency: {
     name: "PAS",
@@ -12,16 +14,16 @@ export const polkadotHub = defineChain({
   },
   rpcUrls: {
     default: {
-      http: ["https://eth-rpc-testnet.polkadot.io/"],
+      http: [APP_RPC_URL],
     },
     public: {
-      http: ["https://services.polkadothub-rpc.com/testnet/"],
+      http: [APP_RPC_URL],
     },
   },
   blockExplorers: {
     default: {
       name: "Blockscout",
-      url: "https://blockscout-testnet.polkadot.io/",
+      url: APP_EXPLORER_URL,
     },
   },
   testnet: true,

@@ -1,5 +1,7 @@
 "use client";
 
+import { explorerTxUrl } from "@/lib/network";
+
 type Props = {
   hash?: string;
   isPending?: boolean;
@@ -12,7 +14,7 @@ export function TxStatus({ hash, isPending, isConfirmed, error }: Props) {
     return null;
   }
 
-  const link = hash ? `https://blockscout-testnet.polkadot.io/tx/${hash}` : undefined;
+  const link = hash ? explorerTxUrl(hash) : undefined;
 
   return (
     <div className="mt-2 text-sm">
