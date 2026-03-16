@@ -148,6 +148,26 @@ describe("IndexVault redeem", function () {
     expect(await asset.balanceOf(await vault.getAddress())).to.equal(0);
   });
 
+  it("caps redeem payouts to post-swap realized NAV", async function () {
+    const { user, base, asset, pdot, vault } = await deploySwapFixture();
+    const depositAmount = ethers.parseUnits("100", 18);
+    const donatedAsset = ethers.parseUnits("1000", 18);
+    const sharesIn = ethers.parseUnits("50", 18);
+
+    await vault.connect(user).deposit(depositAmount, 0);
+    await asset.mint(await vault.getAddress(), donatedAsset);
+
+    const supplyBefore = await pdot.totalSupply();
+    const navBefore = await vault.calcNAV();
+    const claimBefore = (sharesIn * navBefore) / supplyBefore;
+
+    await vault.connect(user).redeem(sharesIn, 0);
+
+    const userBaseBalance = await base.balanceOf(user.address);
+    const preRedeemBaseBalance = ethers.parseUnits("900", 18);
+    expect(userBaseBalance).to.be.lt(preRedeemBaseBalance + claimBefore);
+  });
+
   it("reverts on minBaseOut slippage", async function () {
     const { user, vault } = await deployFixture();
     const amount = ethers.parseUnits("10", 18);

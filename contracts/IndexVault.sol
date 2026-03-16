@@ -219,18 +219,20 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
     {
         require(sharesIn > 0, "shares");
 
-        uint256 totalSupply = pdot.totalSupply();
-        require(totalSupply > 0, "empty");
+        uint256 supplyBefore = pdot.totalSupply();
+        require(supplyBefore > 0, "empty");
 
         uint256 nav = calcNAV();
-        uint256 claim = (sharesIn * nav) / totalSupply;
+        uint256 claim = (sharesIn * nav) / supplyBefore;
 
         pdot.burn(msg.sender, sharesIn);
 
         _ensureBaseLiquidity(claim);
 
+        uint256 realizedNav = calcNAV();
+        uint256 realizedClaim = (sharesIn * realizedNav) / supplyBefore;
         uint256 balance = IERC20(baseAsset).balanceOf(address(this));
-        baseOut = claim > balance ? balance : claim;
+        baseOut = realizedClaim > balance ? balance : realizedClaim;
 
         require(baseOut >= minBaseOut, "slippage");
 
