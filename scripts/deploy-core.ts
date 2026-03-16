@@ -27,7 +27,7 @@ type Deployments = {
   [key: string]: unknown;
 };
 
-async function resolveKeeperAddress(defaultAddress: string): Promise<string> {
+async function resolveKeeperAddress(): Promise<string> {
   if (process.env.KEEPER_ADDRESS) {
     return process.env.KEEPER_ADDRESS;
   }
@@ -36,7 +36,7 @@ async function resolveKeeperAddress(defaultAddress: string): Promise<string> {
     return new ethers.Wallet(process.env.KEEPER_PRIVATE_KEY).address;
   }
 
-  return defaultAddress;
+  throw new Error("KEEPER_ADDRESS or KEEPER_PRIVATE_KEY required");
 }
 
 async function main(): Promise<void> {
@@ -52,7 +52,7 @@ async function main(): Promise<void> {
   }
 
   const [deployer] = await ethers.getSigners();
-  const keeperAddress = await resolveKeeperAddress(deployer.address);
+  const keeperAddress = await resolveKeeperAddress();
 
   console.log(`Network: ${network.name}`);
   console.log(`Deployer: ${deployer.address}`);
