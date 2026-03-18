@@ -3,6 +3,7 @@
 import { formatUnits } from "viem";
 import { useAccount } from "wagmi";
 
+import { AllocationChart, allocationColorByIndex } from "@/components/AllocationChart";
 import { AssetRow } from "@/components/AssetRow";
 import { ConnectCTA } from "@/components/ConnectCTA";
 import { PageHeader } from "@/components/PageHeader";
@@ -67,6 +68,11 @@ export default function DashboardPage() {
   const vault = useVaultState();
   const tokens = vault.assets.map((asset) => asset.token);
   const { byToken } = useTokenMeta(tokens);
+  const chartItems = vault.assets.map((asset, index) => ({
+    label: byToken[asset.token]?.symbol ?? `${asset.token.slice(0, 6)}...${asset.token.slice(-4)}`,
+    value: Number(formatUnits(asset.valueInBase, 18)),
+    color: allocationColorByIndex(index),
+  }));
 
   if (!isConnected) {
     return <ConnectCTA />;
@@ -78,6 +84,9 @@ export default function DashboardPage() {
 
   return (
     <section className="space-y-4">
+      <PageHeader title="Dashboard" description="Vault overview and asset allocation." />
+      <AllocationChart items={chartItems} totalLabel={formatMetric(vault.nav)} />
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <article className="card p-4 transition-transform duration-200 hover:scale-[1.01]">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">NAV</h2>
