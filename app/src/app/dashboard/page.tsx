@@ -19,6 +19,21 @@ import { POLL_FAST } from "@/lib/constants";
 import { Tooltip } from "@/components/Tooltip";
 import { useCountUp } from "@/hooks/useCountUp";
 import { formatToken, decimalFormatter } from "@/lib/format";
+import { useNAVHistory } from "@/hooks/useNAVHistory";
+
+function DeltaBadge({ deltaPct }: { deltaPct: number }) {
+  const isUp = deltaPct >= 0;
+  return (
+    <span className={`inline-flex items-center gap-0.5 text-xs font-semibold ${isUp ? "text-mint" : "text-error"}`}>
+      {isUp ? (
+        <svg viewBox="0 0 16 16" className="h-3 w-3" fill="currentColor"><path d="M8 4l4 6H4z"/></svg>
+      ) : (
+        <svg viewBox="0 0 16 16" className="h-3 w-3" fill="currentColor"><path d="M8 12l4-6H4z"/></svg>
+      )}
+      {isUp ? "+" : ""}{deltaPct.toFixed(2)}%
+    </span>
+  );
+}
 
 function DashboardSkeleton() {
   return (
@@ -99,6 +114,23 @@ export default function DashboardPage() {
   const priceAnimated = useCountUp(priceNum);
   const supplyAnimated = useCountUp(supplyNum);
 
+  const { points: navPoints } = useNAVHistory("24h");
+  const navDeltaPct = useMemo(() => {
+    if (navPoints.length < 1 || navNum === 0) return null;
+    const oldest = navPoints[0].nav;
+    if (oldest === 0) return null;
+    return ((navNum - oldest) / oldest) * 100;
+  }, [navPoints, navNum]);
+
+  const priceDeltaPct = useMemo(() => {
+    if (navPoints.length < 1 || priceNum === 0) return null;
+    const oldest = navPoints[0].nav;
+    const oldestSupply = supplyNum; // supply doesn't change drastically; use for reference
+    if (oldest === 0 || oldestSupply === 0) return null;
+    // price = nav / supply; approximate delta using same NAV history
+    return ((priceNum - oldest / oldestSupply) / (oldest / oldestSupply)) * 100;
+  }, [navPoints, priceNum, supplyNum]);
+
   if (vault.isLoading) {
     return <DashboardSkeleton />;
   }
@@ -148,7 +180,10 @@ export default function DashboardPage() {
             </h2>
           </div>
           <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{decimalFormatter.format(navAnimated)}</p>
-          <p className="mt-1 text-xs text-muted">Total vault assets under management (PAS)</p>
+          <div className="mt-1 flex items-center gap-2">
+            <p className="text-xs text-muted">Total vault AUM (PAS)</p>
+            {navDeltaPct !== null && <DeltaBadge deltaPct={navDeltaPct} />}
+          </div>
         </Card>
         <Card variant="elevated" as="article" className={`stagger-item ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <div className="flex items-center gap-2">
@@ -158,7 +193,10 @@ export default function DashboardPage() {
             <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500">PDOT Price</h2>
           </div>
           <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{decimalFormatter.format(priceAnimated)}</p>
-          <p className="mt-1 text-xs text-muted">Current price per PDOT share (PAS)</p>
+          <div className="mt-1 flex items-center gap-2">
+            <p className="text-xs text-muted">Per PDOT share (PAS)</p>
+            {priceDeltaPct !== null && <DeltaBadge deltaPct={priceDeltaPct} />}
+          </div>
         </Card>
         <Card variant="elevated" as="article" className={`stagger-item ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <div className="flex items-center gap-2">
