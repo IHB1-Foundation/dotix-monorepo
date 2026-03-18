@@ -47,8 +47,6 @@ const config: Config = {
         muted: "#64748b",
       },
       backgroundImage: {
-        "dotix-gradient": "radial-gradient(circle at top left, #ddf4ff 0%, #f7fbff 45%, #ffffff 100%)",
-        "dotix-gradient-dark": "radial-gradient(circle at top left, #151520 0%, #0d0d16 45%, #0a0a12 100%)",
         "brand-gradient": "linear-gradient(135deg, #0f7ad8 0%, #20c997 100%)",
       },
       fontFamily: {

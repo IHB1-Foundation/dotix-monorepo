@@ -12,7 +12,7 @@ html.dark {
 }
 
 body {
-  @apply bg-dotix-gradient text-ink min-h-screen transition-colors dark:bg-dotix-gradient-dark dark:text-slate-100;
+  @apply bg-[#F7F8FA] text-ink min-h-screen transition-colors dark:bg-[#0C0C12] dark:text-slate-100;
   font-family: 'DM Sans', sans-serif;
 }
 
