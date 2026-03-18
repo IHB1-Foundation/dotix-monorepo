@@ -97,7 +97,7 @@ export default function DepositPage() {
 
   return (
     <section className="space-y-4">
-      <PageHeader title="Deposit" description="Deposit base assets into the vault or redeem PDOT shares." />
+      <PageHeader title="Deposit & Redeem" description="Deposit base assets to mint PDOT shares, or burn PDOT to redeem." />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="card relative overflow-hidden p-5">
