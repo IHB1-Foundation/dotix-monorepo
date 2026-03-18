@@ -54,17 +54,17 @@ export function ConnectCTA({ title = defaultTitle, description = defaultDescript
         </div>
 
         <ol className="grid grid-cols-1 gap-2 text-left text-sm sm:grid-cols-3">
-          <li className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-            <p className="font-semibold text-ink">1. Connect</p>
-            <p className="text-slate-600">Link your wallet on Polkadot Hub.</p>
+          <li className="rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800">
+            <p className="font-semibold text-ink dark:text-slate-100">1. Connect</p>
+            <p className="text-slate-600 dark:text-slate-400">Link your wallet on Polkadot Hub.</p>
           </li>
-          <li className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-            <p className="font-semibold text-ink">2. Deposit</p>
-            <p className="text-slate-600">Mint PDOT shares from base tokens.</p>
+          <li className="rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800">
+            <p className="font-semibold text-ink dark:text-slate-100">2. Deposit</p>
+            <p className="text-slate-600 dark:text-slate-400">Mint PDOT shares from base tokens.</p>
           </li>
-          <li className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-            <p className="font-semibold text-ink">3. Earn</p>
-            <p className="text-slate-600">Track rebalances and XCM activity.</p>
+          <li className="rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800">
+            <p className="font-semibold text-ink dark:text-slate-100">3. Earn</p>
+            <p className="text-slate-600 dark:text-slate-400">Track rebalances and XCM activity.</p>
           </li>
         </ol>
       </div>

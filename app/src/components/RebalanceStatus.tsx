@@ -39,9 +39,9 @@ export function RebalanceStatus({ cooldownSeconds, lastRebalanceAt, paused }: Pr
   const isReady = !paused && cooldownRemaining === 0;
 
   return (
-    <div className={`card p-4 ${paused ? "border-red-200 bg-red-50/70" : ""}`}>
+    <div className={`card p-4 ${paused ? "border-red-200 bg-red-50/70 dark:border-red-800 dark:bg-red-900/20" : ""}`}>
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-600">Rebalance Status</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Rebalance Status</h3>
         <span className={`rounded-full px-2 py-1 text-xs font-semibold ${paused ? "bg-red-100 text-red-700" : "bg-mint/20 text-mint"}`}>
           {paused ? "paused" : "active"}
         </span>
@@ -51,7 +51,7 @@ export function RebalanceStatus({ cooldownSeconds, lastRebalanceAt, paused }: Pr
         <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
           <div className="h-full rounded-full bg-ocean transition-[width] duration-300" style={{ width: `${progressPercent}%` }} />
         </div>
-        <p className="text-sm text-slate-700">Cooldown remaining: {formatCountdown(cooldownRemaining)}</p>
+        <p className="text-sm text-slate-700 dark:text-slate-200">Cooldown remaining: {formatCountdown(cooldownRemaining)}</p>
       </div>
 
       {isReady ? (

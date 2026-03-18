@@ -36,7 +36,7 @@ export function WeightBar({ currentBps, targetBps }: Props) {
           />
         </div>
       </div>
-      <p className="text-xs text-slate-600">
+      <p className="text-xs text-slate-600 dark:text-slate-400">
         current {currentPct.toFixed(2)}% / target {targetPct.toFixed(2)}% / deviation {(deviation / 100).toFixed(2)}%
       </p>
     </div>

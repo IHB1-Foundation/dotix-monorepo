@@ -14,7 +14,7 @@ export function SwapPlanTable({ swaps }: { swaps: AgentSwap[] }) {
     <div className="card p-4">
       <div className="space-y-2 sm:hidden">
         {swaps.map((swap, idx) => (
-          <article key={`${swap.tokenIn}-${swap.tokenOut}-mobile-${idx}`} className="rounded-lg border border-slate-200 bg-white p-3">
+          <article key={`${swap.tokenIn}-${swap.tokenOut}-mobile-${idx}`} className="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-800">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Swap {idx + 1}</p>
             <div className="mt-2 space-y-1 text-sm">
               <p className="flex items-center justify-between gap-2">

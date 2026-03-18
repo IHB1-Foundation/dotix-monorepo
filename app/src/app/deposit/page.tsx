@@ -126,7 +126,7 @@ export default function DepositPage() {
           <button
             type="button"
             onClick={() => setDepositInput(asInputAmount(deposit.balance, deposit.baseDecimals))}
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
           >
             MAX
           </button>
@@ -248,7 +248,7 @@ export default function DepositPage() {
           <button
             type="button"
             onClick={() => setRedeemInput(asInputAmount(redeem.pdotBalance))}
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
           >
             MAX
           </button>
