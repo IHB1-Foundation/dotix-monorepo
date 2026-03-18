@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { ConnectCTA } from "@/components/ConnectCTA";
 import { ExplanationPanel } from "@/components/ExplanationPanel";
 import { SwapPlanTable } from "@/components/SwapPlanTable";
@@ -53,6 +54,7 @@ export default function AutopilotPage() {
   const { isStrategist, isKeeper } = useVaultRoles();
 
   const [actionError, setActionError] = useState<string | undefined>();
+  const [confirmAction, setConfirmAction] = useState<"apply-targets" | "execute-rebalance" | null>(null);
 
   const applyWrite = useWriteContract();
   const executeWrite = useWriteContract();
@@ -157,14 +159,14 @@ export default function AutopilotPage() {
         <div className="flex flex-wrap gap-2">
           <TxButton
             label="Apply Targets"
-            onClick={() => void onApplyTargets()}
+            onClick={() => setConfirmAction("apply-targets")}
             loading={applyReceipt.isLoading}
             disabled={!isStrategist || !plan}
           />
           <TxButton
             label="Execute Rebalance"
             variant="danger"
-            onClick={() => void onExecuteRebalance()}
+            onClick={() => setConfirmAction("execute-rebalance")}
             loading={executeReceipt.isLoading}
             disabled={!isKeeper || !plan}
           />
@@ -179,6 +181,27 @@ export default function AutopilotPage() {
           error={actionError}
         />
       </div>
+
+      <ConfirmModal
+        open={Boolean(confirmAction)}
+        title={confirmAction === "execute-rebalance" ? "Confirm Execute Rebalance" : "Confirm Apply Targets"}
+        description={
+          confirmAction === "execute-rebalance"
+            ? `You are about to execute rebalance with ${plan?.swaps.length ?? 0} swaps.`
+            : `You are about to apply target weights for ${targetEntries.length} assets.`
+        }
+        confirmLabel={confirmAction === "execute-rebalance" ? "Execute Rebalance" : "Apply Targets"}
+        confirmLoading={confirmAction === "execute-rebalance" ? executeReceipt.isLoading : applyReceipt.isLoading}
+        onCancel={() => setConfirmAction(null)}
+        onConfirm={() => {
+          if (confirmAction === "execute-rebalance") {
+            void onExecuteRebalance();
+          } else if (confirmAction === "apply-targets") {
+            void onApplyTargets();
+          }
+          setConfirmAction(null);
+        }}
+      />
     </section>
   );
 }

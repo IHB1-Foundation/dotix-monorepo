@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { formatUnits } from "viem";
 import { useAccount } from "wagmi";
 
+import { ConfirmModal } from "@/components/ConfirmModal";
 import { ConnectCTA } from "@/components/ConnectCTA";
 import { TxButton } from "@/components/TxButton";
 import { TxStatus } from "@/components/TxStatus";
@@ -62,6 +63,7 @@ export default function DepositPage() {
   const [depositInput, setDepositInput] = useState("");
   const [redeemInput, setRedeemInput] = useState("");
   const [slippage, setSlippage] = useState("0.5");
+  const [confirmEmergency, setConfirmEmergency] = useState(false);
 
   const slippagePct = useMemo(() => {
     const n = Number(slippage);
@@ -188,7 +190,7 @@ export default function DepositPage() {
             <TxButton
               label="Emergency Redeem"
               variant="danger"
-              onClick={redeem.emergencyRedeem}
+              onClick={() => setConfirmEmergency(true)}
               loading={redeem.emergencyPending}
               disabled={!isConnected || redeem.sharesIn === 0n || redeemExceedsBalance}
             />
@@ -202,6 +204,19 @@ export default function DepositPage() {
           error={redeem.error}
         />
       </div>
+
+      <ConfirmModal
+        open={confirmEmergency}
+        title="Confirm Emergency Redeem"
+        description="You are about to bypass standard redeem flow and withdraw underlying assets immediately."
+        confirmLabel="Emergency Redeem"
+        confirmLoading={redeem.emergencyPending}
+        onCancel={() => setConfirmEmergency(false)}
+        onConfirm={() => {
+          void redeem.emergencyRedeem();
+          setConfirmEmergency(false);
+        }}
+      />
     </section>
   );
 }
