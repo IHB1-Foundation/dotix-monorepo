@@ -201,7 +201,16 @@ export default function DashboardPage() {
 
       <div className="space-y-3">
         {vault.assets.length === 0 ? (
-          <div className="card p-6 text-sm text-slate-600">No assets configured in vault.</div>
+          <div className="card p-8 text-center">
+            <svg viewBox="0 0 64 64" className="mx-auto h-16 w-16 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <rect x="8" y="20" width="48" height="36" rx="4" />
+              <path d="M20 20v-4a12 12 0 0 1 24 0v4" />
+              <path d="M32 36v4" strokeLinecap="round" />
+              <circle cx="32" cy="34" r="2" fill="currentColor" />
+            </svg>
+            <p className="mt-3 text-sm font-semibold text-slate-500 dark:text-slate-400">No assets in the vault yet</p>
+            <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Assets will appear here once the vault is configured by an admin.</p>
+          </div>
         ) : (
           vault.assets.map((asset, idx) => (
             <AssetRow key={asset.token} asset={asset} meta={byToken[asset.token]} color={allocationColorByIndex(idx)} />

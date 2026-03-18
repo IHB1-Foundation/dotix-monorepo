@@ -7,7 +7,16 @@ import { CopyableAddress } from "@/components/CopyableAddress";
 
 export function SwapPlanTable({ swaps }: { swaps: AgentSwap[] }) {
   if (swaps.length === 0) {
-    return <div className="card p-4 text-sm text-slate-600">No swaps proposed.</div>;
+    return (
+      <div className="card p-6 text-center">
+        <svg viewBox="0 0 64 64" className="mx-auto h-12 w-12 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <path d="M16 32h32M40 24l8 8-8 8" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M48 20V16a4 4 0 0 0-4-4H20a4 4 0 0 0-4 4v32a4 4 0 0 0 4 4h24a4 4 0 0 0 4-4v-4" strokeLinecap="round" />
+        </svg>
+        <p className="mt-2 text-sm font-semibold text-slate-500 dark:text-slate-400">No swaps proposed</p>
+        <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Generate a plan to see swap proposals.</p>
+      </div>
+    );
   }
 
   return (
