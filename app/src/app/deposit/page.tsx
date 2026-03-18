@@ -88,6 +88,8 @@ export default function DepositPage() {
   const [redeemSlippagePreset, setRedeemSlippagePreset] = useState<(typeof SLIPPAGE_PRESETS)[number] | "custom">("0.5");
   const [redeemCustomSlippage, setRedeemCustomSlippage] = useState("0.5");
   const [confirmEmergency, setConfirmEmergency] = useState(false);
+  const [depositSlippageOpen, setDepositSlippageOpen] = useState(false);
+  const [redeemSlippageOpen, setRedeemSlippageOpen] = useState(false);
   const slippageInput = slippagePreset === "custom" ? customSlippage : slippagePreset;
   const redeemSlippageInput = redeemSlippagePreset === "custom" ? redeemCustomSlippage : redeemSlippagePreset;
 
@@ -187,39 +189,52 @@ export default function DepositPage() {
         </div>
         {depositExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
 
-        <label className="mb-2 mt-3 block text-sm text-slate-600">Slippage (%)</label>
-        <div className="flex flex-wrap gap-2 text-sm">
-          {SLIPPAGE_PRESETS.map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              onClick={() => setSlippagePreset(preset)}
-              className={`rounded-lg px-3 py-2 font-medium transition ${
-                slippagePreset === preset ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-              }`}
-            >
-              {preset}%
-            </button>
-          ))}
+        <div className="mt-3">
           <button
             type="button"
-            onClick={() => setSlippagePreset("custom")}
-            className={`rounded-lg px-3 py-2 font-medium transition ${
-              slippagePreset === "custom" ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-            }`}
+            onClick={() => setDepositSlippageOpen((o) => !o)}
+            className="flex w-full items-center justify-between text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
           >
-            Custom
+            <span>Advanced: Slippage ({slippageInput}%)</span>
+            <svg viewBox="0 0 24 24" className={`h-4 w-4 transition-transform ${depositSlippageOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
           </button>
+          {depositSlippageOpen && (
+            <div className="mt-2">
+              <div className="flex flex-wrap gap-2 text-sm">
+                {SLIPPAGE_PRESETS.map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => setSlippagePreset(preset)}
+                    className={`rounded-lg px-3 py-2 font-medium transition ${
+                      slippagePreset === preset ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                    }`}
+                  >
+                    {preset}%
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setSlippagePreset("custom")}
+                  className={`rounded-lg px-3 py-2 font-medium transition ${
+                    slippagePreset === "custom" ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                  }`}
+                >
+                  Custom
+                </button>
+              </div>
+              {slippagePreset === "custom" && (
+                <input
+                  className="input mt-2"
+                  value={customSlippage}
+                  onChange={(e) => setCustomSlippage(sanitizeAmountInput(e.target.value))}
+                  placeholder="0.5"
+                  inputMode="decimal"
+                />
+              )}
+            </div>
+          )}
         </div>
-        {slippagePreset === "custom" && (
-          <input
-            className="input mt-2"
-            value={customSlippage}
-            onChange={(e) => setCustomSlippage(sanitizeAmountInput(e.target.value))}
-            placeholder="0.5"
-            inputMode="decimal"
-          />
-        )}
 
         {deposit.amountIn > 0n && (
           <div className="mt-3 rounded-lg border border-ocean/30 bg-ocean/5 p-3 text-sm dark:border-ocean/40 dark:bg-ocean/10">
@@ -371,39 +386,52 @@ export default function DepositPage() {
         </div>
         {redeemExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
 
-        <label className="mb-2 mt-3 block text-sm text-slate-600">Slippage (%)</label>
-        <div className="flex flex-wrap gap-2 text-sm">
-          {SLIPPAGE_PRESETS.map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              onClick={() => setRedeemSlippagePreset(preset)}
-              className={`rounded-lg px-3 py-2 font-medium transition ${
-                redeemSlippagePreset === preset ? "bg-brand-gradient text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-              }`}
-            >
-              {preset}%
-            </button>
-          ))}
+        <div className="mt-3">
           <button
             type="button"
-            onClick={() => setRedeemSlippagePreset("custom")}
-            className={`rounded-lg px-3 py-2 font-medium transition ${
-              redeemSlippagePreset === "custom" ? "bg-brand-gradient text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-            }`}
+            onClick={() => setRedeemSlippageOpen((o) => !o)}
+            className="flex w-full items-center justify-between text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
           >
-            Custom
+            <span>Advanced: Slippage ({redeemSlippageInput}%)</span>
+            <svg viewBox="0 0 24 24" className={`h-4 w-4 transition-transform ${redeemSlippageOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
           </button>
+          {redeemSlippageOpen && (
+            <div className="mt-2">
+              <div className="flex flex-wrap gap-2 text-sm">
+                {SLIPPAGE_PRESETS.map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => setRedeemSlippagePreset(preset)}
+                    className={`rounded-lg px-3 py-2 font-medium transition ${
+                      redeemSlippagePreset === preset ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                    }`}
+                  >
+                    {preset}%
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setRedeemSlippagePreset("custom")}
+                  className={`rounded-lg px-3 py-2 font-medium transition ${
+                    redeemSlippagePreset === "custom" ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                  }`}
+                >
+                  Custom
+                </button>
+              </div>
+              {redeemSlippagePreset === "custom" && (
+                <input
+                  className="input mt-2"
+                  value={redeemCustomSlippage}
+                  onChange={(e) => setRedeemCustomSlippage(sanitizeAmountInput(e.target.value))}
+                  placeholder="0.5"
+                  inputMode="decimal"
+                />
+              )}
+            </div>
+          )}
         </div>
-        {redeemSlippagePreset === "custom" && (
-          <input
-            className="input mt-2"
-            value={redeemCustomSlippage}
-            onChange={(e) => setRedeemCustomSlippage(sanitizeAmountInput(e.target.value))}
-            placeholder="0.5"
-            inputMode="decimal"
-          />
-        )}
 
         {redeem.sharesIn > 0n && (
           <div className="mt-3 rounded-lg border border-warning/30 bg-warning/5 p-3 text-sm dark:border-warning/40 dark:bg-warning/10">
