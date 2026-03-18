@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { formatUnits } from "viem";
 import { useAccount } from "wagmi";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ConnectCTA } from "@/components/ConnectCTA";
@@ -46,24 +47,40 @@ const SLIPPAGE_PRESETS = ["0.1", "0.5", "1.0"] as const;
 
 function DepositSkeleton() {
   return (
-    <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      {Array.from({ length: 2 }).map((_, idx) => (
-        <div key={`deposit-skeleton-${idx}`} className="card animate-pulse p-5">
-          <div className="h-6 w-28 rounded bg-slate-200 dark:bg-slate-700" />
-          <div className="mt-4 h-4 w-48 rounded bg-slate-200 dark:bg-slate-700" />
-          <div className="mt-3 h-10 w-full rounded-lg bg-slate-200 dark:bg-slate-700" />
-          <div className="mt-4 h-4 w-28 rounded bg-slate-200 dark:bg-slate-700" />
-          <div className="mt-2 h-10 w-full rounded-lg bg-slate-200 dark:bg-slate-700" />
-          <div className="mt-4 h-4 w-full rounded bg-slate-200 dark:bg-slate-700" />
-          <div className="mt-4 h-10 w-32 rounded-lg bg-slate-200 dark:bg-slate-700" />
-        </div>
-      ))}
+    <section className="mx-auto max-w-lg space-y-4">
+      <div className="card animate-pulse p-5">
+        <div className="h-6 w-28 rounded bg-slate-200 dark:bg-slate-700" />
+        <div className="mt-4 h-4 w-48 rounded bg-slate-200 dark:bg-slate-700" />
+        <div className="mt-3 h-10 w-full rounded-lg bg-slate-200 dark:bg-slate-700" />
+        <div className="mt-4 h-4 w-28 rounded bg-slate-200 dark:bg-slate-700" />
+        <div className="mt-2 h-10 w-full rounded-lg bg-slate-200 dark:bg-slate-700" />
+        <div className="mt-4 h-4 w-full rounded bg-slate-200 dark:bg-slate-700" />
+        <div className="mt-4 h-10 w-32 rounded-lg bg-slate-200 dark:bg-slate-700" />
+      </div>
     </section>
   );
 }
 
 export default function DepositPage() {
   const { isConnected } = useAccount();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const tabParam = searchParams?.get("tab");
+  const [activeTab, setActiveTab] = useState<"deposit" | "redeem">(
+    tabParam === "redeem" ? "redeem" : "deposit"
+  );
+
+  function switchTab(tab: "deposit" | "redeem") {
+    setActiveTab(tab);
+    const params = new URLSearchParams(searchParams?.toString() ?? "");
+    if (tab === "redeem") {
+      params.set("tab", "redeem");
+    } else {
+      params.delete("tab");
+    }
+    router.replace(`?${params.toString()}`, { scroll: false });
+  }
+
   const [depositInput, setDepositInput] = useState("");
   const [redeemInput, setRedeemInput] = useState("");
   const [slippagePreset, setSlippagePreset] = useState<(typeof SLIPPAGE_PRESETS)[number] | "custom">("0.5");
@@ -94,12 +111,46 @@ export default function DepositPage() {
   }
 
   return (
-    <section className="space-y-4">
+    <section className="mx-auto max-w-lg space-y-4">
       <PageHeader title="Deposit & Redeem" description="Deposit base assets to mint PDOT shares, or burn PDOT to redeem." />
 
       {!isConnected && <ConnectCTA variant="inline" description="Connect your wallet to deposit base tokens and mint PDOT shares." />}
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      {/* Tab toggle */}
+      <div className="flex rounded-xl border border-slate-200 bg-slate-100 p-1 dark:border-slate-700 dark:bg-slate-800">
+        <button
+          type="button"
+          onClick={() => switchTab("deposit")}
+          className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold transition ${
+            activeTab === "deposit"
+              ? "bg-white text-ocean shadow-sm dark:bg-slate-900 dark:text-ocean-light"
+              : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+          }`}
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 4v12" /><path d="m7 11 5 5 5-5" />
+          </svg>
+          Deposit
+        </button>
+        <button
+          type="button"
+          onClick={() => switchTab("redeem")}
+          className={`flex flex-1 items-center justify-center gap-2 rounded-lg py-2 text-sm font-semibold transition ${
+            activeTab === "redeem"
+              ? "bg-white text-warning shadow-sm dark:bg-slate-900 dark:text-warning-light"
+              : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+          }`}
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 20V8" /><path d="m17 13-5-5-5 5" />
+          </svg>
+          Redeem
+        </button>
+      </div>
+
+      {/* Tab content with fade transition */}
+      <div className="page-transition">
+      {activeTab === "deposit" && (
         <div className="card relative overflow-hidden p-5">
         <span className="absolute inset-x-0 top-0 h-1 bg-ocean/80" />
         <div className="mb-3">
@@ -280,7 +331,9 @@ export default function DepositPage() {
           </div>
         )}
         </div>
+      )}
 
+      {activeTab === "redeem" && (
         <div className="card relative overflow-hidden p-5">
         <span className="absolute inset-x-0 top-0 h-1 bg-warning/70" />
         <div className="mb-3">
@@ -425,6 +478,7 @@ export default function DepositPage() {
           </div>
         )}
         </div>
+      )}
       </div>
 
       <ConfirmModal
