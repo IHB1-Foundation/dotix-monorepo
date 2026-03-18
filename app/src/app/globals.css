@@ -81,6 +81,12 @@ h1, h2, h3, h4, h5, h6,
   animation: check-draw 400ms ease-out forwards;
 }
 
+/* Global focus ring — consistent across all interactive elements */
+:focus-visible {
+  outline: 2px solid transparent;
+  @apply ring-2 ring-ocean/40 ring-offset-2 ring-offset-white dark:ring-offset-surface-0;
+}
+
 /* Button press feedback */
 button:not(:disabled):active {
   transform: scale(0.98);
