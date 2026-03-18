@@ -39,7 +39,7 @@ export function NAVChart() {
   return (
     <Card>
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           NAV History
         </h3>
         <div className="flex gap-1">
@@ -61,20 +61,22 @@ export function NAVChart() {
       </div>
 
       {loading && (
-        <div className="h-40 w-full animate-pulse rounded-lg bg-slate-100 dark:bg-slate-800" />
+        <div className="h-[180px] w-full animate-pulse rounded-lg bg-slate-100 dark:bg-slate-800 md:h-[240px]" />
       )}
 
       {!loading && !hasData && (
-        <div className="flex h-40 items-center justify-center">
-          <p className="text-sm text-slate-400 dark:text-slate-500">
-            No rebalance events found in this range.
-          </p>
+        <div className="relative flex h-[180px] items-center justify-center md:h-[240px]">
+          <svg className="absolute inset-0 h-full w-full" preserveAspectRatio="none">
+            <line x1="0" y1="50%" x2="100%" y2="50%" stroke="currentColor" strokeDasharray="6 4" className="text-slate-200 dark:text-slate-700" />
+          </svg>
+          <p className="relative text-sm text-slate-400 dark:text-slate-500">No data for this range</p>
         </div>
       )}
 
       {!loading && hasData && (
-        <ResponsiveContainer width="100%" height={160}>
-          <AreaChart data={points} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+        <div className="h-[180px] md:h-[240px]">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={points} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="navGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3} />
@@ -111,6 +113,7 @@ export function NAVChart() {
             />
           </AreaChart>
         </ResponsiveContainer>
+        </div>
       )}
     </Card>
   );
