@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { formatUnits } from "viem";
 import { useAccount } from "wagmi";
@@ -11,6 +12,7 @@ import { TxButton } from "@/components/TxButton";
 import { TxStatus } from "@/components/TxStatus";
 import { useDeposit } from "@/hooks/useDeposit";
 import { useRedeem } from "@/hooks/useRedeem";
+import { explorerTxUrl } from "@/lib/network";
 
 function formatAmount(value: bigint, decimals = 18): string {
   return Number(formatUnits(value, decimals)).toFixed(4);
@@ -249,6 +251,34 @@ export default function DepositPage() {
           isConfirmed={deposit.requiresApproval ? deposit.approveConfirmed : deposit.depositConfirmed}
           error={deposit.error}
         />
+
+        {deposit.depositConfirmed && deposit.depositTxHash && (
+          <div className="mt-3 rounded-lg border border-mint/30 bg-mint/10 p-4 dark:border-mint/40 dark:bg-mint/15">
+            <p className="flex items-center gap-1.5 text-sm font-semibold text-mint">
+              <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6 9 17l-5-5" /></svg>
+              Deposit successful!
+            </p>
+            <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+              +{formatAmount(deposit.expectedShares)} PDOT added to your balance
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <a
+                href={explorerTxUrl(deposit.depositTxHash)}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+              >
+                View on Explorer
+              </a>
+              <Link
+                href="/dashboard"
+                className="rounded-lg bg-brand-gradient px-3 py-1.5 text-xs font-semibold text-white transition hover:opacity-90"
+              >
+                Go to Dashboard
+              </Link>
+            </div>
+          </div>
+        )}
         </div>
 
         <div className="card relative overflow-hidden p-5">
@@ -330,6 +360,36 @@ export default function DepositPage() {
           isConfirmed={redeem.emergencyConfirmed || redeem.redeemConfirmed}
           error={redeem.error}
         />
+
+        {(redeem.redeemConfirmed || redeem.emergencyConfirmed) && (redeem.redeemTxHash ?? redeem.emergencyTxHash) && (
+          <div className="mt-3 rounded-lg border border-mint/30 bg-mint/10 p-4 dark:border-mint/40 dark:bg-mint/15">
+            <p className="flex items-center gap-1.5 text-sm font-semibold text-mint">
+              <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6 9 17l-5-5" /></svg>
+              Redeem successful!
+            </p>
+            <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+              ~{formatAmount(redeem.expectedBaseOut)} {deposit.baseSymbol} returned to your wallet
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {(redeem.redeemTxHash ?? redeem.emergencyTxHash) && (
+                <a
+                  href={explorerTxUrl((redeem.redeemTxHash ?? redeem.emergencyTxHash)!)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                >
+                  View on Explorer
+                </a>
+              )}
+              <Link
+                href="/dashboard"
+                className="rounded-lg bg-brand-gradient px-3 py-1.5 text-xs font-semibold text-white transition hover:opacity-90"
+              >
+                Go to Dashboard
+              </Link>
+            </div>
+          </div>
+        )}
         </div>
       </div>
 
