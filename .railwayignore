@@ -1,0 +1,13 @@
+/app
+/.next
+/node_modules
+/app/node_modules
+/contracts
+/typechain-types
+/cache
+/coverage
+/dist
+*.md
+.DS_Store
+/.idea
+.env
