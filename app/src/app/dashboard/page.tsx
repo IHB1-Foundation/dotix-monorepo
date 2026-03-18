@@ -9,8 +9,18 @@ import { RebalanceStatus } from "@/components/RebalanceStatus";
 import { useTokenMeta } from "@/hooks/useTokenMeta";
 import { useVaultState } from "@/hooks/useVaultState";
 
-function formatBase(value: bigint, decimals = 18): string {
-  return Number(formatUnits(value, decimals)).toFixed(4);
+const decimalFormatter = new Intl.NumberFormat("en-US", {
+  minimumFractionDigits: 4,
+  maximumFractionDigits: 4,
+});
+
+function formatMetric(value: bigint, decimals = 18): string {
+  const parsed = Number(formatUnits(value, decimals));
+  if (!Number.isFinite(parsed) || parsed === 0) {
+    return "—";
+  }
+
+  return decimalFormatter.format(parsed);
 }
 
 function DashboardSkeleton() {
@@ -68,15 +78,18 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <article className="card p-4">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">NAV</h2>
-          <p className="mt-2 text-2xl font-bold">{formatBase(vault.nav)}</p>
+          <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.nav)}</p>
+          <p className="mt-1 text-xs text-slate-500">PAS</p>
         </article>
         <article className="card p-4">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Price</h2>
-          <p className="mt-2 text-2xl font-bold">{formatBase(vault.pdotPrice)}</p>
+          <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.pdotPrice)}</p>
+          <p className="mt-1 text-xs text-slate-500">per PDOT</p>
         </article>
         <article className="card p-4">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Total Supply</h2>
-          <p className="mt-2 text-2xl font-bold">{formatBase(vault.totalSupply)}</p>
+          <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.totalSupply)}</p>
+          <p className="mt-1 text-xs text-slate-500">PDOT shares</p>
         </article>
       </div>
 
