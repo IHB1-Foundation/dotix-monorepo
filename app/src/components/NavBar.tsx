@@ -6,19 +6,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
-import { ThemeToggle } from "@/components/ThemeToggle";
-
 const links = [
   { href: "/dashboard", label: "Dashboard", mobileLabel: "Dashboard", icon: "dashboard" },
   { href: "/deposit", label: "Deposit", mobileLabel: "Deposit", icon: "deposit" },
   { href: "/autopilot", label: "Autopilot", mobileLabel: "Autopilot", icon: "autopilot" },
-  { href: "/xcm", label: "XCM Demo", mobileLabel: "XCM", icon: "xcm" },
+  { href: "/xcm", label: "XCM", mobileLabel: "XCM", icon: "xcm" },
 ] as const;
 
 function NavIcon({ type }: { type: (typeof links)[number]["icon"] }): ReactNode {
   if (type === "dashboard") {
     return (
-      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
         <rect x="3" y="3" width="7" height="7" rx="1.5" />
         <rect x="14" y="3" width="7" height="7" rx="1.5" />
         <rect x="3" y="14" width="7" height="7" rx="1.5" />
@@ -29,7 +27,7 @@ function NavIcon({ type }: { type: (typeof links)[number]["icon"] }): ReactNode 
 
   if (type === "deposit") {
     return (
-      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
         <path d="M12 3v14" />
         <path d="m7 12 5 5 5-5" />
         <rect x="4" y="19" width="16" height="2" rx="1" />
@@ -39,7 +37,7 @@ function NavIcon({ type }: { type: (typeof links)[number]["icon"] }): ReactNode 
 
   if (type === "autopilot") {
     return (
-      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
         <rect x="6" y="7" width="12" height="10" rx="3" />
         <path d="M9 12h.01M15 12h.01" />
         <path d="M12 2v3M5 9H3m18 0h-2" />
@@ -48,7 +46,7 @@ function NavIcon({ type }: { type: (typeof links)[number]["icon"] }): ReactNode 
   }
 
   return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
       <circle cx="6" cy="12" r="2.5" />
       <circle cx="18" cy="6" r="2.5" />
       <circle cx="18" cy="18" r="2.5" />
@@ -62,6 +60,7 @@ export function NavBar() {
 
   return (
     <>
+      {/* Full-width sticky GNB */}
       <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-lg transition-colors dark:border-slate-700/80 dark:bg-slate-900/80">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
           <Link href="/dashboard" className="group flex items-center gap-3">
@@ -78,31 +77,13 @@ export function NavBar() {
               <p className="text-base font-bold tracking-tight text-ink dark:text-slate-100">Dotix</p>
             </div>
           </Link>
-          <nav className="hidden items-center gap-1 md:flex">
-            {links.map((link) => {
-              const isActive = pathname?.startsWith(link.href);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`relative rounded-lg px-3 py-2 text-sm font-medium transition ${
-                    isActive
-                      ? "bg-brand-gradient text-white shadow-sm"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <ConnectButton />
-          </div>
+          <ConnectButton />
         </div>
       </header>
+
+      {/* Mobile bottom nav — hidden on md+ (sidebar takes over) */}
       <nav
+        aria-label="Mobile navigation"
         className="fixed inset-x-0 z-40 grid grid-cols-4 gap-1 border-t border-slate-200 bg-white/95 p-2 shadow-lg backdrop-blur dark:border-slate-700 dark:bg-slate-900/90 md:hidden"
         style={{ bottom: 0, paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
       >
@@ -112,6 +93,7 @@ export function NavBar() {
             <Link
               key={link.href}
               href={link.href}
+              aria-label={link.label}
               className={`relative flex min-h-[44px] flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-center text-[11px] font-semibold transition ${
                 isActive
                   ? "bg-brand-gradient text-white shadow-sm"
