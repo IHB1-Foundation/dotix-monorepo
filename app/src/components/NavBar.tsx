@@ -61,7 +61,7 @@ export function NavBar() {
   return (
     <>
       {/* Full-width sticky GNB */}
-      <header className="sticky top-0 z-50 w-full bg-white/90 shadow-sm backdrop-blur-lg transition-colors dark:bg-slate-900/90">
+      <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white shadow-sm transition-colors dark:border-slate-800 dark:bg-surface-1">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
           <Link href="/dashboard" className="group flex items-center gap-2.5">
             <Image
@@ -81,7 +81,7 @@ export function NavBar() {
       {/* Mobile bottom nav — hidden on md+ (sidebar takes over) */}
       <nav
         aria-label="Mobile navigation"
-        className="fixed inset-x-0 z-40 grid grid-cols-4 gap-1 border-t border-slate-200 bg-white/95 p-2 shadow-lg backdrop-blur dark:border-slate-700 dark:bg-slate-900/90 md:hidden"
+        className="fixed inset-x-0 z-40 grid grid-cols-4 gap-1 border-t border-slate-200 bg-white p-2 shadow-lg dark:border-slate-800 dark:bg-surface-1 md:hidden"
         style={{ bottom: 0, paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
       >
         {links.map((link) => {
@@ -92,19 +92,19 @@ export function NavBar() {
               href={link.href}
               aria-label={link.label}
               aria-current={isActive ? "page" : undefined}
-              className={`relative flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-2 text-center text-[11px] font-semibold transition ${
+              className={`relative flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-1.5 text-center text-[11px] font-semibold transition-all active:scale-95 ${
                 isActive
-                  ? "text-ocean dark:text-ocean-light"
-                  : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+                  ? "bg-ocean/8 text-ocean dark:text-ocean-light"
+                  : "text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
               }`}
             >
+              {isActive && (
+                <span className="absolute inset-x-3 top-0 h-0.5 rounded-full bg-ocean dark:bg-ocean-light" />
+              )}
               <span aria-hidden="true">
                 <NavIcon type={link.icon} />
               </span>
               {link.mobileLabel}
-              {isActive && (
-                <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-ocean dark:bg-ocean-light" />
-              )}
             </Link>
           );
         })}
