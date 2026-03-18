@@ -81,6 +81,11 @@ h1, h2, h3, h4, h5, h6,
   animation: check-draw 400ms ease-out forwards;
 }
 
+/* Bottom nav height CSS variable — used for safe area padding */
+:root {
+  --bottom-nav-h: 72px;
+}
+
 /* Global focus ring — consistent across all interactive elements */
 :focus-visible {
   outline: 2px solid transparent;
