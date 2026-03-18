@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
+import { Card } from "@/components/Card";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ConnectCTA } from "@/components/ConnectCTA";
 import { ExplanationPanel } from "@/components/ExplanationPanel";
@@ -158,7 +159,7 @@ export default function AutopilotPage() {
         ]}
       />
 
-      <div className="card p-4">
+      <Card>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Autopilot Plan</h2>
@@ -184,9 +185,9 @@ export default function AutopilotPage() {
           <TxButton label="Generate Plan" onClick={() => void loadPlan()} loading={loading} />
         </div>
         {error && <p className="mt-2 text-sm text-error">{error}</p>}
-      </div>
+      </Card>
 
-      <div className="card p-4">
+      <Card>
         <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Weight Comparison</h3>
         {targetEntries.length === 0 ? (
           <div className="flex items-center justify-between gap-4 py-2">
@@ -233,12 +234,12 @@ export default function AutopilotPage() {
             </table>
           </div>
         )}
-      </div>
+      </Card>
 
       <SwapPlanTable swaps={plan?.swaps ?? []} />
       <ExplanationPanel lines={plan?.explanation ?? []} />
 
-      <div className="card p-4">
+      <Card>
         <div className="flex flex-wrap gap-2">
           <TxButton
             label="Apply Targets"
@@ -263,7 +264,7 @@ export default function AutopilotPage() {
           isConfirmed={applyReceipt.isSuccess || executeReceipt.isSuccess}
           error={actionError}
         />
-      </div>
+      </Card>
 
       <ConfirmModal
         open={Boolean(confirmAction)}

@@ -7,6 +7,7 @@ import { useAccount, useReadContract } from "wagmi";
 
 import { AllocationChart, allocationColorByIndex } from "@/components/AllocationChart";
 import { AssetRow } from "@/components/AssetRow";
+import { Card } from "@/components/Card";
 import { ConnectCTA } from "@/components/ConnectCTA";
 import { RebalanceStatus } from "@/components/RebalanceStatus";
 import { useTokenMeta } from "@/hooks/useTokenMeta";
@@ -137,7 +138,7 @@ export default function DashboardPage() {
 
       {/* 1. KPI Row — most important at-a-glance */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <article className={`card-hero stagger-item p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+        <Card variant="elevated" as="article" className={`stagger-item transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
           <div className="flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ocean/15 text-ocean">
@@ -149,8 +150,8 @@ export default function DashboardPage() {
           </div>
           <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(navAnimated)}</p>
           <p className="mt-1 text-xs text-muted">Total vault assets under management (PAS)</p>
-        </article>
-        <article className={`card-hero stagger-item p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+        </Card>
+        <Card variant="elevated" as="article" className={`stagger-item transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
           <div className="flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-mint/15 text-mint">
@@ -160,8 +161,8 @@ export default function DashboardPage() {
           </div>
           <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(priceAnimated)}</p>
           <p className="mt-1 text-xs text-muted">Current price per PDOT share (PAS)</p>
-        </article>
-        <article className={`card-hero stagger-item p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+        </Card>
+        <Card variant="elevated" as="article" className={`stagger-item transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
           <div className="flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-warning/15 text-warning">
@@ -173,12 +174,12 @@ export default function DashboardPage() {
           </div>
           <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(supplyAnimated)}</p>
           <p className="mt-1 text-xs text-muted">Total PDOT shares in circulation</p>
-        </article>
+        </Card>
       </div>
 
       {/* 2. My Position (connected) or inline CTA */}
       {address ? (
-        <article className="relative overflow-hidden rounded-xl border border-ocean/30 bg-gradient-to-br from-ocean/10 via-white/80 to-mint/10 p-5 shadow-sm backdrop-blur dark:border-ocean/40 dark:from-ocean/20 dark:via-slate-900/80 dark:to-mint/10">
+        <Card variant="elevated" padding="spacious" as="article">
           <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-ocean to-mint" />
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">My Position</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -206,7 +207,7 @@ export default function DashboardPage() {
               </p>
             </div>
           </div>
-        </article>
+        </Card>
       ) : (
         <ConnectCTA variant="inline" />
       )}

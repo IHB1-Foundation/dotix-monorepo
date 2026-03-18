@@ -10,9 +10,11 @@ function lineIcon(line: string): string {
   return "•";
 }
 
+import { Card } from "./Card";
+
 export function ExplanationPanel({ lines }: { lines: string[] }) {
   return (
-    <div className="card p-4">
+    <Card>
       <div className="mb-3 flex items-center gap-2">
         <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ocean/10 text-ocean">
           <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
@@ -37,6 +39,6 @@ export function ExplanationPanel({ lines }: { lines: string[] }) {
           </ul>
         </div>
       )}
-    </div>
+    </Card>
   );
 }

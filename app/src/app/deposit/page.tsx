@@ -6,6 +6,7 @@ import { formatUnits } from "viem";
 import { useAccount } from "wagmi";
 import { useSearchParams, useRouter } from "next/navigation";
 
+import { Card } from "@/components/Card";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ConnectCTA } from "@/components/ConnectCTA";
 import { PageHeader } from "@/components/PageHeader";
@@ -153,7 +154,7 @@ export default function DepositPage() {
       {/* Tab content with fade transition */}
       <div className="page-transition">
       {activeTab === "deposit" && (
-        <div className="card relative overflow-hidden p-5">
+        <Card padding="spacious" className="relative overflow-hidden">
         <span className="absolute inset-x-0 top-0 h-1 bg-ocean/80" />
         <div className="mb-3">
           <h2 className="flex items-center gap-2 text-lg font-semibold">
@@ -346,11 +347,11 @@ export default function DepositPage() {
             </div>
           </div>
         )}
-        </div>
+        </Card>
       )}
 
       {activeTab === "redeem" && (
-        <div className="card relative overflow-hidden p-5">
+        <Card padding="spacious" className="relative overflow-hidden">
         <span className="absolute inset-x-0 top-0 h-1 bg-warning/70" />
         <div className="mb-3">
           <h2 className="flex items-center gap-2 text-lg font-semibold">
@@ -507,7 +508,7 @@ export default function DepositPage() {
             </div>
           </div>
         )}
-        </div>
+        </Card>
       )}
       </div>
 

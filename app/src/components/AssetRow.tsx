@@ -5,6 +5,7 @@ import { formatUnits } from "viem";
 import type { TokenMeta } from "@/hooks/useTokenMeta";
 import type { VaultAssetState } from "@/hooks/useVaultState";
 
+import { Card } from "./Card";
 import { CopyableAddress } from "./CopyableAddress";
 import { TokenAvatar } from "./TokenAvatar";
 import { WeightBar } from "./WeightBar";
@@ -20,7 +21,7 @@ export function AssetRow({ asset, meta, color }: Props) {
   const symbol = meta?.symbol || "UNKNOWN";
 
   return (
-    <div className="card p-4 transition-colors hover:border-ocean/40">
+    <Card variant="interactive">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <TokenAvatar symbol={symbol} address={asset.token} size={36} color={color} />
@@ -47,6 +48,6 @@ export function AssetRow({ asset, meta, color }: Props) {
       <div className="mt-3">
         <WeightBar currentBps={asset.currentBps} targetBps={asset.targetBps} />
       </div>
-    </div>
+    </Card>
   );
 }

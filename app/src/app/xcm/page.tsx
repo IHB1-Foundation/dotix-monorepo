@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { Accordion } from "@/components/Accordion";
+import { Card } from "@/components/Card";
 import { PageHeader } from "@/components/PageHeader";
 import { Stepper } from "@/components/Stepper";
 import { TxButton } from "@/components/TxButton";
@@ -67,12 +68,12 @@ export default function XcmPage() {
         ]}
       />
 
-      <div className="card p-5">
+      <Card padding="spacious">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Precompile</h2>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Precompile address: {xcm.precompileAddress}</p>
-      </div>
+      </Card>
 
-      <div className="card p-5">
+      <Card padding="spacious">
         <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Step 1 — Choose Message</h3>
         <div className="mb-3 flex gap-2 text-sm">
           <button
@@ -132,7 +133,7 @@ export default function XcmPage() {
         </div>
         {!xcm.isKeeper && <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Execute requires KEEPER_ROLE.</p>}
         {!xcm.result && <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Weigh first to enable execute.</p>}
-      </div>
+      </Card>
 
       <XcmResult
         result={xcm.result}
@@ -142,7 +143,7 @@ export default function XcmPage() {
         error={validationError ?? xcm.error}
       />
 
-      <div className="card p-4 text-sm text-slate-700 dark:text-slate-200">
+      <Card className="text-sm text-slate-700 dark:text-slate-200">
         <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">XCM FAQ</h3>
         <Accordion
           items={[
@@ -199,7 +200,7 @@ export default function XcmPage() {
             Polkadot Interoperability Guide
           </a>
         </p>
-      </div>
+      </Card>
     </section>
   );
 }
