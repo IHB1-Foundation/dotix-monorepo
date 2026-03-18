@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { Accordion } from "@/components/Accordion";
 import { PageHeader } from "@/components/PageHeader";
+import { Stepper } from "@/components/Stepper";
 import { TxButton } from "@/components/TxButton";
 import { XcmResult } from "@/components/XcmResult";
 import { useXcmDemo } from "@/hooks/useXcmDemo";
@@ -32,33 +33,67 @@ export default function XcmPage() {
   const validationError = mode === "custom" ? validateHex(customHex) : null;
   const xcm = useXcmDemo(effectiveHex);
 
+  const weighDone = Boolean(xcm.result);
+  const executeDone = xcm.txConfirmed;
+
   return (
     <section className="space-y-4">
       <PageHeader title="XCM Demo" description="Weigh and execute XCM messages from the EVM surface." />
 
+      <Stepper
+        steps={[
+          {
+            label: "Choose Message",
+            detail: "Select default or enter custom hex payload.",
+            completed: Boolean(mode),
+            active: !weighDone,
+          },
+          {
+            label: "Weigh",
+            detail: "Estimate on-chain execution cost.",
+            completed: weighDone,
+            active: !weighDone,
+          },
+          {
+            label: "Execute",
+            detail: "Requires KEEPER_ROLE.",
+            completed: executeDone,
+            active: weighDone && !executeDone,
+            locked: !xcm.isKeeper,
+          },
+        ]}
+      />
+
       <div className="card p-5">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600">Precompile</h2>
-        <p className="mt-1 text-sm text-slate-600">Precompile address: {xcm.precompileAddress}</p>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Precompile</h2>
+        <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">Precompile address: {xcm.precompileAddress}</p>
       </div>
 
       <div className="card p-5">
-        <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-600">Message</h3>
+        <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Step 1 — Choose Message</h3>
         <div className="mb-3 flex gap-2 text-sm">
           <button
             type="button"
-            className={`rounded-lg px-3 py-2 ${mode === "default" ? "bg-ocean text-white" : "bg-slate-100"}`}
+            className={`rounded-lg px-3 py-2 transition ${mode === "default" ? "bg-brand-gradient text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"}`}
             onClick={() => setMode("default")}
           >
             Default Message
           </button>
           <button
             type="button"
-            className={`rounded-lg px-3 py-2 ${mode === "custom" ? "bg-ocean text-white" : "bg-slate-100"}`}
+            className={`rounded-lg px-3 py-2 transition ${mode === "custom" ? "bg-brand-gradient text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"}`}
             onClick={() => setMode("custom")}
           >
             Custom
           </button>
         </div>
+
+        {mode === "default" && (
+          <p className="mb-3 text-xs text-slate-500 dark:text-slate-400">
+            <code className="rounded bg-slate-100 px-1 py-0.5 dark:bg-slate-800">0x03020100</code>{" "}
+            — XCM ClearOrigin instruction (safe no-op for demo, costs minimal gas)
+          </p>
+        )}
 
         {mode === "custom" && (
           <div>
@@ -72,13 +107,19 @@ export default function XcmPage() {
           </div>
         )}
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <h3 className="mb-2 mt-4 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Step 2 — Weigh</h3>
+        <div className="flex flex-wrap gap-2">
           <TxButton
             label={mode === "default" ? "Weigh Default" : "Weigh Message"}
             variant="secondary"
             onClick={() => void (mode === "default" ? xcm.weighDefault() : xcm.weighMessage())}
             disabled={Boolean(validationError)}
           />
+        </div>
+        {weighDone && <p className="mt-1 text-xs text-mint">✓ Weight calculated — proceed to execute</p>}
+
+        <h3 className="mb-2 mt-4 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Step 3 — Execute</h3>
+        <div className="flex flex-wrap gap-2">
           <TxButton
             label="Execute Message"
             onClick={() => void xcm.executeMessage()}
@@ -86,8 +127,8 @@ export default function XcmPage() {
             loading={xcm.txPending}
           />
         </div>
-
-        {!xcm.isKeeper && <p className="mt-2 text-xs text-slate-500">Execute requires KEEPER_ROLE.</p>}
+        {!xcm.isKeeper && <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Execute requires KEEPER_ROLE.</p>}
+        {!xcm.result && <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Weigh first to enable execute.</p>}
       </div>
 
       <XcmResult
