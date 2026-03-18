@@ -72,17 +72,28 @@ function NavItem({
   return (
     <Link
       href={href}
-      title={label}
       className={`group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
         isActive
           ? "bg-ocean/10 text-ocean dark:bg-ocean/20 dark:text-ocean-light"
           : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
       }`}
     >
+      {/* Active accent bar */}
+      {isActive && (
+        <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-ocean" />
+      )}
+
       <SidebarIcon type={icon} />
-      {/* Full label on lg, short/icon-only on md collapsed */}
+
+      {/* Full label on lg */}
       <span className="hidden lg:block">{label}</span>
       {shortLabel && <span className="hidden md:block lg:hidden">{shortLabel}</span>}
+
+      {/* Tooltip for md icon-only mode */}
+      <span className="pointer-events-none absolute left-full z-50 ml-2 hidden whitespace-nowrap rounded-lg bg-slate-900 px-2.5 py-1.5 text-xs text-slate-100 shadow-lg opacity-0 transition-opacity group-hover:opacity-100 md:block lg:hidden dark:bg-slate-700">
+        {label}
+        <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-slate-900 dark:border-r-slate-700" />
+      </span>
     </Link>
   );
 }
@@ -91,7 +102,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-[60px] hidden h-[calc(100vh-60px)] w-16 shrink-0 flex-col bg-white/80 backdrop-blur md:flex lg:w-60 dark:bg-slate-900/80">
+    <aside className="sticky top-[60px] hidden h-[calc(100vh-60px)] w-16 shrink-0 flex-col border-r border-slate-200 bg-white md:flex lg:w-60 dark:border-slate-800 dark:bg-surface-1">
       <nav className="flex-1 overflow-y-auto px-2 py-4">
         <ul className="space-y-1">
           {mainLinks.map((link) => (
@@ -127,18 +138,24 @@ export function Sidebar() {
       <div className="border-t border-slate-100 px-2 py-3 dark:border-slate-800">
         <Link
           href="/settings"
-          title="Settings"
-          className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+          className={`group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
             pathname?.startsWith("/settings")
               ? "bg-ocean/10 text-ocean dark:bg-ocean/20 dark:text-ocean-light"
               : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
           }`}
         >
+          {pathname?.startsWith("/settings") && (
+            <span className="absolute left-0 top-2 bottom-2 w-0.5 rounded-full bg-ocean" />
+          )}
           <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8">
             <circle cx="12" cy="12" r="3" />
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
           </svg>
           <span className="hidden lg:block">Settings</span>
+          <span className="pointer-events-none absolute left-full z-50 ml-2 hidden whitespace-nowrap rounded-lg bg-slate-900 px-2.5 py-1.5 text-xs text-slate-100 shadow-lg opacity-0 transition-opacity group-hover:opacity-100 md:block lg:hidden dark:bg-slate-700">
+            Settings
+            <span className="absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent border-r-slate-900 dark:border-r-slate-700" />
+          </span>
         </Link>
       </div>
     </aside>
