@@ -69,16 +69,24 @@ export default function DepositPage() {
   const [redeemInput, setRedeemInput] = useState("");
   const [slippagePreset, setSlippagePreset] = useState<(typeof SLIPPAGE_PRESETS)[number] | "custom">("0.5");
   const [customSlippage, setCustomSlippage] = useState("0.5");
+  const [redeemSlippagePreset, setRedeemSlippagePreset] = useState<(typeof SLIPPAGE_PRESETS)[number] | "custom">("0.5");
+  const [redeemCustomSlippage, setRedeemCustomSlippage] = useState("0.5");
   const [confirmEmergency, setConfirmEmergency] = useState(false);
   const slippageInput = slippagePreset === "custom" ? customSlippage : slippagePreset;
+  const redeemSlippageInput = redeemSlippagePreset === "custom" ? redeemCustomSlippage : redeemSlippagePreset;
 
   const slippagePct = useMemo(() => {
     const n = Number(slippageInput);
     return Number.isFinite(n) && n >= 0 ? n : 0.5;
   }, [slippageInput]);
 
+  const redeemSlippagePct = useMemo(() => {
+    const n = Number(redeemSlippageInput);
+    return Number.isFinite(n) && n >= 0 ? n : 0.5;
+  }, [redeemSlippageInput]);
+
   const deposit = useDeposit(depositInput, slippagePct);
-  const redeem = useRedeem(redeemInput, slippagePct);
+  const redeem = useRedeem(redeemInput, redeemSlippagePct);
   const depositExceedsBalance = deposit.amountIn > deposit.balance;
   const redeemExceedsBalance = redeem.sharesIn > redeem.pdotBalance;
 
@@ -316,6 +324,40 @@ export default function DepositPage() {
         </div>
         {redeemExceedsBalance && <p className="mt-2 text-sm text-red-600">Exceeds balance</p>}
 
+        <label className="mb-2 mt-3 block text-sm text-slate-600">Slippage (%)</label>
+        <div className="flex flex-wrap gap-2 text-sm">
+          {SLIPPAGE_PRESETS.map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              onClick={() => setRedeemSlippagePreset(preset)}
+              className={`rounded-lg px-3 py-2 font-medium transition ${
+                redeemSlippagePreset === preset ? "bg-brand-gradient text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+              }`}
+            >
+              {preset}%
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setRedeemSlippagePreset("custom")}
+            className={`rounded-lg px-3 py-2 font-medium transition ${
+              redeemSlippagePreset === "custom" ? "bg-brand-gradient text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            }`}
+          >
+            Custom
+          </button>
+        </div>
+        {redeemSlippagePreset === "custom" && (
+          <input
+            className="input mt-2"
+            value={redeemCustomSlippage}
+            onChange={(e) => setRedeemCustomSlippage(sanitizeAmountInput(e.target.value))}
+            placeholder="0.5"
+            inputMode="decimal"
+          />
+        )}
+
         {redeem.sharesIn > 0n && (
           <div className="mt-3 rounded-lg border border-warning/30 bg-warning/5 p-3 text-sm dark:border-warning/40 dark:bg-warning/10">
             <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Transaction Preview</p>
@@ -329,7 +371,7 @@ export default function DepositPage() {
                 <span className="tabular-nums font-medium">~{formatAmount(redeem.expectedBaseOut)} {deposit.baseSymbol}</span>
               </div>
               <div className="flex justify-between border-t border-slate-200 pt-1 dark:border-slate-700">
-                <span className="text-slate-500 dark:text-slate-400">Min received (0.5% slippage)</span>
+                <span className="text-slate-500 dark:text-slate-400">Min received ({redeemSlippageInput}% slippage)</span>
                 <span className="tabular-nums text-slate-600 dark:text-slate-300">{formatAmount(redeem.minBaseOut)} {deposit.baseSymbol}</span>
               </div>
             </div>
