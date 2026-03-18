@@ -14,6 +14,31 @@ function formatAmount(value: bigint, decimals = 18): string {
   return Number(formatUnits(value, decimals)).toFixed(4);
 }
 
+function sanitizeAmountInput(value: string): string {
+  const normalized = value.replace(/,/g, ".");
+  let next = "";
+  let hasDot = false;
+
+  for (const char of normalized) {
+    if (/\d/.test(char)) {
+      next += char;
+      continue;
+    }
+
+    if (char === "." && !hasDot) {
+      hasDot = true;
+      next += char;
+    }
+  }
+
+  return next;
+}
+
+function asInputAmount(value: bigint, decimals = 18): string {
+  const formatted = formatUnits(value, decimals);
+  return formatted.includes(".") ? formatted.replace(/\.?0+$/, "") : formatted;
+}
+
 function DepositSkeleton() {
   return (
     <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -45,6 +70,8 @@ export default function DepositPage() {
 
   const deposit = useDeposit(depositInput, slippagePct);
   const redeem = useRedeem(redeemInput, slippagePct);
+  const depositExceedsBalance = deposit.amountIn > deposit.balance;
+  const redeemExceedsBalance = redeem.sharesIn > redeem.pdotBalance;
 
   if (!isConnected) {
     return (
@@ -66,12 +93,23 @@ export default function DepositPage() {
         <p className="mb-2 text-sm text-slate-600">Base balance: {formatAmount(deposit.balance, deposit.baseDecimals)} {deposit.baseSymbol}</p>
 
         <label className="mb-2 block text-sm text-slate-600">Amount</label>
-        <input
-          className="w-full rounded-lg border border-slate-300 px-3 py-2"
-          value={depositInput}
-          onChange={(e) => setDepositInput(e.target.value)}
-          placeholder="0.0"
-        />
+        <div className="relative">
+          <input
+            className={`w-full rounded-lg border px-3 py-2 pr-16 ${depositExceedsBalance ? "border-red-400" : "border-slate-300"}`}
+            value={depositInput}
+            onChange={(e) => setDepositInput(sanitizeAmountInput(e.target.value))}
+            placeholder="0.0"
+            inputMode="decimal"
+          />
+          <button
+            type="button"
+            onClick={() => setDepositInput(asInputAmount(deposit.balance, deposit.baseDecimals))}
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
+          >
+            MAX
+          </button>
+        </div>
+        {depositExceedsBalance && <p className="mt-2 text-sm text-red-600">Exceeds balance</p>}
 
         <label className="mb-2 mt-3 block text-sm text-slate-600">Slippage (%)</label>
         <input
@@ -92,14 +130,14 @@ export default function DepositPage() {
               variant="secondary"
               onClick={deposit.approve}
               loading={deposit.approvePending}
-              disabled={!isConnected || deposit.amountIn === 0n || deposit.paused}
+              disabled={!isConnected || deposit.amountIn === 0n || deposit.paused || depositExceedsBalance}
             />
           ) : (
             <TxButton
               label="Deposit"
               onClick={deposit.deposit}
               loading={deposit.depositPending}
-              disabled={!isConnected || deposit.amountIn === 0n || deposit.paused}
+              disabled={!isConnected || deposit.amountIn === 0n || deposit.paused || depositExceedsBalance}
             />
           )}
         </div>
@@ -117,12 +155,23 @@ export default function DepositPage() {
         <p className="mb-2 text-sm text-slate-600">PDOT balance: {formatAmount(redeem.pdotBalance)}</p>
 
         <label className="mb-2 block text-sm text-slate-600">PDOT Amount</label>
-        <input
-          className="w-full rounded-lg border border-slate-300 px-3 py-2"
-          value={redeemInput}
-          onChange={(e) => setRedeemInput(e.target.value)}
-          placeholder="0.0"
-        />
+        <div className="relative">
+          <input
+            className={`w-full rounded-lg border px-3 py-2 pr-16 ${redeemExceedsBalance ? "border-red-400" : "border-slate-300"}`}
+            value={redeemInput}
+            onChange={(e) => setRedeemInput(sanitizeAmountInput(e.target.value))}
+            placeholder="0.0"
+            inputMode="decimal"
+          />
+          <button
+            type="button"
+            onClick={() => setRedeemInput(asInputAmount(redeem.pdotBalance))}
+            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200"
+          >
+            MAX
+          </button>
+        </div>
+        {redeemExceedsBalance && <p className="mt-2 text-sm text-red-600">Exceeds balance</p>}
 
         <p className="mt-3 text-sm text-slate-600">
           Expected base out: {formatAmount(redeem.expectedBaseOut)} / Min base out: {formatAmount(redeem.minBaseOut)}
@@ -133,7 +182,7 @@ export default function DepositPage() {
             label="Redeem"
             onClick={redeem.redeem}
             loading={redeem.redeemPending}
-            disabled={!isConnected || redeem.sharesIn === 0n}
+            disabled={!isConnected || redeem.sharesIn === 0n || redeemExceedsBalance}
           />
           {redeem.paused && (
             <TxButton
@@ -141,7 +190,7 @@ export default function DepositPage() {
               variant="danger"
               onClick={redeem.emergencyRedeem}
               loading={redeem.emergencyPending}
-              disabled={!isConnected || redeem.sharesIn === 0n}
+              disabled={!isConnected || redeem.sharesIn === 0n || redeemExceedsBalance}
             />
           )}
         </div>
