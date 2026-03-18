@@ -22,3 +22,18 @@ body {
 .input {
   @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 placeholder:text-slate-400 transition focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500;
 }
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: page-fade-in 220ms ease-out;
+}
