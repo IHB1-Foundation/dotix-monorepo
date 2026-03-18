@@ -137,7 +137,7 @@ export default function DashboardPage() {
 
       {/* 1. KPI Row — most important at-a-glance */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+        <article className={`card-hero stagger-item p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
           <div className="flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ocean/15 text-ocean">
@@ -150,7 +150,7 @@ export default function DashboardPage() {
           <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(navAnimated)}</p>
           <p className="mt-1 text-xs text-muted">Total vault assets under management (PAS)</p>
         </article>
-        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+        <article className={`card-hero stagger-item p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
           <div className="flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-mint/15 text-mint">
@@ -161,7 +161,7 @@ export default function DashboardPage() {
           <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(priceAnimated)}</p>
           <p className="mt-1 text-xs text-muted">Current price per PDOT share (PAS)</p>
         </article>
-        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+        <article className={`card-hero stagger-item p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
           <div className="flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-warning/15 text-warning">

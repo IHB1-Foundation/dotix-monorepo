@@ -64,3 +64,48 @@ h1, h2, h3, h4, h5, h6,
 .page-transition {
   animation: page-fade-in 220ms ease-out;
 }
+
+/* Stagger fade-in for card lists */
+@keyframes stagger-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-item {
+  animation: stagger-fade-in 300ms ease-out both;
+}
+.stagger-item:nth-child(1) { animation-delay: 0ms; }
+.stagger-item:nth-child(2) { animation-delay: 60ms; }
+.stagger-item:nth-child(3) { animation-delay: 120ms; }
+.stagger-item:nth-child(4) { animation-delay: 180ms; }
+.stagger-item:nth-child(5) { animation-delay: 240ms; }
+.stagger-item:nth-child(6) { animation-delay: 300ms; }
+
+/* Success checkmark animation */
+@keyframes check-draw {
+  from { stroke-dashoffset: 30; opacity: 0; }
+  to   { stroke-dashoffset: 0; opacity: 1; }
+}
+
+.check-animate {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: check-draw 400ms ease-out forwards;
+}
+
+/* Button press feedback */
+button:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .stagger-item,
+  .page-transition,
+  .check-animate {
+    animation: none !important;
+  }
+  button:active {
+    transform: none !important;
+  }
+}

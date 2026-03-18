@@ -307,7 +307,7 @@ export default function DepositPage() {
         {deposit.depositConfirmed && deposit.depositTxHash && (
           <div className="mt-3 rounded-lg border border-mint/30 bg-mint/10 p-4 dark:border-mint/40 dark:bg-mint/15">
             <p className="flex items-center gap-1.5 text-sm font-semibold text-mint">
-              <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6 9 17l-5-5" /></svg>
+              <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5"><path className="check-animate" d="M20 6 9 17l-5-5" /></svg>
               Deposit successful!
             </p>
             <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
