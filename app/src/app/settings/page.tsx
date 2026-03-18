@@ -24,7 +24,7 @@ export default function SettingsPage() {
   const { prefs, updatePrefs } = usePreferences();
 
   return (
-    <section className="mx-auto max-w-xl space-y-4">
+    <section className="mx-auto max-w-[560px] space-y-4">
       <PageHeader title="Settings" description="Manage your wallet, preferences, and app info." />
 
       {/* Wallet */}

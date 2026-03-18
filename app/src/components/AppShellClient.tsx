@@ -23,7 +23,7 @@ export function AppShellClient({ children }: { children: ReactNode }) {
             className="min-w-0 flex-1 px-4 py-6 md:pb-8 lg:px-8"
             style={{ paddingBottom: "calc(var(--bottom-nav-h) + 1rem)" } as React.CSSProperties}
           >
-            <div className="mx-auto max-w-5xl">
+            <div className="mx-auto max-w-4xl">
               <NetworkGuard />
               <div key={pathname} className="page-transition">
                 {children}
