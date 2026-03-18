@@ -1,8 +1,10 @@
 "use client";
 
 import { formatUnits } from "viem";
+import { useAccount } from "wagmi";
 
 import { AssetRow } from "@/components/AssetRow";
+import { ConnectCTA } from "@/components/ConnectCTA";
 import { RebalanceStatus } from "@/components/RebalanceStatus";
 import { useTokenMeta } from "@/hooks/useTokenMeta";
 import { useVaultState } from "@/hooks/useVaultState";
@@ -48,9 +50,14 @@ function DashboardSkeleton() {
 }
 
 export default function DashboardPage() {
+  const { isConnected } = useAccount();
   const vault = useVaultState();
   const tokens = vault.assets.map((asset) => asset.token);
   const { byToken } = useTokenMeta(tokens);
+
+  if (!isConnected) {
+    return <ConnectCTA />;
+  }
 
   if (vault.isLoading) {
     return <DashboardSkeleton />;

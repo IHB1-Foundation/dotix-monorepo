@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
+import { ConnectCTA } from "@/components/ConnectCTA";
 import { ExplanationPanel } from "@/components/ExplanationPanel";
 import { SwapPlanTable } from "@/components/SwapPlanTable";
 import { TxButton } from "@/components/TxButton";
@@ -47,6 +48,7 @@ function AutopilotSkeleton() {
 }
 
 export default function AutopilotPage() {
+  const { isConnected } = useAccount();
   const { plan, file, loading, error, loadPlan } = useAgentPlan();
   const { isStrategist, isKeeper } = useVaultRoles();
 
@@ -62,6 +64,15 @@ export default function AutopilotPage() {
     if (!plan) return [];
     return Object.entries(plan.newTargets);
   }, [plan]);
+
+  if (!isConnected) {
+    return (
+      <ConnectCTA
+        title="Connect your wallet to run the Autopilot strategy workflow"
+        description="Generate a plan, apply target weights, and execute rebalances from one connected control surface."
+      />
+    );
+  }
 
   if (loading && !plan) {
     return <AutopilotSkeleton />;

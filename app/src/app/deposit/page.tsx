@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { formatUnits } from "viem";
 import { useAccount } from "wagmi";
 
+import { ConnectCTA } from "@/components/ConnectCTA";
 import { TxButton } from "@/components/TxButton";
 import { TxStatus } from "@/components/TxStatus";
 import { useDeposit } from "@/hooks/useDeposit";
@@ -44,6 +45,15 @@ export default function DepositPage() {
 
   const deposit = useDeposit(depositInput, slippagePct);
   const redeem = useRedeem(redeemInput, slippagePct);
+
+  if (!isConnected) {
+    return (
+      <ConnectCTA
+        title="Connect your wallet to start depositing into the index vault"
+        description="After connecting, you can deposit base tokens, mint PDOT shares, and redeem whenever needed."
+      />
+    );
+  }
 
   if (isConnected && (deposit.isLoading || redeem.isLoading)) {
     return <DepositSkeleton />;
