@@ -14,3 +14,7 @@ body {
 .card {
   @apply rounded-xl border border-slate-200 bg-white/80 shadow-sm backdrop-blur transition-shadow duration-200 hover:shadow-md;
 }
+
+.input {
+  @apply w-full rounded-lg border border-slate-300 px-3 py-2 placeholder:text-slate-400 transition focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20;
+}

@@ -62,7 +62,7 @@ export default function XcmPage() {
         {mode === "custom" && (
           <div>
             <input
-              className="w-full rounded-lg border border-slate-300 px-3 py-2"
+              className="input"
               value={customHex}
               onChange={(e) => setCustomHex(e.target.value)}
               placeholder="0x..."

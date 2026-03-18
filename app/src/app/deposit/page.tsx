@@ -117,7 +117,7 @@ export default function DepositPage() {
         <label className="mb-2 block text-sm text-slate-600">Amount</label>
         <div className="relative">
           <input
-            className={`w-full rounded-lg border px-3 py-2 pr-16 ${depositExceedsBalance ? "border-red-400" : "border-slate-300"}`}
+            className={`input pr-16 ${depositExceedsBalance ? "border-red-400 focus:border-red-400 focus:ring-red-200" : ""}`}
             value={depositInput}
             onChange={(e) => setDepositInput(sanitizeAmountInput(e.target.value))}
             placeholder="0.0"
@@ -159,7 +159,7 @@ export default function DepositPage() {
         </div>
         {slippagePreset === "custom" && (
           <input
-            className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2"
+            className="input mt-2"
             value={customSlippage}
             onChange={(e) => setCustomSlippage(sanitizeAmountInput(e.target.value))}
             placeholder="0.5"
@@ -217,7 +217,7 @@ export default function DepositPage() {
         <label className="mb-2 block text-sm text-slate-600">PDOT Amount</label>
         <div className="relative">
           <input
-            className={`w-full rounded-lg border px-3 py-2 pr-16 ${redeemExceedsBalance ? "border-red-400" : "border-slate-300"}`}
+            className={`input pr-16 ${redeemExceedsBalance ? "border-red-400 focus:border-red-400 focus:ring-red-200" : ""}`}
             value={redeemInput}
             onChange={(e) => setRedeemInput(sanitizeAmountInput(e.target.value))}
             placeholder="0.0"
