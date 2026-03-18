@@ -14,6 +14,10 @@ function formatCountdown(seconds: number): string {
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
+function clamp(value: number): number {
+  return Math.min(100, Math.max(0, value));
+}
+
 export function RebalanceStatus({ cooldownSeconds, lastRebalanceAt, paused }: Props) {
   const [now, setNow] = useState(() => Math.floor(Date.now() / 1000));
 
@@ -27,15 +31,35 @@ export function RebalanceStatus({ cooldownSeconds, lastRebalanceAt, paused }: Pr
     return Math.max(next - now, 0);
   }, [cooldownSeconds, lastRebalanceAt, now]);
 
+  const progressPercent = useMemo(() => {
+    if (cooldownSeconds <= 0) return 100;
+    return clamp(((cooldownSeconds - cooldownRemaining) / cooldownSeconds) * 100);
+  }, [cooldownRemaining, cooldownSeconds]);
+
+  const isReady = !paused && cooldownRemaining === 0;
+
   return (
-    <div className="card p-4">
+    <div className={`card p-4 ${paused ? "border-red-200 bg-red-50/70" : ""}`}>
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-600">Rebalance Status</h3>
         <span className={`rounded-full px-2 py-1 text-xs font-semibold ${paused ? "bg-red-100 text-red-700" : "bg-mint/20 text-mint"}`}>
           {paused ? "paused" : "active"}
         </span>
       </div>
-      <p className="text-sm text-slate-700">Cooldown remaining: {formatCountdown(cooldownRemaining)}</p>
+
+      <div className="mb-3 space-y-1">
+        <div className="h-2 w-full overflow-hidden rounded-full bg-slate-200">
+          <div className="h-full rounded-full bg-ocean transition-[width] duration-300" style={{ width: `${progressPercent}%` }} />
+        </div>
+        <p className="text-sm text-slate-700">Cooldown remaining: {formatCountdown(cooldownRemaining)}</p>
+      </div>
+
+      {isReady ? (
+        <p className="mb-2 inline-flex items-center rounded-full bg-mint/15 px-2 py-1 text-xs font-semibold text-mint animate-pulse">
+          Ready to rebalance
+        </p>
+      ) : null}
+
       <p className="text-xs text-slate-500">
         Last rebalance: {lastRebalanceAt > 0 ? new Date(lastRebalanceAt * 1000).toLocaleString() : "never"}
       </p>
