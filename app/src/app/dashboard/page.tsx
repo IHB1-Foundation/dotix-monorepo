@@ -142,10 +142,9 @@ export default function DashboardPage() {
 
       {/* 1. KPI Row — most important at-a-glance */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card variant="elevated" as="article" className={`stagger-item transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
-          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
+        <Card variant="elevated" as="article" className={`stagger-item ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ocean/15 text-ocean">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-slate-400 dark:bg-slate-700">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </span>
             <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -155,10 +154,9 @@ export default function DashboardPage() {
           <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{decimalFormatter.format(navAnimated)}</p>
           <p className="mt-1 text-[11px] text-muted">Total vault assets under management (PAS)</p>
         </Card>
-        <Card variant="elevated" as="article" className={`stagger-item transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
-          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
+        <Card variant="elevated" as="article" className={`stagger-item ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-mint/15 text-mint">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-slate-400 dark:bg-slate-700">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="8"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
             </span>
             <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Price</h2>
@@ -166,10 +164,9 @@ export default function DashboardPage() {
           <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{decimalFormatter.format(priceAnimated)}</p>
           <p className="mt-1 text-[11px] text-muted">Current price per PDOT share (PAS)</p>
         </Card>
-        <Card variant="elevated" as="article" className={`stagger-item transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
-          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
+        <Card variant="elevated" as="article" className={`stagger-item ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-warning/15 text-warning">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-slate-400 dark:bg-slate-700">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             </span>
             <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -184,7 +181,6 @@ export default function DashboardPage() {
       {/* 2. My Position (connected) or inline CTA */}
       {address ? (
         <Card variant="elevated" padding="spacious" as="article">
-          <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-ocean to-mint" />
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">My Position</h2>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <div>

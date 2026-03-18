@@ -22,12 +22,12 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .card {
-  @apply rounded-xl border border-slate-200 bg-white/80 shadow-sm backdrop-blur transition-shadow duration-200 hover:shadow-md dark:border-slate-700 dark:bg-slate-900/80;
+  @apply rounded-2xl border border-slate-200/60 bg-white/80 shadow-sm backdrop-blur transition-shadow duration-200 hover:shadow-md dark:border-white/[0.06] dark:bg-slate-900/80;
 }
 
-/* Hero card: gradient tint + glow border — for KPI, My Position, primary stats */
+/* Hero card: clean white with shadow elevation — for KPI, My Position, primary stats */
 .card-hero {
-  @apply relative overflow-hidden rounded-xl border border-ocean/30 bg-gradient-to-br from-ocean/10 via-white/90 to-mint/10 shadow-md backdrop-blur transition-shadow duration-200 hover:shadow-lg dark:border-ocean/40 dark:from-ocean/20 dark:via-slate-900/90 dark:to-mint/10;
+  @apply relative overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-md transition-shadow duration-200 hover:shadow-lg dark:border-white/[0.08] dark:bg-slate-800;
 }
 
 /* Subtle card: transparent bg, thin border — for legends, FAQs, auxiliary info */

@@ -159,7 +159,6 @@ export default function DepositPage() {
       <div className="page-transition">
       {activeTab === "deposit" && (
         <Card padding="spacious" className="relative overflow-hidden">
-        <span className="absolute inset-x-0 top-0 h-1 bg-ocean/80" />
         <div className="mb-3">
           <h2 className="flex items-center gap-2 text-lg font-semibold">
             <span aria-hidden="true" className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-ocean/10 text-ocean">
@@ -331,7 +330,6 @@ export default function DepositPage() {
 
       {activeTab === "redeem" && (
         <Card padding="spacious" className="relative overflow-hidden">
-        <span className="absolute inset-x-0 top-0 h-1 bg-warning/70" />
         <div className="mb-3">
           <h2 className="flex items-center gap-2 text-lg font-semibold">
             <span aria-hidden="true" className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-warning/15 text-warning">

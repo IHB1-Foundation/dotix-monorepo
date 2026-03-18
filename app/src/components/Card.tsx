@@ -9,7 +9,7 @@ const variantClass: Record<CardVariant, string> = {
   base: "card",
   elevated: "card-hero",
   flat: "card-subtle",
-  interactive: "card transition-transform duration-200 hover:scale-[1.01] hover:border-ocean/40",
+  interactive: "card hover:border-ocean/40",
 };
 
 const paddingClass: Record<CardPadding, string> = {
