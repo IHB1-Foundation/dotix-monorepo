@@ -54,7 +54,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       setToasts((prev) => [...prev, { id, durationMs, ...toast }]);
       // tx-pending stays until explicitly updated/removed
       if (toast.variant !== "tx-pending") {
-        scheduleRemoval(id, durationMs ?? 4000);
+        const defaultMs = toast.variant === "error" ? 8000 : 5000;
+        scheduleRemoval(id, durationMs ?? defaultMs);
       }
       return id;
     },
@@ -68,7 +69,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       );
       // auto-dismiss after transition to confirmed/success/error
       if (update.variant && update.variant !== "tx-pending") {
-        scheduleRemoval(id, update.durationMs ?? 5000);
+        const defaultMs = update.variant === "error" ? 8000 : 5000;
+        scheduleRemoval(id, update.durationMs ?? defaultMs);
       }
     },
     [scheduleRemoval]
@@ -92,7 +94,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       {mounted
         ? createPortal(
-            <div aria-live="polite" role="status" className="pointer-events-none fixed right-4 top-4 z-[60] space-y-2">
+            <div aria-live="polite" role="status" className="pointer-events-none fixed top-4 z-[60] space-y-2 left-1/2 -translate-x-1/2 md:left-auto md:right-4 md:translate-x-0 w-max max-w-[calc(100vw-2rem)]">
               {toasts.map((toast) => (
                 <div key={toast.id} className="pointer-events-auto">
                   <Toast
