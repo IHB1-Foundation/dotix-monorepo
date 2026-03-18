@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import { formatUnits } from "viem";
 import { useAccount } from "wagmi";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -156,7 +156,44 @@ export default function DepositPage() {
 
       {/* Tab content with fade transition */}
       <div className="page-transition">
-      {activeTab === "deposit" && (
+      {activeTab === "deposit" && deposit.depositConfirmed && deposit.depositTxHash ? (
+        <Card padding="spacious">
+          <div className="flex flex-col items-center py-6 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-mint/10">
+              <svg viewBox="0 0 24 24" className="h-8 w-8 text-mint" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <path className="check-animate" d="M20 6 9 17l-5-5" />
+              </svg>
+            </div>
+            <h2 className="mt-4 font-display text-xl font-bold text-ink dark:text-slate-100">Stake successful!</h2>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+              +{formatAmount(deposit.expectedShares)} PDOT added to your balance
+            </p>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <a
+                href={explorerTxUrl(deposit.depositTxHash)}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800"
+              >
+                View on Explorer
+              </a>
+              <button
+                type="button"
+                onClick={() => setDepositInput("")}
+                className="rounded-xl bg-ocean px-4 py-2 text-sm font-bold text-white transition hover:bg-ocean-dark"
+              >
+                Stake More
+              </button>
+              <Link
+                href="/dashboard"
+                className="rounded-xl bg-ocean/10 px-4 py-2 text-sm font-bold text-ocean transition hover:bg-ocean/20 dark:text-ocean-light"
+              >
+                Dashboard
+              </Link>
+            </div>
+          </div>
+        </Card>
+      ) : activeTab === "deposit" && (
         <Card padding="spacious">
           {/* Amount input — Lido style: large number, balance inside */}
           <div className={`rounded-2xl bg-slate-50 p-4 dark:bg-slate-950 ${depositExceedsBalance ? "ring-2 ring-error/60" : "focus-within:ring-2 focus-within:ring-ocean/30"}`}>
@@ -291,33 +328,6 @@ export default function DepositPage() {
             error={deposit.error}
           />
 
-          {deposit.depositConfirmed && deposit.depositTxHash && (
-            <div className="mt-4 rounded-2xl border border-mint/30 bg-mint/10 p-4 dark:border-mint/40 dark:bg-mint/15">
-              <p className="flex items-center gap-1.5 text-sm font-semibold text-mint">
-                <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5"><path className="check-animate" d="M20 6 9 17l-5-5" /></svg>
-                Stake successful!
-              </p>
-              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
-                +{formatAmount(deposit.expectedShares)} PDOT added to your balance
-              </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <a
-                  href={explorerTxUrl(deposit.depositTxHash)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
-                >
-                  View on Explorer
-                </a>
-                <Link
-                  href="/dashboard"
-                  className="rounded-xl bg-ocean px-3 py-1.5 text-xs font-bold text-white transition hover:bg-ocean-dark"
-                >
-                  Go to Dashboard
-                </Link>
-              </div>
-            </div>
-          )}
         </Card>
       )}
 
