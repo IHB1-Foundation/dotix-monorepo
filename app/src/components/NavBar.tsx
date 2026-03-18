@@ -62,60 +62,49 @@ export function NavBar() {
 
   return (
     <>
-      <header className="mb-6 rounded-2xl border border-slate-200 bg-white/70 p-4 shadow-sm backdrop-blur dark:border-slate-700 dark:bg-slate-900/80">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex items-start justify-between gap-4">
-            <Link href="/dashboard" className="group flex items-center gap-3">
-              <Image
-                src="/dotix-logo.svg"
-                alt="Dotix logo"
-                width={48}
-                height={48}
-                priority
-                className="h-12 w-12 rounded-2xl shadow-sm ring-1 ring-slate-200/80 transition-transform group-hover:scale-[1.03] dark:ring-slate-700/80"
-              />
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Polkadot Native</p>
-                <h1 className="text-xl font-bold tracking-tight text-ink dark:text-slate-100">Dotix</h1>
-                <p className="text-xs text-slate-500 dark:text-slate-400">Index Vault</p>
-              </div>
-            </Link>
-            <div className="flex items-center gap-2 lg:hidden">
-              <ThemeToggle />
-              <ConnectButton />
+      <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-lg transition-colors dark:border-slate-700/80 dark:bg-slate-900/80">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
+          <Link href="/dashboard" className="group flex items-center gap-3">
+            <Image
+              src="/dotix-logo.svg"
+              alt="Dotix logo"
+              width={36}
+              height={36}
+              priority
+              className="h-9 w-9 rounded-xl shadow-sm ring-1 ring-slate-200/80 transition-transform group-hover:scale-[1.03] dark:ring-slate-700/80"
+            />
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Polkadot Native</p>
+              <p className="text-base font-bold tracking-tight text-ink dark:text-slate-100">Dotix</p>
             </div>
-          </div>
-          <nav className="hidden flex-wrap items-center gap-1 md:flex">
-            {links.map((link, idx) => {
+          </Link>
+          <nav className="hidden items-center gap-1 md:flex">
+            {links.map((link) => {
               const isActive = pathname?.startsWith(link.href);
               return (
-                <span key={link.href} className="flex items-center">
-                  {idx > 0 && (
-                    <span className="mr-1 text-slate-300 dark:text-slate-600 text-xs">›</span>
-                  )}
-                  <Link
-                    href={link.href}
-                    className={`relative rounded-lg px-3 py-2 text-sm font-medium transition ${
-                      isActive
-                        ? "bg-brand-gradient text-white shadow-sm"
-                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                </span>
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`relative rounded-lg px-3 py-2 text-sm font-medium transition ${
+                    isActive
+                      ? "bg-brand-gradient text-white shadow-sm"
+                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                  }`}
+                >
+                  {link.label}
+                </Link>
               );
             })}
           </nav>
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="flex items-center gap-2">
             <ThemeToggle />
             <ConnectButton />
           </div>
         </div>
       </header>
       <nav
-        className="fixed inset-x-4 z-40 grid grid-cols-4 gap-2 rounded-2xl border border-slate-200 bg-white/95 p-2 shadow-lg backdrop-blur dark:border-slate-700 dark:bg-slate-900/90 md:hidden"
-        style={{ bottom: "max(1rem, env(safe-area-inset-bottom))" }}
+        className="fixed inset-x-0 z-40 grid grid-cols-4 gap-1 border-t border-slate-200 bg-white/95 p-2 shadow-lg backdrop-blur dark:border-slate-700 dark:bg-slate-900/90 md:hidden"
+        style={{ bottom: 0, paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
       >
         {links.map((link) => {
           const isActive = pathname?.startsWith(link.href);
@@ -123,7 +112,7 @@ export function NavBar() {
             <Link
               key={link.href}
               href={link.href}
-              className={`relative flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-center text-[11px] font-semibold transition ${
+              className={`relative flex min-h-[44px] flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-center text-[11px] font-semibold transition ${
                 isActive
                   ? "bg-brand-gradient text-white shadow-sm"
                   : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
