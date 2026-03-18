@@ -6,6 +6,7 @@ import { formatUnits } from "viem";
 import { useAccount, useReadContract } from "wagmi";
 
 import { ActivityFeed } from "@/components/ActivityFeed";
+import { NAVChart } from "@/components/NAVChart";
 import { AllocationChart, allocationColorByIndex } from "@/components/AllocationChart";
 import { AssetRow } from "@/components/AssetRow";
 import { Button } from "@/components/Button";
@@ -249,7 +250,10 @@ export default function DashboardPage() {
         paused={vault.paused}
       />
 
-      {/* 5. Activity Feed */}
+      {/* 5. NAV Historical Chart */}
+      <NAVChart />
+
+      {/* 6. Activity Feed */}
       <ActivityFeed />
     </section>
   );
