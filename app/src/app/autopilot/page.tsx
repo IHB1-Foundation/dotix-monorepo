@@ -156,8 +156,25 @@ export default function AutopilotPage() {
       <div className="card p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600">Plan Source</h2>
-            <p className="text-sm text-slate-600">Latest plan file: {file ?? "none"}</p>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Autopilot Plan</h2>
+            {plan?.timestamp ? (
+              <p className="text-sm text-slate-600 dark:text-slate-400">
+                Generated at {new Date(plan.timestamp).toLocaleTimeString()} (
+                {Math.round((Date.now() - new Date(plan.timestamp).getTime()) / 60000)} min ago)
+              </p>
+            ) : (
+              <p className="text-sm text-slate-600 dark:text-slate-400">No plan loaded — click Generate Plan</p>
+            )}
+            {plan && (
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {plan.swaps.length} swap{plan.swaps.length !== 1 ? "s" : ""} proposed
+                {Object.keys(plan.newTargets).length > 0 ? `, ${Object.keys(plan.newTargets).length} assets targeted` : ""}
+              </p>
+            )}
+            <details className="mt-1">
+              <summary className="cursor-pointer text-[11px] text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300">Show file</summary>
+              <p className="text-[11px] text-slate-400 dark:text-slate-500">{file ?? "none"}</p>
+            </details>
           </div>
           <TxButton label="Generate Plan" onClick={() => void loadPlan()} loading={loading} />
         </div>
