@@ -1,6 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+
+import { BottomSheet } from "@/components/BottomSheet";
 
 type ConnectCTAProps = {
   title?: string;
@@ -14,6 +17,8 @@ const defaultDescription =
   "Dotix helps you deposit once and keep a rules-based Polkadot portfolio balanced automatically.";
 
 function ConnectButtonInner() {
+  const [sheetOpen, setSheetOpen] = useState(false);
+
   return (
     <ConnectButton.Custom>
       {({ account, chain, mounted, openConnectModal, openChainModal }) => {
@@ -22,13 +27,45 @@ function ConnectButtonInner() {
         }
         if (!account || !chain) {
           return (
-            <button
-              type="button"
-              onClick={openConnectModal}
-              className="inline-flex items-center justify-center rounded-lg bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean/40 focus-visible:ring-offset-2"
-            >
-              Connect Wallet
-            </button>
+            <>
+              {/* Desktop: direct modal */}
+              <button
+                type="button"
+                onClick={openConnectModal}
+                className="hidden items-center justify-center rounded-lg bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean/40 focus-visible:ring-offset-2 sm:inline-flex"
+              >
+                Connect Wallet
+              </button>
+              {/* Mobile: bottom sheet trigger */}
+              <button
+                type="button"
+                onClick={() => setSheetOpen(true)}
+                className="inline-flex items-center justify-center rounded-lg bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean/40 focus-visible:ring-offset-2 sm:hidden"
+              >
+                Connect Wallet
+              </button>
+              <BottomSheet
+                open={sheetOpen}
+                onClose={() => setSheetOpen(false)}
+                title="Connect Wallet"
+              >
+                <div className="space-y-4 py-2">
+                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                    Connect your wallet to access Dotix on Polkadot Hub.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSheetOpen(false);
+                      openConnectModal();
+                    }}
+                    className="w-full rounded-xl bg-brand-gradient px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+                  >
+                    Choose Wallet
+                  </button>
+                </div>
+              </BottomSheet>
+            </>
           );
         }
         return (
