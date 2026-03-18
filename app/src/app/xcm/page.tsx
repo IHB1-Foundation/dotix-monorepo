@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import { Accordion } from "@/components/Accordion";
 import { PageHeader } from "@/components/PageHeader";
 import { TxButton } from "@/components/TxButton";
 import { XcmResult } from "@/components/XcmResult";
@@ -97,11 +98,62 @@ export default function XcmPage() {
         error={validationError ?? xcm.error}
       />
 
-      <div className="card p-4 text-sm text-slate-700">
-        <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-600">What is XCM?</h3>
-        <p>
-          XCM (Cross-Consensus Messaging) enables communication across Polkadot consensus systems. This page demonstrates
-          Solidity-native access to the XCM precompile on Polkadot Hub.
+      <div className="card p-4 text-sm text-slate-700 dark:text-slate-200">
+        <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">XCM FAQ</h3>
+        <Accordion
+          items={[
+            {
+              title: "What is XCM?",
+              content: (
+                <p>
+                  XCM (Cross-Consensus Messaging) is Polkadot's standard format for passing messages and intent between
+                  consensus systems.
+                </p>
+              ),
+            },
+            {
+              title: "What does weigh do?",
+              content: (
+                <p>
+                  `weigh` estimates execution cost (`refTime` and `proofSize`) before submission, so callers can set safe
+                  execution limits.
+                </p>
+              ),
+            },
+            {
+              title: "What does execute do?",
+              content: (
+                <p>
+                  `execute` sends the XCM payload with computed limits to the precompile, which dispatches it to the
+                  underlying runtime.
+                </p>
+              ),
+            },
+            {
+              title: "Why is this special on Polkadot Hub?",
+              content: (
+                <p>
+                  On Polkadot Hub, Solidity contracts can invoke XCM behavior directly through the precompile, bridging EVM
+                  app UX and native interoperability.
+                </p>
+              ),
+            },
+          ]}
+        />
+        <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+          Docs:{" "}
+          <a href="https://wiki.polkadot.network/docs/learn-xcm" target="_blank" rel="noreferrer" className="underline">
+            XCM Overview
+          </a>
+          {" · "}
+          <a
+            href="https://docs.polkadot.com/develop/interoperability/intro-to-xcm/"
+            target="_blank"
+            rel="noreferrer"
+            className="underline"
+          >
+            Polkadot Interoperability Guide
+          </a>
         </p>
       </div>
     </section>
