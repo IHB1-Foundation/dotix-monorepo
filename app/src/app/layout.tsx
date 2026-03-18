@@ -2,9 +2,11 @@ import dynamic from "next/dynamic";
 import type { Metadata, Viewport } from "next";
 
 import "./globals.css";
+import { ShellSkeleton } from "@/components/ShellSkeleton";
 
 const AppShellClient = dynamic(() => import("@/components/AppShellClient").then((mod) => mod.AppShellClient), {
   ssr: false,
+  loading: () => <ShellSkeleton />,
 });
 
 export const metadata: Metadata = {
