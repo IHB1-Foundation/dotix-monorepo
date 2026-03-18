@@ -203,37 +203,69 @@ export default function AutopilotPage() {
             </Button>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-slate-200 dark:border-slate-700">
-                  <th className="pb-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Asset</th>
-                  <th className="pb-2 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Current</th>
-                  <th className="pb-2 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Proposed</th>
-                  <th className="pb-2 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Delta</th>
-                </tr>
-              </thead>
-              <tbody>
-                {targetEntries.map(([token, proposedBps]) => {
-                  const current = vault.assets.find((a) => a.token.toLowerCase() === token.toLowerCase());
-                  const currentBps = current?.currentBps ?? 0;
-                  const delta = proposedBps - currentBps;
-                  const symbol = byToken[token]?.symbol ?? byToken[token.toLowerCase()]?.symbol ?? `${token.slice(0, 6)}…${token.slice(-4)}`;
-
-                  return (
-                    <tr key={token} className="border-b border-slate-100 dark:border-slate-800">
-                      <td className="py-2 font-medium text-ink dark:text-slate-100">{symbol}</td>
-                      <td className="py-2 text-right tabular-nums text-slate-600 dark:text-slate-300">{formatPercent(currentBps)}</td>
-                      <td className="py-2 text-right tabular-nums text-slate-600 dark:text-slate-300">{formatPercent(proposedBps)}</td>
-                      <td className={`py-2 text-right tabular-nums font-semibold ${delta > 0 ? "text-mint" : delta < 0 ? "text-warning" : "text-slate-400"}`}>
-                        {delta > 0 ? "+" : ""}{formatPercent(Math.abs(delta))} {delta > 0 ? "▲" : delta < 0 ? "▼" : ""}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <>
+            {/* Mobile: card list */}
+            <div className="space-y-2 sm:hidden">
+              {targetEntries.map(([token, proposedBps]) => {
+                const current = vault.assets.find((a) => a.token.toLowerCase() === token.toLowerCase());
+                const currentBps = current?.currentBps ?? 0;
+                const delta = proposedBps - currentBps;
+                const symbol = byToken[token]?.symbol ?? byToken[token.toLowerCase()]?.symbol ?? `${token.slice(0, 6)}…${token.slice(-4)}`;
+                return (
+                  <div key={token} className="rounded-lg border border-slate-200 bg-white p-3 dark:border-slate-700 dark:bg-slate-800">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{symbol}</p>
+                    <div className="mt-2 space-y-1 text-sm">
+                      <p className="flex justify-between">
+                        <span className="text-slate-500">Current</span>
+                        <span className="tabular-nums">{formatPercent(currentBps)}</span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-slate-500">Proposed</span>
+                        <span className="tabular-nums">{formatPercent(proposedBps)}</span>
+                      </p>
+                      <p className="flex justify-between">
+                        <span className="text-slate-500">Delta</span>
+                        <span className={`tabular-nums font-semibold ${delta > 0 ? "text-mint" : delta < 0 ? "text-warning" : "text-slate-400"}`}>
+                          {delta > 0 ? "+" : ""}{formatPercent(Math.abs(delta))} {delta > 0 ? "▲" : delta < 0 ? "▼" : ""}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {/* Desktop: table */}
+            <div className="relative -mx-4 hidden overflow-x-auto px-4 sm:mx-0 sm:block sm:px-0">
+              <table className="w-full text-sm">
+                <thead className="sticky top-0 bg-white dark:bg-slate-900">
+                  <tr className="border-b border-slate-200 dark:border-slate-700">
+                    <th className="pb-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Asset</th>
+                    <th className="pb-2 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Current</th>
+                    <th className="pb-2 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Proposed</th>
+                    <th className="pb-2 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Delta</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {targetEntries.map(([token, proposedBps]) => {
+                    const current = vault.assets.find((a) => a.token.toLowerCase() === token.toLowerCase());
+                    const currentBps = current?.currentBps ?? 0;
+                    const delta = proposedBps - currentBps;
+                    const symbol = byToken[token]?.symbol ?? byToken[token.toLowerCase()]?.symbol ?? `${token.slice(0, 6)}…${token.slice(-4)}`;
+                    return (
+                      <tr key={token} className="border-b border-slate-100 dark:border-slate-800">
+                        <td className="py-2 font-medium text-ink dark:text-slate-100">{symbol}</td>
+                        <td className="py-2 text-right tabular-nums text-slate-600 dark:text-slate-300">{formatPercent(currentBps)}</td>
+                        <td className="py-2 text-right tabular-nums text-slate-600 dark:text-slate-300">{formatPercent(proposedBps)}</td>
+                        <td className={`py-2 text-right tabular-nums font-semibold ${delta > 0 ? "text-mint" : delta < 0 ? "text-warning" : "text-slate-400"}`}>
+                          {delta > 0 ? "+" : ""}{formatPercent(Math.abs(delta))} {delta > 0 ? "▲" : delta < 0 ? "▼" : ""}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </Card>
 
