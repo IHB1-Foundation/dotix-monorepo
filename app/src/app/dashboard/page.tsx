@@ -13,6 +13,7 @@ import { useTokenMeta } from "@/hooks/useTokenMeta";
 import { useVaultState } from "@/hooks/useVaultState";
 import { PDOT_ABI, PDOT_ADDRESS } from "@/lib/contracts";
 import { POLL_FAST } from "@/lib/constants";
+import { Tooltip } from "@/components/Tooltip";
 
 const decimalFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 4,
@@ -164,7 +165,9 @@ export default function DashboardPage() {
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ocean/15 text-ocean">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </span>
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">NAV</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <Tooltip content="Net Asset Value — the total value of all assets held in the vault, denominated in PAS">NAV</Tooltip>
+            </h2>
           </div>
           <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.nav)}</p>
           <p className="mt-1 text-xs text-slate-500">Total vault assets under management (PAS)</p>
@@ -186,7 +189,9 @@ export default function DashboardPage() {
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-warning/15 text-warning">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             </span>
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Supply</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <Tooltip content="Total PDOT shares minted across all depositors. More shares = more users in the vault.">PDOT Supply</Tooltip>
+            </h2>
           </div>
           <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.totalSupply)}</p>
           <p className="mt-1 text-xs text-slate-500">Total PDOT shares in circulation</p>

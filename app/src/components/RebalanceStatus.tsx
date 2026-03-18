@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Tooltip } from "@/components/Tooltip";
 
 type Props = {
   cooldownSeconds: number;
@@ -41,7 +42,9 @@ export function RebalanceStatus({ cooldownSeconds, lastRebalanceAt, paused }: Pr
   return (
     <div className={`card p-4 ${paused ? "border-red-200 bg-red-50/70 dark:border-red-800 dark:bg-red-900/20" : ""}`}>
       <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Rebalance Status</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">
+          <Tooltip content="Cooldown: minimum waiting time between rebalance executions to prevent over-trading.">Rebalance Status</Tooltip>
+        </h3>
         <span className={`rounded-full px-2 py-1 text-xs font-semibold ${paused ? "bg-red-100 text-red-700" : "bg-mint/20 text-mint"}`}>
           {paused ? "paused" : "active"}
         </span>
