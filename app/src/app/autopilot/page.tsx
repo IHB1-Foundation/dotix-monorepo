@@ -170,7 +170,7 @@ export default function AutopilotPage() {
           </div>
           <TxButton label="Generate Plan" onClick={() => void loadPlan()} loading={loading} />
         </div>
-        {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+        {error && <p className="mt-2 text-sm text-error">{error}</p>}
       </div>
 
       <div className="card p-4">

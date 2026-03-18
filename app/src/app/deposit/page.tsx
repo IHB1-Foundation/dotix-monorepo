@@ -120,7 +120,7 @@ export default function DepositPage() {
         <label className="mb-2 block text-sm text-slate-600">Amount</label>
         <div className="relative">
           <input
-            className={`input pr-16 ${depositExceedsBalance ? "border-red-400 focus:border-red-400 focus:ring-red-200" : ""}`}
+            className={`input pr-16 ${depositExceedsBalance ? "border-error focus:border-error focus:ring-error/20" : ""}`}
             value={depositInput}
             onChange={(e) => setDepositInput(sanitizeAmountInput(e.target.value))}
             placeholder="0.0"
@@ -134,7 +134,7 @@ export default function DepositPage() {
             MAX
           </button>
         </div>
-        {depositExceedsBalance && <p className="mt-2 text-sm text-red-600">Exceeds balance</p>}
+        {depositExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
 
         <label className="mb-2 mt-3 block text-sm text-slate-600">Slippage (%)</label>
         <div className="flex flex-wrap gap-2 text-sm">
@@ -301,7 +301,7 @@ export default function DepositPage() {
         <label className="mb-2 block text-sm text-slate-600">PDOT Amount</label>
         <div className="relative">
           <input
-            className={`input pr-16 ${redeemExceedsBalance ? "border-red-400 focus:border-red-400 focus:ring-red-200" : ""}`}
+            className={`input pr-16 ${redeemExceedsBalance ? "border-error focus:border-error focus:ring-error/20" : ""}`}
             value={redeemInput}
             onChange={(e) => setRedeemInput(sanitizeAmountInput(e.target.value))}
             placeholder="0.0"
@@ -315,7 +315,7 @@ export default function DepositPage() {
             MAX
           </button>
         </div>
-        {redeemExceedsBalance && <p className="mt-2 text-sm text-red-600">Exceeds balance</p>}
+        {redeemExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
 
         <label className="mb-2 mt-3 block text-sm text-slate-600">Slippage (%)</label>
         <div className="flex flex-wrap gap-2 text-sm">

@@ -16,7 +16,7 @@ export function Toast({ id, variant, title, description, linkHref, linkLabel, on
   return (
     <div
       className={`w-full max-w-sm rounded-xl border px-4 py-3 shadow-lg backdrop-blur transition ${
-        isSuccess ? "border-mint/40 bg-mint/15 text-emerald-900" : "border-red-300 bg-red-50 text-red-900"
+        isSuccess ? "border-mint/40 bg-mint/15 text-emerald-900 dark:text-mint-light" : "border-error/40 bg-error-light text-error-dark dark:bg-error/20 dark:text-error dark:border-error/30"
       }`}
     >
       <div className="flex items-start gap-3">
@@ -26,7 +26,7 @@ export function Toast({ id, variant, title, description, linkHref, linkLabel, on
               <path d="M20 6 9 17l-5-5" />
             </svg>
           ) : (
-            <svg viewBox="0 0 24 24" className="h-5 w-5 text-red-600" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg viewBox="0 0 24 24" className="h-5 w-5 text-error" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 9v4" />
               <path d="M12 17h.01" />
               <path d="M10.3 3.9 1.8 18.5A2 2 0 0 0 3.6 21h16.8a2 2 0 0 0 1.8-2.5L13.7 3.9a2 2 0 0 0-3.4 0Z" />

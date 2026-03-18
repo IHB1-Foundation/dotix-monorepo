@@ -103,7 +103,7 @@ export default function XcmPage() {
               onChange={(e) => setCustomHex(e.target.value)}
               placeholder="0x..."
             />
-            {validationError && <p className="mt-2 text-sm text-red-600">{validationError}</p>}
+            {validationError && <p className="mt-2 text-sm text-error">{validationError}</p>}
           </div>
         )}
 

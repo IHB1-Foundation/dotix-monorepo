@@ -16,7 +16,7 @@ export function WeightBar({ currentBps, targetBps }: Props) {
   const targetPct = clamp(targetBps / 100, 0, 100);
   const deviation = Math.abs(currentBps - targetBps);
 
-  const deviationColor = deviation > 1000 ? "bg-red-500" : deviation > 500 ? "bg-warning" : "bg-mint";
+  const deviationColor = deviation > 1000 ? "bg-error" : deviation > 500 ? "bg-warning" : "bg-mint";
 
   return (
     <div className="min-w-0 space-y-2">
@@ -45,7 +45,7 @@ export function WeightBar({ currentBps, targetBps }: Props) {
         <span className="flex items-center gap-1 text-[10px] text-slate-400 dark:text-slate-500">
           <span className="h-2 w-2 rounded-full bg-mint" title="deviation ≤ 5%" />
           <span className="h-2 w-2 rounded-full bg-warning" title="5–10%" />
-          <span className="h-2 w-2 rounded-full bg-red-500" title=">10%" />
+          <span className="h-2 w-2 rounded-full bg-error" title=">10%" />
         </span>
       </div>
     </div>

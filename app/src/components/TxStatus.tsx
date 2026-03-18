@@ -82,7 +82,7 @@ export function TxStatus({ hash, isPending, isConfirmed, error }: Props) {
         </div>
       )}
       {error && (
-        <div className="flex items-start gap-2 rounded-lg bg-red-50 px-3 py-2 text-red-700">
+        <div className="flex items-start gap-2 rounded-lg bg-error-light px-3 py-2 text-error-dark dark:bg-error/20 dark:text-error">
           <svg viewBox="0 0 24 24" className="mt-0.5 h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 9v4" />
             <path d="M12 17h.01" />
