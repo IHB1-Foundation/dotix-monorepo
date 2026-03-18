@@ -177,7 +177,17 @@ export default function AutopilotPage() {
       <div className="card p-4">
         <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Weight Comparison</h3>
         {targetEntries.length === 0 ? (
-          <p className="text-sm text-slate-600 dark:text-slate-400">No targets available. Generate a plan first.</p>
+          <div className="flex items-center justify-between gap-4 py-2">
+            <p className="text-sm text-slate-600 dark:text-slate-400">No targets available. Generate a plan first.</p>
+            <button
+              type="button"
+              onClick={() => void loadPlan()}
+              disabled={loading}
+              className="shrink-0 rounded-lg bg-brand-gradient px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:opacity-90 disabled:opacity-50"
+            >
+              Generate Plan
+            </button>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
