@@ -92,7 +92,7 @@ export function NavBar() {
                 href={link.href}
                 className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
                   pathname?.startsWith(link.href)
-                    ? "bg-ocean text-white"
+                    ? "bg-brand-gradient text-white shadow-sm"
                     : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
                 }`}
               >
@@ -113,7 +113,7 @@ export function NavBar() {
             href={link.href}
             className={`flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-center text-[11px] font-semibold transition ${
               pathname?.startsWith(link.href)
-                ? "bg-ocean text-white"
+                ? "bg-brand-gradient text-white shadow-sm"
                 : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
             }`}
           >

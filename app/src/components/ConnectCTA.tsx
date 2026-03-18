@@ -33,7 +33,7 @@ export function ConnectCTA({ title = defaultTitle, description = defaultDescript
                   <button
                     type="button"
                     onClick={openConnectModal}
-                    className="inline-flex min-h-12 items-center justify-center rounded-xl bg-ocean px-8 py-3 text-sm font-semibold text-white transition hover:bg-[#0b65b3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean/40 focus-visible:ring-offset-2"
+                    className="inline-flex min-h-12 items-center justify-center rounded-xl bg-brand-gradient px-8 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ocean/40 focus-visible:ring-offset-2"
                   >
                     Connect Wallet
                   </button>
