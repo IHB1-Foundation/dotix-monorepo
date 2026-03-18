@@ -38,7 +38,10 @@ export default function XcmPage() {
 
   return (
     <section className="space-y-4">
-      <PageHeader title="XCM Demo" description="Weigh and execute XCM messages from the EVM surface." />
+      <div className="rounded-lg border border-info/30 bg-info-light/60 px-4 py-3 text-sm text-info-dark dark:border-info/40 dark:bg-info/10 dark:text-info-light">
+        <strong>Advanced feature</strong> — This is an advanced feature for protocol administrators. Direct XCM interaction requires deep knowledge of cross-chain messaging.
+      </div>
+      <PageHeader title="Cross-Chain Messaging" description="Weigh and execute XCM messages from the EVM surface." />
 
       <Stepper
         steps={[
