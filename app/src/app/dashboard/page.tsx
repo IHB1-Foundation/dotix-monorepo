@@ -14,6 +14,7 @@ import { useVaultState } from "@/hooks/useVaultState";
 import { PDOT_ABI, PDOT_ADDRESS } from "@/lib/contracts";
 import { POLL_FAST } from "@/lib/constants";
 import { Tooltip } from "@/components/Tooltip";
+import { useCountUp } from "@/hooks/useCountUp";
 
 const decimalFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 4,
@@ -104,6 +105,14 @@ export default function DashboardPage() {
     return <ConnectCTA />;
   }
 
+  const navNum = Number(formatUnits(vault.nav, 18));
+  const priceNum = Number(formatUnits(vault.pdotPrice, 18));
+  const supplyNum = Number(formatUnits(vault.totalSupply, 18));
+
+  const navAnimated = useCountUp(navNum);
+  const priceAnimated = useCountUp(priceNum);
+  const supplyAnimated = useCountUp(supplyNum);
+
   if (vault.isLoading) {
     return <DashboardSkeleton />;
   }
@@ -169,7 +178,7 @@ export default function DashboardPage() {
               <Tooltip content="Net Asset Value — the total value of all assets held in the vault, denominated in PAS">NAV</Tooltip>
             </h2>
           </div>
-          <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.nav)}</p>
+          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(navAnimated)}</p>
           <p className="mt-1 text-xs text-slate-500">Total vault assets under management (PAS)</p>
         </article>
         <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
@@ -180,7 +189,7 @@ export default function DashboardPage() {
             </span>
             <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Price</h2>
           </div>
-          <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.pdotPrice)}</p>
+          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(priceAnimated)}</p>
           <p className="mt-1 text-xs text-slate-500">Current price per PDOT share (PAS)</p>
         </article>
         <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
@@ -193,7 +202,7 @@ export default function DashboardPage() {
               <Tooltip content="Total PDOT shares minted across all depositors. More shares = more users in the vault.">PDOT Supply</Tooltip>
             </h2>
           </div>
-          <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.totalSupply)}</p>
+          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(supplyAnimated)}</p>
           <p className="mt-1 text-xs text-slate-500">Total PDOT shares in circulation</p>
         </article>
       </div>
