@@ -7,6 +7,7 @@ import { ConfirmModal } from "@/components/ConfirmModal";
 import { ConnectCTA } from "@/components/ConnectCTA";
 import { CopyableAddress } from "@/components/CopyableAddress";
 import { ExplanationPanel } from "@/components/ExplanationPanel";
+import { PageHeader } from "@/components/PageHeader";
 import { SwapPlanTable } from "@/components/SwapPlanTable";
 import { TxButton } from "@/components/TxButton";
 import { TxStatus } from "@/components/TxStatus";
@@ -122,10 +123,12 @@ export default function AutopilotPage() {
 
   return (
     <section className="space-y-4">
+      <PageHeader title="Autopilot" description="Generate plans, apply targets, and execute rebalances." />
+
       <div className="card p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h2 className="text-lg font-semibold">Autopilot</h2>
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600">Plan Source</h2>
             <p className="text-sm text-slate-600">Latest plan file: {file ?? "none"}</p>
           </div>
           <TxButton label="Generate Plan" onClick={() => void loadPlan()} loading={loading} />

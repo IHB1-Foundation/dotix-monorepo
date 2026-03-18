@@ -5,6 +5,7 @@ import { useAccount } from "wagmi";
 
 import { AssetRow } from "@/components/AssetRow";
 import { ConnectCTA } from "@/components/ConnectCTA";
+import { PageHeader } from "@/components/PageHeader";
 import { RebalanceStatus } from "@/components/RebalanceStatus";
 import { useTokenMeta } from "@/hooks/useTokenMeta";
 import { useVaultState } from "@/hooks/useVaultState";
@@ -26,6 +27,8 @@ function formatMetric(value: bigint, decimals = 18): string {
 function DashboardSkeleton() {
   return (
     <section className="space-y-4">
+      <PageHeader title="Dashboard" description="Vault overview and asset allocation." />
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 3 }).map((_, idx) => (
           <article key={`kpi-skeleton-${idx}`} className="card animate-pulse p-4">

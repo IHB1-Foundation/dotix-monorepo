@@ -6,6 +6,7 @@ import { useAccount } from "wagmi";
 
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ConnectCTA } from "@/components/ConnectCTA";
+import { PageHeader } from "@/components/PageHeader";
 import { TxButton } from "@/components/TxButton";
 import { TxStatus } from "@/components/TxStatus";
 import { useDeposit } from "@/hooks/useDeposit";
@@ -89,8 +90,11 @@ export default function DepositPage() {
   }
 
   return (
-    <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      <div className="card relative overflow-hidden p-5">
+    <section className="space-y-4">
+      <PageHeader title="Deposit" description="Deposit base assets into the vault or redeem PDOT shares." />
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="card relative overflow-hidden p-5">
         <span className="absolute inset-x-0 top-0 h-1 bg-ocean/80" />
         <div className="mb-3">
           <h2 className="flex items-center gap-2 text-lg font-semibold">
@@ -162,9 +166,9 @@ export default function DepositPage() {
           isConfirmed={deposit.requiresApproval ? deposit.approveConfirmed : deposit.depositConfirmed}
           error={deposit.error}
         />
-      </div>
+        </div>
 
-      <div className="card relative overflow-hidden p-5">
+        <div className="card relative overflow-hidden p-5">
         <span className="absolute inset-x-0 top-0 h-1 bg-warning/70" />
         <div className="mb-3">
           <h2 className="flex items-center gap-2 text-lg font-semibold">
@@ -227,6 +231,7 @@ export default function DepositPage() {
           isConfirmed={redeem.emergencyConfirmed || redeem.redeemConfirmed}
           error={redeem.error}
         />
+        </div>
       </div>
 
       <ConfirmModal

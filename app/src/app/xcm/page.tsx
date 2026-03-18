@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import { PageHeader } from "@/components/PageHeader";
 import { TxButton } from "@/components/TxButton";
 import { XcmResult } from "@/components/XcmResult";
 import { useXcmDemo } from "@/hooks/useXcmDemo";
@@ -32,9 +33,11 @@ export default function XcmPage() {
 
   return (
     <section className="space-y-4">
+      <PageHeader title="XCM Demo" description="Weigh and execute XCM messages from the EVM surface." />
+
       <div className="card p-5">
-        <h2 className="text-lg font-semibold">XCM Precompile Demo</h2>
-        <p className="text-sm text-slate-600">Precompile address: {xcm.precompileAddress}</p>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600">Precompile</h2>
+        <p className="mt-1 text-sm text-slate-600">Precompile address: {xcm.precompileAddress}</p>
       </div>
 
       <div className="card p-5">
