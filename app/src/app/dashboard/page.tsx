@@ -7,6 +7,7 @@ import { useAccount, useReadContract } from "wagmi";
 
 import { AllocationChart, allocationColorByIndex } from "@/components/AllocationChart";
 import { AssetRow } from "@/components/AssetRow";
+import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { ConnectCTA } from "@/components/ConnectCTA";
 import { RebalanceStatus } from "@/components/RebalanceStatus";
@@ -116,24 +117,25 @@ export default function DashboardPage() {
             )}
           </p>
         </div>
-        <button
-          type="button"
+        <Button
+          variant="secondary"
+          size="sm"
           aria-label="Refresh vault data"
           onClick={() => void vault.refetch()}
           disabled={vault.isRefreshing}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-slate-800"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            className={`h-4 w-4 ${vault.isRefreshing ? "animate-spin" : ""}`}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
-            <path d="M21 3v5h-5" />
-          </svg>
-        </button>
+          icon={
+            <svg
+              viewBox="0 0 24 24"
+              className={`h-4 w-4 ${vault.isRefreshing ? "animate-spin" : ""}`}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+              <path d="M21 3v5h-5" />
+            </svg>
+          }
+        />
       </div>
 
       {/* 1. KPI Row — most important at-a-glance */}

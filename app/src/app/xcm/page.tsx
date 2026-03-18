@@ -6,6 +6,7 @@ import { Accordion } from "@/components/Accordion";
 import { Card } from "@/components/Card";
 import { PageHeader } from "@/components/PageHeader";
 import { Stepper } from "@/components/Stepper";
+import { ToggleGroup } from "@/components/ToggleGroup";
 import { TxButton } from "@/components/TxButton";
 import { XcmResult } from "@/components/XcmResult";
 import { useXcmDemo } from "@/hooks/useXcmDemo";
@@ -75,22 +76,15 @@ export default function XcmPage() {
 
       <Card padding="spacious">
         <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Step 1 — Choose Message</h3>
-        <div className="mb-3 flex gap-2 text-sm">
-          <button
-            type="button"
-            className={`rounded-lg px-3 py-2 transition ${mode === "default" ? "bg-brand-gradient text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"}`}
-            onClick={() => setMode("default")}
-          >
-            Default Message
-          </button>
-          <button
-            type="button"
-            className={`rounded-lg px-3 py-2 transition ${mode === "custom" ? "bg-brand-gradient text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200"}`}
-            onClick={() => setMode("custom")}
-          >
-            Custom
-          </button>
-        </div>
+        <ToggleGroup
+          items={[
+            { value: "default", label: "Default Message" },
+            { value: "custom", label: "Custom" },
+          ]}
+          value={mode}
+          onChange={setMode}
+          className="mb-3"
+        />
 
         {mode === "default" && (
           <p className="mb-3 text-xs text-slate-500 dark:text-slate-400">

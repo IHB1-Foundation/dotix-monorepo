@@ -6,8 +6,10 @@ import { formatUnits } from "viem";
 import { useAccount } from "wagmi";
 import { useSearchParams, useRouter } from "next/navigation";
 
+import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { ToggleGroup } from "@/components/ToggleGroup";
 import { ConnectCTA } from "@/components/ConnectCTA";
 import { PageHeader } from "@/components/PageHeader";
 import { TxButton } from "@/components/TxButton";
@@ -180,13 +182,14 @@ export default function DepositPage() {
             placeholder="0.0"
             inputMode="decimal"
           />
-          <button
-            type="button"
+          <Button
+            size="xs"
+            variant="secondary"
             onClick={() => setDepositInput(asInputAmount(deposit.balance, deposit.baseDecimals))}
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+            className="absolute right-2 top-1/2 -translate-y-1/2"
           >
             MAX
-          </button>
+          </Button>
         </div>
         {depositExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
 
@@ -201,29 +204,14 @@ export default function DepositPage() {
           </button>
           {depositSlippageOpen && (
             <div className="mt-2">
-              <div className="flex flex-wrap gap-2 text-sm">
-                {SLIPPAGE_PRESETS.map((preset) => (
-                  <button
-                    key={preset}
-                    type="button"
-                    onClick={() => setSlippagePreset(preset)}
-                    className={`rounded-lg px-3 py-2 font-medium transition ${
-                      slippagePreset === preset ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                    }`}
-                  >
-                    {preset}%
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => setSlippagePreset("custom")}
-                  className={`rounded-lg px-3 py-2 font-medium transition ${
-                    slippagePreset === "custom" ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                  }`}
-                >
-                  Custom
-                </button>
-              </div>
+              <ToggleGroup
+                items={[
+                  ...SLIPPAGE_PRESETS.map((p) => ({ value: p as string, label: `${p}%` })),
+                  { value: "custom", label: "Custom" },
+                ]}
+                value={slippagePreset}
+                onChange={(v) => setSlippagePreset(v as typeof slippagePreset)}
+              />
               {slippagePreset === "custom" && (
                 <input
                   className="input mt-2"
@@ -377,13 +365,14 @@ export default function DepositPage() {
             placeholder="0.0"
             inputMode="decimal"
           />
-          <button
-            type="button"
+          <Button
+            size="xs"
+            variant="secondary"
             onClick={() => setRedeemInput(asInputAmount(redeem.pdotBalance))}
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700 transition hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
+            className="absolute right-2 top-1/2 -translate-y-1/2"
           >
             MAX
-          </button>
+          </Button>
         </div>
         {redeemExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
 
@@ -398,29 +387,14 @@ export default function DepositPage() {
           </button>
           {redeemSlippageOpen && (
             <div className="mt-2">
-              <div className="flex flex-wrap gap-2 text-sm">
-                {SLIPPAGE_PRESETS.map((preset) => (
-                  <button
-                    key={preset}
-                    type="button"
-                    onClick={() => setRedeemSlippagePreset(preset)}
-                    className={`rounded-lg px-3 py-2 font-medium transition ${
-                      redeemSlippagePreset === preset ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                    }`}
-                  >
-                    {preset}%
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => setRedeemSlippagePreset("custom")}
-                  className={`rounded-lg px-3 py-2 font-medium transition ${
-                    redeemSlippagePreset === "custom" ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                  }`}
-                >
-                  Custom
-                </button>
-              </div>
+              <ToggleGroup
+                items={[
+                  ...SLIPPAGE_PRESETS.map((p) => ({ value: p as string, label: `${p}%` })),
+                  { value: "custom", label: "Custom" },
+                ]}
+                value={redeemSlippagePreset}
+                onChange={(v) => setRedeemSlippagePreset(v as typeof redeemSlippagePreset)}
+              />
               {redeemSlippagePreset === "custom" && (
                 <input
                   className="input mt-2"

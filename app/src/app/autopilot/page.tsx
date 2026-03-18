@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 
+import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ConnectCTA } from "@/components/ConnectCTA";
@@ -192,14 +193,14 @@ export default function AutopilotPage() {
         {targetEntries.length === 0 ? (
           <div className="flex items-center justify-between gap-4 py-2">
             <p className="text-sm text-slate-600 dark:text-slate-400">No targets available. Generate a plan first.</p>
-            <button
-              type="button"
+            <Button
+              size="sm"
               onClick={() => void loadPlan()}
               disabled={loading}
-              className="shrink-0 rounded-lg bg-brand-gradient px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:opacity-90 disabled:opacity-50"
+              className="shrink-0"
             >
               Generate Plan
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="overflow-x-auto">
