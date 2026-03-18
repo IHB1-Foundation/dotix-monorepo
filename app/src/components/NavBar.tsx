@@ -9,10 +9,10 @@ import { ReactNode } from "react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const links = [
-  { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
-  { href: "/deposit", label: "Deposit", icon: "deposit" },
-  { href: "/autopilot", label: "Autopilot", icon: "autopilot" },
-  { href: "/xcm", label: "XCM Demo", icon: "xcm" },
+  { href: "/dashboard", label: "Dashboard", mobileLabel: "Dashboard", icon: "dashboard" },
+  { href: "/deposit", label: "Deposit", mobileLabel: "Deposit", icon: "deposit" },
+  { href: "/autopilot", label: "Autopilot", mobileLabel: "Autopilot", icon: "autopilot" },
+  { href: "/xcm", label: "XCM Demo", mobileLabel: "XCM", icon: "xcm" },
 ] as const;
 
 function NavIcon({ type }: { type: (typeof links)[number]["icon"] }): ReactNode {
@@ -106,23 +106,32 @@ export function NavBar() {
           </div>
         </div>
       </header>
-      <nav className="fixed inset-x-4 bottom-4 z-40 grid grid-cols-4 gap-2 rounded-2xl border border-slate-200 bg-white/95 p-2 shadow-lg backdrop-blur dark:border-slate-700 dark:bg-slate-900/90 md:hidden">
-        {links.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            className={`flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-center text-[11px] font-semibold transition ${
-              pathname?.startsWith(link.href)
-                ? "bg-brand-gradient text-white shadow-sm"
-                : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-            }`}
-          >
-            <span aria-hidden="true">
-              <NavIcon type={link.icon} />
-            </span>
-            {link.label}
-          </Link>
-        ))}
+      <nav
+        className="fixed inset-x-4 z-40 grid grid-cols-4 gap-2 rounded-2xl border border-slate-200 bg-white/95 p-2 shadow-lg backdrop-blur dark:border-slate-700 dark:bg-slate-900/90 md:hidden"
+        style={{ bottom: "max(1rem, env(safe-area-inset-bottom))" }}
+      >
+        {links.map((link) => {
+          const isActive = pathname?.startsWith(link.href);
+          return (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`relative flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-center text-[11px] font-semibold transition ${
+                isActive
+                  ? "bg-brand-gradient text-white shadow-sm"
+                  : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+              }`}
+            >
+              {isActive && (
+                <span className="absolute inset-x-3 top-0.5 h-0.5 rounded-full bg-white/60" />
+              )}
+              <span aria-hidden="true">
+                <NavIcon type={link.icon} />
+              </span>
+              {link.mobileLabel}
+            </Link>
+          );
+        })}
       </nav>
     </>
   );
