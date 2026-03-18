@@ -12,7 +12,7 @@ html.dark {
 }
 
 body {
-  @apply bg-[#F7F8FA] text-ink min-h-screen transition-colors dark:bg-[#0C0C12] dark:text-slate-100;
+  @apply bg-surface text-ink min-h-screen transition-colors dark:bg-surface-0 dark:text-slate-100;
   font-family: 'DM Sans', sans-serif;
 }
 
@@ -21,13 +21,14 @@ h1, h2, h3, h4, h5, h6,
   font-family: 'Space Grotesk', 'DM Sans', sans-serif;
 }
 
+/* Level 1 card — standard card surface */
 .card {
-  @apply rounded-2xl border border-slate-200 bg-white shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-slate-800 dark:bg-[#16161F];
+  @apply rounded-2xl border border-slate-200 bg-white shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-slate-800 dark:bg-surface-1;
 }
 
-/* Hero card: clean white with shadow elevation — for KPI, My Position, primary stats */
+/* Level 2 card — elevated card (KPI, My Position, primary stats) */
 .card-hero {
-  @apply relative overflow-hidden rounded-2xl border border-slate-200/60 bg-white shadow-md transition-shadow duration-200 hover:shadow-lg dark:border-white/[0.08] dark:bg-[#1a1a24];
+  @apply relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-md transition-shadow duration-200 hover:shadow-lg dark:border-slate-800/60 dark:bg-surface-2;
 }
 
 /* Subtle card: transparent bg, thin border — for legends, FAQs, auxiliary info */
@@ -41,7 +42,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .input {
-  @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 placeholder:text-slate-400 transition focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500;
+  @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 placeholder:text-slate-400 transition focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20 dark:border-slate-700 dark:bg-surface-3 dark:text-slate-100 dark:placeholder:text-slate-500;
 }
 
 /* Tabular numbers for all numeric values */

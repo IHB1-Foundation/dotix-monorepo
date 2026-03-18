@@ -26,8 +26,14 @@ const config: Config = {
           light: "#fbbf24",
           dark: "#d97706",
         },
-        surface: "#f8fbff",
-        "surface-dark": "#0f0f14",
+        // Page & card surface elevation (light mode uses white/near-white, dark uses layered near-blacks)
+        surface: "#F7F8FA",
+        "surface-dark": "#0C0C12",
+        // Dark mode elevation hierarchy: surface-0 (page) → surface-1 (card) → surface-2 (elevated) → surface-3 (input)
+        "surface-0": "#0C0C12",
+        "surface-1": "#16161F",
+        "surface-2": "#1E1E2A",
+        "surface-3": "#0F0F17",
         // Semantic tokens
         success: {
           DEFAULT: "#20c997",
