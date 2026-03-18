@@ -221,7 +221,9 @@ export default function DashboardPage() {
         {vault.assets.length === 0 ? (
           <div className="card p-6 text-sm text-slate-600">No assets configured in vault.</div>
         ) : (
-          vault.assets.map((asset) => <AssetRow key={asset.token} asset={asset} meta={byToken[asset.token]} />)
+          vault.assets.map((asset, idx) => (
+            <AssetRow key={asset.token} asset={asset} meta={byToken[asset.token]} color={allocationColorByIndex(idx)} />
+          ))
         )}
       </div>
     </section>
