@@ -1,0 +1,30 @@
+name: Deploy Agent (Railway)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "agent/**"
+      - "shared/**"
+      - "package.json"
+      - "bun.lock"
+      - ".github/workflows/deploy-agent.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install Railway CLI
+        run: bash <(curl -fsSL cli.new)
+
+      - name: Deploy to Railway
+        run: railway up --service=${{ secrets.RAILWAY_SERVICE_ID }}
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
