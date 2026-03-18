@@ -199,24 +199,6 @@ export default function DashboardPage() {
         paused={vault.paused}
       />
 
-      <div className="card-subtle p-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Weight Deviation Legend</p>
-        <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-600">
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-mint" />
-            deviation &lt;= 5%
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-warning" />
-            deviation 5-10%
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
-            deviation &gt; 10%
-          </span>
-        </div>
-      </div>
-
       <div className="space-y-3">
         {vault.assets.length === 0 ? (
           <div className="card p-6 text-sm text-slate-600">No assets configured in vault.</div>
