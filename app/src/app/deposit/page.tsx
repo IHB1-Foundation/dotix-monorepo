@@ -90,8 +90,20 @@ export default function DepositPage() {
 
   return (
     <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-      <div className="card p-5">
-        <h2 className="mb-3 text-lg font-semibold">Deposit</h2>
+      <div className="card relative overflow-hidden p-5">
+        <span className="absolute inset-x-0 top-0 h-1 bg-ocean/80" />
+        <div className="mb-3">
+          <h2 className="flex items-center gap-2 text-lg font-semibold">
+            <span aria-hidden="true" className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-ocean/10 text-ocean">
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 4v12" />
+                <path d="m7 11 5 5 5-5" />
+              </svg>
+            </span>
+            Deposit
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">Convert base token to PDOT shares.</p>
+        </div>
         <p className="mb-2 text-sm text-slate-600">Base balance: {formatAmount(deposit.balance, deposit.baseDecimals)} {deposit.baseSymbol}</p>
 
         <label className="mb-2 block text-sm text-slate-600">Amount</label>
@@ -152,8 +164,20 @@ export default function DepositPage() {
         />
       </div>
 
-      <div className="card p-5">
-        <h2 className="mb-3 text-lg font-semibold">Redeem</h2>
+      <div className="card relative overflow-hidden p-5">
+        <span className="absolute inset-x-0 top-0 h-1 bg-warning/70" />
+        <div className="mb-3">
+          <h2 className="flex items-center gap-2 text-lg font-semibold">
+            <span aria-hidden="true" className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-warning/15 text-warning">
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 20V8" />
+                <path d="m17 13-5-5-5 5" />
+              </svg>
+            </span>
+            Redeem
+          </h2>
+          <p className="mt-1 text-sm text-slate-600">Burn PDOT shares to receive base token.</p>
+        </div>
         <p className="mb-2 text-sm text-slate-600">PDOT balance: {formatAmount(redeem.pdotBalance)}</p>
 
         <label className="mb-2 block text-sm text-slate-600">PDOT Amount</label>
