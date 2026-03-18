@@ -39,10 +39,10 @@ export function AssetRow({ asset, meta, color }: Props) {
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-2 text-sm text-slate-700 sm:grid-cols-2 lg:grid-cols-3">
-        <p>Balance: {Number(formatUnits(asset.balance, decimals)).toFixed(4)}</p>
-        <p>Value (base): {Number(formatUnits(asset.valueInBase, 18)).toFixed(4)}</p>
-        <p>Target: {(asset.targetBps / 100).toFixed(2)}%</p>
+      <div className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2 lg:grid-cols-3">
+        <p className="text-slate-500">Balance <span className="font-semibold text-ink dark:text-slate-100">{Number(formatUnits(asset.balance, decimals)).toFixed(4)}</span></p>
+        <p className="text-slate-500">Value <span className="font-semibold text-ink dark:text-slate-100">{Number(formatUnits(asset.valueInBase, 18)).toFixed(4)} <span className="text-xs font-normal text-muted">PAS</span></span></p>
+        <p className="text-slate-500">Target <span className="font-semibold text-ink dark:text-slate-100">{(asset.targetBps / 100).toFixed(2)}%</span></p>
       </div>
 
       <div className="mt-3">
