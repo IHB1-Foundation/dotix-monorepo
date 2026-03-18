@@ -79,17 +79,17 @@ export default function DashboardPage() {
   return (
     <section className="space-y-4">
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <article className="card p-4">
+        <article className="card p-4 transition-transform duration-200 hover:scale-[1.01]">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">NAV</h2>
           <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.nav)}</p>
           <p className="mt-1 text-xs text-slate-500">PAS</p>
         </article>
-        <article className="card p-4">
+        <article className="card p-4 transition-transform duration-200 hover:scale-[1.01]">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Price</h2>
           <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.pdotPrice)}</p>
           <p className="mt-1 text-xs text-slate-500">per PDOT</p>
         </article>
-        <article className="card p-4">
+        <article className="card p-4 transition-transform duration-200 hover:scale-[1.01]">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Total Supply</h2>
           <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.totalSupply)}</p>
           <p className="mt-1 text-xs text-slate-500">PDOT shares</p>

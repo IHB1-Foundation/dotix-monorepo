@@ -18,7 +18,7 @@ export function AssetRow({ asset, meta }: Props) {
   const symbol = meta?.symbol || "UNKNOWN";
 
   return (
-    <div className="card p-4">
+    <div className="card p-4 transition-colors hover:border-ocean/40">
       <div className="mb-3 flex items-center justify-between">
         <div>
           <p className="text-base font-semibold">{symbol}</p>

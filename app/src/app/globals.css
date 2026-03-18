@@ -12,5 +12,5 @@ body {
 }
 
 .card {
-  @apply rounded-xl border border-slate-200 bg-white/80 shadow-sm backdrop-blur;
+  @apply rounded-xl border border-slate-200 bg-white/80 shadow-sm backdrop-blur transition-shadow duration-200 hover:shadow-md;
 }
