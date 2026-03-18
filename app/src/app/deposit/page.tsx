@@ -14,6 +14,7 @@ import { ConnectCTA } from "@/components/ConnectCTA";
 import { PageHeader } from "@/components/PageHeader";
 import { Stepper } from "@/components/Stepper";
 import { TxButton } from "@/components/TxButton";
+import { TxPreview } from "@/components/TxPreview";
 import { TxStatus } from "@/components/TxStatus";
 import { useDeposit } from "@/hooks/useDeposit";
 import { useRedeem } from "@/hooks/useRedeem";
@@ -227,29 +228,23 @@ export default function DepositPage() {
         </div>
 
         {deposit.amountIn > 0n && (
-          <div className="mt-3 rounded-lg border border-ocean/30 bg-ocean/5 p-3 text-sm dark:border-ocean/40 dark:bg-ocean/10">
-            <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Transaction Preview</p>
-            <div className="space-y-1 text-slate-700 dark:text-slate-200">
-              <div className="flex justify-between">
-                <span>You deposit</span>
-                <span className="tabular-nums font-medium">{depositInput} {deposit.baseSymbol}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>You receive</span>
-                <span className="tabular-nums font-medium">~{formatAmount(deposit.expectedShares)} PDOT</span>
-              </div>
-              <div className="flex justify-between border-t border-slate-200 pt-1 dark:border-slate-700">
-                <span className="text-slate-500 dark:text-slate-400">Min received ({slippageInput}% slippage)</span>
-                <span className="tabular-nums text-slate-600 dark:text-slate-300">{formatAmount(deposit.minSharesOut)} PDOT</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500 dark:text-slate-400">Exchange rate</span>
-                <span className="tabular-nums text-slate-600 dark:text-slate-300">
-                  1 {deposit.baseSymbol} = {deposit.amountIn > 0n ? (Number(formatAmount(deposit.expectedShares)) / Number(depositInput) || 0).toFixed(4) : "—"} PDOT
-                </span>
-              </div>
-            </div>
-          </div>
+          <TxPreview
+            accent="ocean"
+            items={[
+              { label: "You deposit", value: `${depositInput} ${deposit.baseSymbol}`, highlight: true },
+              { label: "You receive", value: `~${formatAmount(deposit.expectedShares)} PDOT`, highlight: true },
+              {
+                label: `Min received (${slippageInput}% slippage)`,
+                value: `${formatAmount(deposit.minSharesOut)} PDOT`,
+                muted: true,
+              },
+              {
+                label: "Exchange rate",
+                value: `1 ${deposit.baseSymbol} = ${deposit.amountIn > 0n ? (Number(formatAmount(deposit.expectedShares)) / Number(depositInput) || 0).toFixed(4) : "—"} PDOT`,
+                muted: true,
+              },
+            ]}
+          />
         )}
 
         {deposit.amountIn > 0n && (
@@ -405,23 +400,18 @@ export default function DepositPage() {
         </div>
 
         {redeem.sharesIn > 0n && (
-          <div className="mt-3 rounded-lg border border-warning/30 bg-warning/5 p-3 text-sm dark:border-warning/40 dark:bg-warning/10">
-            <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Transaction Preview</p>
-            <div className="space-y-1 text-slate-700 dark:text-slate-200">
-              <div className="flex justify-between">
-                <span>You burn</span>
-                <span className="tabular-nums font-medium">{redeemInput} PDOT</span>
-              </div>
-              <div className="flex justify-between">
-                <span>You receive</span>
-                <span className="tabular-nums font-medium">~{formatAmount(redeem.expectedBaseOut)} {deposit.baseSymbol}</span>
-              </div>
-              <div className="flex justify-between border-t border-slate-200 pt-1 dark:border-slate-700">
-                <span className="text-slate-500 dark:text-slate-400">Min received ({redeemSlippageInput}% slippage)</span>
-                <span className="tabular-nums text-slate-600 dark:text-slate-300">{formatAmount(redeem.minBaseOut)} {deposit.baseSymbol}</span>
-              </div>
-            </div>
-          </div>
+          <TxPreview
+            accent="warning"
+            items={[
+              { label: "You burn", value: `${redeemInput} PDOT`, highlight: true },
+              { label: "You receive", value: `~${formatAmount(redeem.expectedBaseOut)} ${deposit.baseSymbol}`, highlight: true },
+              {
+                label: `Min received (${redeemSlippageInput}% slippage)`,
+                value: `${formatAmount(redeem.minBaseOut)} ${deposit.baseSymbol}`,
+                muted: true,
+              },
+            ]}
+          />
         )}
 
         <div className="mt-4 flex flex-wrap gap-2">
