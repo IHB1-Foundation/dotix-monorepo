@@ -72,7 +72,7 @@ export function NAVChart() {
             <XAxis
               dataKey="blockNumber"
               tick={{ fontSize: 10 }}
-              tickFormatter={(v: number) => `#${v.toLocaleString()}`}
+              tickFormatter={(v: number) => `#${v.toLocaleString("en-US")}`}
               className="text-slate-500"
               tickLine={false}
               axisLine={false}
@@ -94,7 +94,7 @@ export function NAVChart() {
                 backgroundColor: "white",
               }}
               formatter={(value) => [`${Number(value).toFixed(4)}`, "NAV"]}
-              labelFormatter={(v) => `Block #${Number(v).toLocaleString()}`}
+              labelFormatter={(v) => `Block #${Number(v).toLocaleString("en-US")}`}
             />
             <Area
               type="monotone"

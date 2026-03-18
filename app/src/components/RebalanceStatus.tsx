@@ -64,7 +64,7 @@ export function RebalanceStatus({ cooldownSeconds, lastRebalanceAt, paused }: Pr
       ) : null}
 
       <p className="text-xs text-slate-500">
-        Last rebalance: {lastRebalanceAt > 0 ? new Date(lastRebalanceAt * 1000).toLocaleString() : "never"}
+        Last rebalance: {lastRebalanceAt > 0 ? new Date(lastRebalanceAt * 1000).toLocaleString("en-US") : "never"}
       </p>
     </div>
   );

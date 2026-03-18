@@ -166,7 +166,7 @@ export default function AutopilotPage() {
             <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Autopilot Plan</h2>
             {plan?.timestamp ? (
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Generated at {new Date(plan.timestamp).toLocaleTimeString()} (
+                Generated at {new Date(plan.timestamp).toLocaleTimeString("en-US")} (
                 {Math.round((Date.now() - new Date(plan.timestamp).getTime()) / 60000)} min ago)
               </p>
             ) : (
