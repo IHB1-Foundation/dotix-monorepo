@@ -22,10 +22,36 @@ export type AgentPlanPayload = {
   explanation: string[];
 };
 
+/**
+ * Normalize raw agent output (which uses `output.newTargetBps`, `output.swaps`,
+ * `output.reasoning`) into the flat shape the UI expects.
+ */
+function normalize(raw: Record<string, unknown>): AgentPlanPayload {
+  // Already normalized format
+  if (raw.newTargets && Array.isArray(raw.swaps)) {
+    return raw as unknown as AgentPlanPayload;
+  }
+
+  // Agent dry-run / execute format: { state, output: { newTargetBps, swaps, reasoning } }
+  const output = (raw.output ?? {}) as Record<string, unknown>;
+  const reasoning = (output.reasoning ?? {}) as Record<string, string>;
+
+  return {
+    mode: String(raw.mode ?? "unknown"),
+    timestamp: String(raw.timestamp ?? new Date().toISOString()),
+    vaultState: raw.state as AgentPlanPayload["vaultState"],
+    newTargets: (output.newTargetBps ?? output.newTargets ?? {}) as Record<string, number>,
+    swaps: (Array.isArray(output.swaps) ? output.swaps : []) as AgentSwap[],
+    explanation: Array.isArray(raw.explanation)
+      ? raw.explanation
+      : Object.values(reasoning),
+  };
+}
+
 export function useAgentPlan() {
   const [plan, setPlan] = useState<AgentPlanPayload | null>(null);
   const [file, setFile] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadPlan = useCallback(async () => {
@@ -38,19 +64,15 @@ export function useAgentPlan() {
         throw new Error(`Failed to load plan: ${res.status}`);
       }
 
-      const json = (await res.json()) as { file: string; payload: AgentPlanPayload };
+      const json = (await res.json()) as { file: string; payload: Record<string, unknown> };
       setFile(json.file);
-      setPlan(json.payload);
+      setPlan(normalize(json.payload));
     } catch (e) {
       setError(String(e));
     } finally {
       setLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    void loadPlan();
-  }, [loadPlan]);
 
   return {
     plan,

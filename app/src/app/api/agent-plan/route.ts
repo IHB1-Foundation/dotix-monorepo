@@ -3,6 +3,13 @@ import { AGENT_PLAN_SAMPLE } from "@/generated/agent-plan-sample.generated";
 
 export const dynamic = "force-dynamic";
 
+function sampleResponse() {
+  return NextResponse.json({
+    file: "local-generated-sample.json",
+    payload: AGENT_PLAN_SAMPLE,
+  });
+}
+
 export async function GET() {
   const upstreamUrl = process.env.AGENT_PLAN_URL;
   const upstreamApiKey = process.env.AGENT_PLAN_API_KEY;
@@ -18,13 +25,12 @@ export async function GET() {
         method: "GET",
         cache: "no-store",
         headers,
+        signal: AbortSignal.timeout(5000),
       });
 
       if (!response.ok) {
-        return NextResponse.json(
-          { error: `Upstream plan API failed (${response.status})` },
-          { status: 502 }
-        );
+        // Upstream down — fall back to sample data
+        return sampleResponse();
       }
 
       const upstreamJson = (await response.json()) as { file?: string; payload?: unknown };
@@ -39,17 +45,11 @@ export async function GET() {
         file: "railway-live.json",
         payload: upstreamJson,
       });
-    } catch (error) {
-      return NextResponse.json({ error: String(error) }, { status: 502 });
+    } catch {
+      // Upstream unreachable — fall back to sample data
+      return sampleResponse();
     }
   }
 
-  try {
-    return NextResponse.json({
-      file: "local-generated-sample.json",
-      payload: AGENT_PLAN_SAMPLE,
-    });
-  } catch (error) {
-    return NextResponse.json({ error: String(error) }, { status: 500 });
-  }
+  return sampleResponse();
 }
