@@ -64,7 +64,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       {mounted
         ? createPortal(
-            <div className="pointer-events-none fixed right-4 top-4 z-[60] space-y-2">
+            <div aria-live="polite" role="status" className="pointer-events-none fixed right-4 top-4 z-[60] space-y-2">
               {toasts.map((toast) => (
                 <div key={toast.id} className="pointer-events-auto">
                   <Toast

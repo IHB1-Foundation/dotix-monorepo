@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 
 import { TxButton } from "@/components/TxButton";
 
@@ -15,6 +15,8 @@ type ConfirmModalProps = {
   children?: ReactNode;
 };
 
+const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
 export function ConfirmModal({
   open,
   title,
@@ -25,17 +27,43 @@ export function ConfirmModal({
   onCancel,
   children,
 }: ConfirmModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!open) return;
 
-    function handleEsc(event: KeyboardEvent) {
+    // Focus first focusable element when modal opens
+    const firstFocusable = dialogRef.current?.querySelectorAll<HTMLElement>(FOCUSABLE)[0];
+    firstFocusable?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         onCancel();
+        return;
+      }
+
+      // Focus trap — keep Tab cycling within the modal
+      if (event.key === "Tab" && dialogRef.current) {
+        const focusables = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE));
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (event.shiftKey) {
+          if (document.activeElement === first) {
+            event.preventDefault();
+            last?.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            event.preventDefault();
+            first?.focus();
+          }
+        }
       }
     }
 
-    window.addEventListener("keydown", handleEsc);
-    return () => window.removeEventListener("keydown", handleEsc);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [open, onCancel]);
 
   if (!open) {
@@ -51,10 +79,10 @@ export function ConfirmModal({
         }
       }}
     >
-      <div role="dialog" aria-modal="true" className="card w-full max-w-lg p-5">
-        <h3 className="text-lg font-semibold text-ink">{title}</h3>
-        <p className="mt-2 text-sm text-slate-600">{description}</p>
-        {children ? <div className="mt-3 text-sm text-slate-700">{children}</div> : null}
+      <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" className="card w-full max-w-lg p-5">
+        <h3 id="confirm-modal-title" className="text-lg font-semibold text-ink dark:text-slate-100">{title}</h3>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{description}</p>
+        {children ? <div className="mt-3 text-sm text-slate-700 dark:text-slate-200">{children}</div> : null}
         <div className="mt-5 flex justify-end gap-2">
           <TxButton label="Cancel" variant="secondary" onClick={onCancel} />
           <TxButton label={confirmLabel} variant="danger" onClick={onConfirm} loading={confirmLoading} />
