@@ -5,7 +5,6 @@ import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagm
 
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ConnectCTA } from "@/components/ConnectCTA";
-import { CopyableAddress } from "@/components/CopyableAddress";
 import { ExplanationPanel } from "@/components/ExplanationPanel";
 import { PageHeader } from "@/components/PageHeader";
 import { Stepper } from "@/components/Stepper";
@@ -14,6 +13,8 @@ import { TxButton } from "@/components/TxButton";
 import { TxStatus } from "@/components/TxStatus";
 import { useAgentPlan } from "@/hooks/useAgentPlan";
 import { useVaultRoles } from "@/hooks/useVaultRoles";
+import { useVaultState } from "@/hooks/useVaultState";
+import { useTokenMeta } from "@/hooks/useTokenMeta";
 import { INDEX_VAULT_ABI, VAULT_ADDRESS } from "@/lib/contracts";
 import { mapContractError } from "@/lib/errors";
 
@@ -51,6 +52,8 @@ export default function AutopilotPage() {
   const { isConnected } = useAccount();
   const { plan, file, loading, error, loadPlan } = useAgentPlan();
   const { isStrategist, isKeeper } = useVaultRoles();
+  const vault = useVaultState();
+  const { byToken } = useTokenMeta(vault.assets.map((a) => a.token));
 
   const [actionError, setActionError] = useState<string | undefined>();
   const [confirmAction, setConfirmAction] = useState<"apply-targets" | "execute-rebalance" | null>(null);
@@ -162,18 +165,41 @@ export default function AutopilotPage() {
       </div>
 
       <div className="card p-4">
-        <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-600">Proposed Target Weights</h3>
+        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Weight Comparison</h3>
         {targetEntries.length === 0 ? (
-          <p className="text-sm text-slate-600">No targets available.</p>
+          <p className="text-sm text-slate-600 dark:text-slate-400">No targets available. Generate a plan first.</p>
         ) : (
-          <ul className="space-y-1 text-sm">
-            {targetEntries.map(([token, bps]) => (
-              <li key={token} className="flex justify-between">
-                <CopyableAddress address={token} />
-                <span>{(bps / 100).toFixed(2)}%</span>
-              </li>
-            ))}
-          </ul>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-slate-200 dark:border-slate-700">
+                  <th className="pb-2 text-left text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Asset</th>
+                  <th className="pb-2 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Current</th>
+                  <th className="pb-2 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Proposed</th>
+                  <th className="pb-2 text-right text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Delta</th>
+                </tr>
+              </thead>
+              <tbody>
+                {targetEntries.map(([token, proposedBps]) => {
+                  const current = vault.assets.find((a) => a.token.toLowerCase() === token.toLowerCase());
+                  const currentBps = current?.currentBps ?? 0;
+                  const delta = proposedBps - currentBps;
+                  const symbol = byToken[token]?.symbol ?? byToken[token.toLowerCase()]?.symbol ?? `${token.slice(0, 6)}…${token.slice(-4)}`;
+
+                  return (
+                    <tr key={token} className="border-b border-slate-100 dark:border-slate-800">
+                      <td className="py-2 font-medium text-ink dark:text-slate-100">{symbol}</td>
+                      <td className="py-2 text-right tabular-nums text-slate-600 dark:text-slate-300">{(currentBps / 100).toFixed(2)}%</td>
+                      <td className="py-2 text-right tabular-nums text-slate-600 dark:text-slate-300">{(proposedBps / 100).toFixed(2)}%</td>
+                      <td className={`py-2 text-right tabular-nums font-semibold ${delta > 0 ? "text-mint" : delta < 0 ? "text-warning" : "text-slate-400"}`}>
+                        {delta > 0 ? "+" : ""}{(delta / 100).toFixed(2)}% {delta > 0 ? "▲" : delta < 0 ? "▼" : ""}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
 
