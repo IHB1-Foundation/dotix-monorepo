@@ -12,7 +12,6 @@ import { ConfirmModal } from "@/components/ConfirmModal";
 import { ToggleGroup } from "@/components/ToggleGroup";
 import { ConnectCTA } from "@/components/ConnectCTA";
 import { PageHeader } from "@/components/PageHeader";
-import { Stepper } from "@/components/Stepper";
 import { TxButton } from "@/components/TxButton";
 import { TxPreview } from "@/components/TxPreview";
 import { TxStatus } from "@/components/TxStatus";
@@ -251,26 +250,16 @@ export default function DepositPage() {
             </div>
           )}
 
-          {/* Stepper */}
-          {deposit.amountIn > 0n && (
-            <div className="mt-4">
-              <Stepper
-                steps={[
-                  {
-                    label: "Approve",
-                    detail: deposit.requiresApproval ? "Allow vault to spend your tokens." : "Already approved.",
-                    completed: deposit.approveConfirmed || !deposit.requiresApproval,
-                    active: deposit.requiresApproval && !deposit.approveConfirmed,
-                  },
-                  {
-                    label: "Stake",
-                    detail: "Mint PDOT shares.",
-                    completed: deposit.depositConfirmed,
-                    active: !deposit.requiresApproval || deposit.approveConfirmed,
-                  },
-                ]}
-              />
-            </div>
+          {/* Step indicator — only when approve is needed */}
+          {deposit.amountIn > 0n && deposit.requiresApproval && !deposit.approveConfirmed && (
+            <p className="mt-4 text-xs text-slate-500 dark:text-slate-400">
+              Step 1 of 2 — Approve token spending
+            </p>
+          )}
+          {deposit.amountIn > 0n && deposit.approveConfirmed && (
+            <p className="mt-4 text-xs text-mint">
+              Step 2 of 2 — Ready to stake
+            </p>
           )}
 
           {/* CTA — full-width */}
