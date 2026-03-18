@@ -19,6 +19,21 @@ body {
   @apply rounded-xl border border-slate-200 bg-white/80 shadow-sm backdrop-blur transition-shadow duration-200 hover:shadow-md dark:border-slate-700 dark:bg-slate-900/80;
 }
 
+/* Hero card: gradient tint + glow border — for KPI, My Position, primary stats */
+.card-hero {
+  @apply relative overflow-hidden rounded-xl border border-ocean/30 bg-gradient-to-br from-ocean/10 via-white/90 to-mint/10 shadow-md backdrop-blur transition-shadow duration-200 hover:shadow-lg dark:border-ocean/40 dark:from-ocean/20 dark:via-slate-900/90 dark:to-mint/10;
+}
+
+/* Subtle card: transparent bg, thin border — for legends, FAQs, auxiliary info */
+.card-subtle {
+  @apply rounded-xl border border-slate-100 bg-transparent transition-colors duration-200 dark:border-slate-800;
+}
+
+/* Highlight card: ocean/mint border + light tint — for active states, previews */
+.card-highlight {
+  @apply rounded-xl border border-ocean/30 bg-ocean/5 backdrop-blur dark:border-ocean/40 dark:bg-ocean/10;
+}
+
 .input {
   @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 placeholder:text-slate-400 transition focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500;
 }

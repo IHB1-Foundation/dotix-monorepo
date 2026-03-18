@@ -158,20 +158,38 @@ export default function DashboardPage() {
       <AllocationChart items={chartItems} totalLabel={formatMetric(vault.nav)} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <article className={`card p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">NAV</h2>
+        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
+          <div className="flex items-center gap-2">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ocean/15 text-ocean">
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </span>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">NAV</h2>
+          </div>
           <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.nav)}</p>
-          <p className="mt-1 text-xs text-slate-500">PAS</p>
+          <p className="mt-1 text-xs text-slate-500">Total vault assets under management (PAS)</p>
         </article>
-        <article className={`card p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Price</h2>
+        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
+          <div className="flex items-center gap-2">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-mint/15 text-mint">
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="8"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+            </span>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Price</h2>
+          </div>
           <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.pdotPrice)}</p>
-          <p className="mt-1 text-xs text-slate-500">per PDOT</p>
+          <p className="mt-1 text-xs text-slate-500">Current price per PDOT share (PAS)</p>
         </article>
-        <article className={`card p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Total Supply</h2>
+        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
+          <div className="flex items-center gap-2">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-warning/15 text-warning">
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </span>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Supply</h2>
+          </div>
           <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.totalSupply)}</p>
-          <p className="mt-1 text-xs text-slate-500">PDOT shares</p>
+          <p className="mt-1 text-xs text-slate-500">Total PDOT shares in circulation</p>
         </article>
       </div>
 
@@ -181,7 +199,7 @@ export default function DashboardPage() {
         paused={vault.paused}
       />
 
-      <div className="card p-3">
+      <div className="card-subtle p-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Weight Deviation Legend</p>
         <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-600">
           <span className="inline-flex items-center gap-1.5">
