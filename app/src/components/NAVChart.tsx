@@ -9,10 +9,23 @@ import {
   Tooltip,
   XAxis,
   YAxis,
+  type TooltipProps,
 } from "recharts";
 
 import { Card } from "@/components/Card";
 import { useNAVHistory } from "@/hooks/useNAVHistory";
+
+function ChartTooltip({ active, payload, label }: TooltipProps<number, string>) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs shadow-md dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100">
+      <p className="mb-1 text-slate-500 dark:text-slate-400">
+        Block #{Number(label).toLocaleString("en-US")}
+      </p>
+      <p className="font-semibold">NAV: {Number(payload[0].value).toFixed(4)}</p>
+    </div>
+  );
+}
 
 const RANGES = ["24h", "7d", "30d", "all"] as const;
 type Range = (typeof RANGES)[number];
@@ -86,16 +99,7 @@ export function NAVChart() {
               axisLine={false}
               width={48}
             />
-            <Tooltip
-              contentStyle={{
-                borderRadius: "8px",
-                fontSize: "12px",
-                border: "1px solid #e2e8f0",
-                backgroundColor: "white",
-              }}
-              formatter={(value) => [`${Number(value).toFixed(4)}`, "NAV"]}
-              labelFormatter={(v) => `Block #${Number(v).toLocaleString("en-US")}`}
-            />
+            <Tooltip content={<ChartTooltip />} />
             <Area
               type="monotone"
               dataKey="nav"
