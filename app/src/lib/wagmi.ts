@@ -1,6 +1,7 @@
+import { connectorsForWallets } from "@rainbow-me/rainbowkit";
+import { metaMaskWallet } from "@rainbow-me/rainbowkit/wallets";
 import { defineChain, http } from "viem";
 import { createConfig } from "wagmi";
-import { injected } from "wagmi/connectors";
 
 import { APP_CHAIN_ID, APP_EXPLORER_URL, APP_RPC_URL } from "@/lib/network";
 
@@ -29,9 +30,14 @@ export const polkadotHub = defineChain({
   testnet: true,
 });
 
+const connectors = connectorsForWallets(
+  [{ groupName: "Supported", wallets: [metaMaskWallet] }],
+  { appName: "Dotix", projectId: "dotix" },
+);
+
 export const wagmiConfig = createConfig({
   chains: [polkadotHub],
-  connectors: [injected()],
+  connectors,
   transports: {
     [polkadotHub.id]: http(polkadotHub.rpcUrls.default.http[0]),
   },
