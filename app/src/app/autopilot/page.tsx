@@ -121,6 +121,18 @@ export default function AutopilotPage() {
     <section className="space-y-4">
       <PageHeader title="Autopilot" description="Generate plans, apply targets, and execute rebalances." />
       {!isConnected && <ConnectCTA variant="inline" description="Connect your wallet to apply targets and execute rebalances." />}
+      {isConnected && (
+        <div className="flex flex-wrap gap-2">
+          <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${isStrategist ? "bg-success-light text-success-dark dark:bg-success/20 dark:text-success" : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"}`}>
+            <span className={`h-1.5 w-1.5 rounded-full ${isStrategist ? "bg-success" : "bg-slate-400"}`} />
+            STRATEGIST {isStrategist ? "✓" : "✗"}
+          </span>
+          <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ${isKeeper ? "bg-success-light text-success-dark dark:bg-success/20 dark:text-success" : "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"}`}>
+            <span className={`h-1.5 w-1.5 rounded-full ${isKeeper ? "bg-success" : "bg-slate-400"}`} />
+            KEEPER {isKeeper ? "✓" : "✗"}
+          </span>
+        </div>
+      )}
       <Stepper
         steps={[
           {
