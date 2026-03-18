@@ -8,7 +8,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 const mainLinks = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
-  { href: "/deposit", label: "Deposit", mobileLabel: "Deposit", icon: "deposit" },
+  { href: "/deposit", label: "Stake", icon: "deposit" },
   { href: "/autopilot", label: "Autopilot", icon: "autopilot" },
 ] as const;
 

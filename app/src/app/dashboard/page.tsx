@@ -232,7 +232,7 @@ export default function DashboardPage() {
               <p className="mt-3 text-sm font-semibold text-slate-500 dark:text-slate-400">No assets in the vault yet</p>
               <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Assets will appear here once the vault is configured.</p>
               <Link href="/deposit" className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90">
-                Go to Deposit
+                Stake now
               </Link>
             </div>
           ) : (

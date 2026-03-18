@@ -119,9 +119,9 @@ export default function DepositPage() {
 
   return (
     <section className="mx-auto max-w-lg space-y-4">
-      <PageHeader title="Deposit & Redeem" description="Deposit base assets to mint PDOT shares, or burn PDOT to redeem." />
+      <PageHeader title="Stake & Unstake" description="Stake PAS, receive PDOT." />
 
-      {!isConnected && <ConnectCTA variant="inline" description="Connect your wallet to deposit base tokens and mint PDOT shares." />}
+      {!isConnected && <ConnectCTA variant="inline" description="Connect your wallet to stake PAS and mint PDOT shares." />}
 
       {/* Tab toggle */}
       <div className="flex rounded-xl border border-slate-200 bg-slate-100 p-1 dark:border-slate-700 dark:bg-slate-800">
@@ -137,7 +137,7 @@ export default function DepositPage() {
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 4v12" /><path d="m7 11 5 5 5-5" />
           </svg>
-          Deposit
+          Stake
         </button>
         <button
           type="button"
@@ -151,7 +151,7 @@ export default function DepositPage() {
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 20V8" /><path d="m17 13-5-5-5 5" />
           </svg>
-          Redeem
+          Unstake
         </button>
       </div>
 
@@ -168,11 +168,11 @@ export default function DepositPage() {
                 <path d="m7 11 5 5 5-5" />
               </svg>
             </span>
-            Deposit
+            Stake
           </h2>
-          <p className="mt-1 text-sm text-slate-600">Convert base token to PDOT shares.</p>
+          <p className="mt-1 text-sm text-slate-600">Stake PAS, receive PDOT.</p>
         </div>
-        <p className="mb-2 text-sm text-slate-600">Base balance: {formatAmount(deposit.balance, deposit.baseDecimals)} {deposit.baseSymbol}</p>
+        <p className="mb-2 text-sm text-slate-600">Available: {formatAmount(deposit.balance, deposit.baseDecimals)} {deposit.baseSymbol}</p>
 
         <label htmlFor="deposit-amount" className="mb-2 block text-sm text-slate-600">Amount</label>
         <div className="relative">
@@ -340,11 +340,11 @@ export default function DepositPage() {
                 <path d="m17 13-5-5-5 5" />
               </svg>
             </span>
-            Redeem
+            Unstake
           </h2>
-          <p className="mt-1 text-sm text-slate-600">Burn PDOT shares to receive base token.</p>
+          <p className="mt-1 text-sm text-slate-600">Unstake PDOT, receive PAS.</p>
         </div>
-        <p className="mb-2 text-sm text-slate-600">PDOT balance: {formatAmount(redeem.pdotBalance)}</p>
+        <p className="mb-2 text-sm text-slate-600">Available: {formatAmount(redeem.pdotBalance)} PDOT</p>
 
         <label htmlFor="redeem-amount" className="mb-2 block text-sm text-slate-600">PDOT Amount</label>
         <div className="relative">
@@ -416,7 +416,7 @@ export default function DepositPage() {
 
         <div className="mt-4 flex flex-wrap gap-2">
           <TxButton
-            label="Redeem"
+            label="Unstake"
             onClick={redeem.redeem}
             loading={redeem.redeemPending}
             disabled={!isConnected || redeem.sharesIn === 0n || redeemExceedsBalance}
@@ -443,7 +443,7 @@ export default function DepositPage() {
           <div className="mt-3 rounded-lg border border-mint/30 bg-mint/10 p-4 dark:border-mint/40 dark:bg-mint/15">
             <p className="flex items-center gap-1.5 text-sm font-semibold text-mint">
               <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6 9 17l-5-5" /></svg>
-              Redeem successful!
+              Unstake successful!
             </p>
             <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
               ~{formatAmount(redeem.expectedBaseOut)} {deposit.baseSymbol} returned to your wallet

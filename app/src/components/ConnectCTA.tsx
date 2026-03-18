@@ -139,8 +139,8 @@ export function ConnectCTA({ title = defaultTitle, description = defaultDescript
             <p className="text-slate-600 dark:text-slate-400">Link your wallet on Polkadot Hub.</p>
           </li>
           <li className="rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800">
-            <p className="font-semibold text-ink dark:text-slate-100">2. Deposit</p>
-            <p className="text-slate-600 dark:text-slate-400">Mint PDOT shares from base tokens.</p>
+            <p className="font-semibold text-ink dark:text-slate-100">2. Stake</p>
+            <p className="text-slate-600 dark:text-slate-400">Stake PAS, receive PDOT shares.</p>
           </li>
           <li className="rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-800">
             <p className="font-semibold text-ink dark:text-slate-100">3. Earn</p>
