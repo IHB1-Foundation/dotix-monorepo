@@ -73,6 +73,8 @@ export function useRedeem(amount: string, slippagePct: number) {
   const redeemReceipt = useWaitForTransactionReceipt({ hash: redeemHash });
   const emergencyReceipt = useWaitForTransactionReceipt({ hash: emergencyHash });
 
+  const isLoading = navRead.isLoading || pausedRead.isLoading || supplyRead.isLoading || balanceRead.isLoading;
+
   async function redeem(): Promise<void> {
     if (sharesIn === 0n) return;
     setError(undefined);
@@ -121,6 +123,7 @@ export function useRedeem(amount: string, slippagePct: number) {
     emergencyPending: emergencyReceipt.isLoading,
     redeemConfirmed: redeemReceipt.isSuccess,
     emergencyConfirmed: emergencyReceipt.isSuccess,
+    isLoading,
     error,
   };
 }

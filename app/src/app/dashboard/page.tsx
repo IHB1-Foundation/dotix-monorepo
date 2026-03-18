@@ -11,13 +11,49 @@ function formatBase(value: bigint, decimals = 18): string {
   return Number(formatUnits(value, decimals)).toFixed(4);
 }
 
+function DashboardSkeleton() {
+  return (
+    <section className="space-y-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 3 }).map((_, idx) => (
+          <article key={`kpi-skeleton-${idx}`} className="card animate-pulse p-4">
+            <div className="h-3 w-20 rounded bg-slate-200" />
+            <div className="mt-3 h-8 w-28 rounded bg-slate-200" />
+          </article>
+        ))}
+      </div>
+
+      <div className="card animate-pulse p-4">
+        <div className="h-3 w-36 rounded bg-slate-200" />
+        <div className="mt-3 h-4 w-44 rounded bg-slate-200" />
+        <div className="mt-2 h-3 w-52 rounded bg-slate-200" />
+      </div>
+
+      <div className="space-y-3">
+        {Array.from({ length: 3 }).map((_, idx) => (
+          <div key={`asset-skeleton-${idx}`} className="card animate-pulse p-4">
+            <div className="h-4 w-20 rounded bg-slate-200" />
+            <div className="mt-2 h-3 w-40 rounded bg-slate-200" />
+            <div className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="h-3 rounded bg-slate-200" />
+              <div className="h-3 rounded bg-slate-200" />
+              <div className="h-3 rounded bg-slate-200" />
+            </div>
+            <div className="mt-4 h-2.5 w-full rounded-full bg-slate-200" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function DashboardPage() {
   const vault = useVaultState();
   const tokens = vault.assets.map((asset) => asset.token);
   const { byToken } = useTokenMeta(tokens);
 
   if (vault.isLoading) {
-    return <section className="card p-6">Loading dashboard state...</section>;
+    return <DashboardSkeleton />;
   }
 
   return (

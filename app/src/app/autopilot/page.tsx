@@ -16,6 +16,36 @@ function shortAddress(address: string): string {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
+function AutopilotSkeleton() {
+  return (
+    <section className="space-y-4">
+      <div className="card animate-pulse p-4">
+        <div className="h-6 w-28 rounded bg-slate-200" />
+        <div className="mt-3 h-4 w-52 rounded bg-slate-200" />
+        <div className="mt-4 h-10 w-36 rounded-lg bg-slate-200" />
+      </div>
+
+      <div className="card animate-pulse p-4">
+        <div className="h-4 w-44 rounded bg-slate-200" />
+        <div className="mt-3 space-y-2">
+          <div className="h-3 w-full rounded bg-slate-200" />
+          <div className="h-3 w-full rounded bg-slate-200" />
+          <div className="h-3 w-2/3 rounded bg-slate-200" />
+        </div>
+      </div>
+
+      <div className="card animate-pulse p-4">
+        <div className="h-4 w-36 rounded bg-slate-200" />
+        <div className="mt-3 space-y-2">
+          <div className="h-8 w-full rounded bg-slate-200" />
+          <div className="h-8 w-full rounded bg-slate-200" />
+          <div className="h-8 w-full rounded bg-slate-200" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function AutopilotPage() {
   const { plan, file, loading, error, loadPlan } = useAgentPlan();
   const { isStrategist, isKeeper } = useVaultRoles();
@@ -32,6 +62,10 @@ export default function AutopilotPage() {
     if (!plan) return [];
     return Object.entries(plan.newTargets);
   }, [plan]);
+
+  if (loading && !plan) {
+    return <AutopilotSkeleton />;
+  }
 
   async function onApplyTargets(): Promise<void> {
     if (!plan) return;

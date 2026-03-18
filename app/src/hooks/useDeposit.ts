@@ -155,6 +155,12 @@ export function useDeposit(amount: string, slippagePct: number) {
   const approveReceipt = useWaitForTransactionReceipt({ hash: approveHash });
   const depositReceipt = useWaitForTransactionReceipt({ hash: depositHash });
 
+  const isLoading =
+    vaultReads.isLoading ||
+    pdotSupplyRead.isLoading ||
+    supplyRead.isLoading ||
+    (Boolean(baseAsset && address) && baseMetaRead.isLoading);
+
   async function approve(): Promise<void> {
     if (!baseAsset || amountIn === 0n) return;
 
@@ -207,6 +213,7 @@ export function useDeposit(amount: string, slippagePct: number) {
     depositPending: depositReceipt.isLoading,
     approveConfirmed: approveReceipt.isSuccess,
     depositConfirmed: depositReceipt.isSuccess,
+    isLoading,
     error,
   };
 }
