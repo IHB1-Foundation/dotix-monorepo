@@ -17,10 +17,6 @@ export function TxStatus({ hash, isPending, isConfirmed, error }: Props) {
   const shownSuccessRef = useRef<string | null>(null);
   const shownErrorRef = useRef<string | null>(null);
 
-  if (!hash && !error) {
-    return null;
-  }
-
   const link = hash ? explorerTxUrl(hash) : undefined;
 
   useEffect(() => {
@@ -55,6 +51,10 @@ export function TxStatus({ hash, isPending, isConfirmed, error }: Props) {
       description: error,
     });
   }, [error, hash, pushToast]);
+
+  if (!hash && !error) {
+    return null;
+  }
 
   return (
     <div className="mt-2 space-y-2 text-sm">
