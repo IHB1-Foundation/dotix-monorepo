@@ -12,7 +12,6 @@ import { AssetRow } from "@/components/AssetRow";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { ConnectCTA } from "@/components/ConnectCTA";
-import { RebalanceStatus } from "@/components/RebalanceStatus";
 import { useTokenMeta } from "@/hooks/useTokenMeta";
 import { useVaultState } from "@/hooks/useVaultState";
 import { PDOT_ABI, PDOT_ADDRESS } from "@/lib/contracts";
@@ -110,14 +109,11 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink dark:text-slate-100">Dashboard</h1>
-          <p className="mt-0.5 text-sm text-muted dark:text-slate-400">
-            Vault overview and asset allocation.
-            {freshnessSeconds !== null && (
-              <span className="ml-2 inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400">
-                Updated {freshnessSeconds}s ago
-              </span>
-            )}
-          </p>
+          {freshnessSeconds !== null && (
+            <p className="mt-0.5 text-[11px] text-slate-400">
+              Updated {freshnessSeconds}s ago
+            </p>
+          )}
         </div>
         <Button
           variant="secondary"
@@ -239,17 +235,10 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* 4. Rebalance Status — operational info */}
-      <RebalanceStatus
-        cooldownSeconds={vault.cooldownSeconds}
-        lastRebalanceAt={vault.lastRebalanceAt}
-        paused={vault.paused}
-      />
-
-      {/* 5. NAV Historical Chart */}
+      {/* 4. NAV Historical Chart */}
       <NAVChart />
 
-      {/* 6. Activity Feed */}
+      {/* 5. Activity Feed */}
       <ActivityFeed />
     </section>
   );
