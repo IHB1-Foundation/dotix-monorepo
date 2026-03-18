@@ -185,6 +185,11 @@ export default function DepositPage() {
             </div>
           </div>
           {depositExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
+          {!depositExceedsBalance && deposit.amountIn > 0n && (
+            <p className="mt-1.5 text-xs text-muted">
+              ≈ {formatAmount(deposit.expectedShares)} PDOT
+            </p>
+          )}
 
           {/* Slippage */}
           <div className="mt-4">
@@ -348,6 +353,11 @@ export default function DepositPage() {
             </div>
           </div>
           {redeemExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
+          {!redeemExceedsBalance && redeem.sharesIn > 0n && (
+            <p className="mt-1.5 text-xs text-muted">
+              ≈ {formatAmount(redeem.expectedBaseOut)} {deposit.baseSymbol}
+            </p>
+          )}
 
           {/* Slippage */}
           <div className="mt-4">
