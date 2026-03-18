@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+
+import { useToast } from "@/components/ToastProvider";
 import { explorerTxUrl } from "@/lib/network";
 
 type Props = {
@@ -10,11 +13,48 @@ type Props = {
 };
 
 export function TxStatus({ hash, isPending, isConfirmed, error }: Props) {
+  const { pushToast } = useToast();
+  const shownSuccessRef = useRef<string | null>(null);
+  const shownErrorRef = useRef<string | null>(null);
+
   if (!hash && !error) {
     return null;
   }
 
   const link = hash ? explorerTxUrl(hash) : undefined;
+
+  useEffect(() => {
+    if (!isConfirmed || !hash) return;
+
+    if (shownSuccessRef.current === hash) {
+      return;
+    }
+
+    shownSuccessRef.current = hash;
+    pushToast({
+      variant: "success",
+      title: "Transaction Confirmed",
+      description: "Your transaction was successfully included on-chain.",
+      linkHref: link,
+      linkLabel: "View on Blockscout",
+    });
+  }, [hash, isConfirmed, link, pushToast]);
+
+  useEffect(() => {
+    if (!error) return;
+
+    const errorKey = hash ? `${hash}:${error}` : error;
+    if (shownErrorRef.current === errorKey) {
+      return;
+    }
+
+    shownErrorRef.current = errorKey;
+    pushToast({
+      variant: "error",
+      title: "Transaction Failed",
+      description: error,
+    });
+  }, [error, hash, pushToast]);
 
   return (
     <div className="mt-2 text-sm">
