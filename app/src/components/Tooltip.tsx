@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useRef, useState, useCallback, useEffect } from "react";
 
 type Props = {
   content: string;
@@ -9,6 +9,30 @@ type Props = {
 
 export function Tooltip({ content, children }: Props) {
   const [visible, setVisible] = useState(false);
+  const tipRef = useRef<HTMLSpanElement>(null);
+
+  const clamp = useCallback(() => {
+    const el = tipRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    // reset
+    el.style.left = "50%";
+    el.style.transform = "translateX(-50%)";
+
+    const updated = el.getBoundingClientRect();
+    if (updated.left < 8) {
+      el.style.left = "0";
+      el.style.transform = "translateX(0)";
+    } else if (updated.right > window.innerWidth - 8) {
+      el.style.left = "auto";
+      el.style.right = "0";
+      el.style.transform = "translateX(0)";
+    }
+  }, []);
+
+  useEffect(() => {
+    if (visible) clamp();
+  }, [visible, clamp]);
 
   return (
     <span
@@ -23,8 +47,9 @@ export function Tooltip({ content, children }: Props) {
       </span>
       {visible && (
         <span
+          ref={tipRef}
           role="tooltip"
-          className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 w-max max-w-xs -translate-x-1/2 rounded-lg bg-slate-900 px-2.5 py-1.5 text-xs text-slate-100 shadow-lg dark:bg-slate-700"
+          className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1 w-max max-w-[min(20rem,calc(100vw-1rem))] -translate-x-1/2 whitespace-normal break-words rounded-lg bg-slate-900 px-2.5 py-1.5 text-xs leading-relaxed text-slate-100 shadow-lg dark:bg-slate-700"
         >
           {content}
           <span className="absolute left-1/2 top-full -translate-x-1/2 border-4 border-transparent border-t-slate-900 dark:border-t-slate-700" />
