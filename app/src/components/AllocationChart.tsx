@@ -11,7 +11,7 @@ type AllocationChartProps = {
   totalLabel: string;
 };
 
-const CHART_COLORS = ["#0f7ad8", "#20c997", "#f59f00", "#f97316", "#a855f7", "#ef4444"];
+const CHART_COLORS = ["#0f7ad8", "#34d399", "#fb923c", "#f97316", "#c084fc", "#f87171"];
 
 export function allocationColorByIndex(index: number): string {
   return CHART_COLORS[index % CHART_COLORS.length];

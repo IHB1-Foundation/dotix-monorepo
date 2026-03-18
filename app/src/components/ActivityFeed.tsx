@@ -12,7 +12,7 @@ const typeConfig = {
         <path d="M12 4v12" /><path d="m7 11 5 5 5-5" />
       </svg>
     ),
-    color: "text-mint bg-mint/10",
+    color: "text-mint bg-mint/8",
   },
   Redeem: {
     label: "Redeem",
@@ -21,7 +21,7 @@ const typeConfig = {
         <path d="M12 20V8" /><path d="m17 13-5-5-5 5" />
       </svg>
     ),
-    color: "text-warning bg-warning/10",
+    color: "text-warning bg-warning/8",
   },
   Rebalanced: {
     label: "Rebalance",
@@ -31,7 +31,7 @@ const typeConfig = {
         <path d="M21 3v5h-5" />
       </svg>
     ),
-    color: "text-ocean bg-ocean/10",
+    color: "text-ocean bg-ocean/8",
   },
 };
 

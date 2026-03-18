@@ -32,7 +32,7 @@ export function AssetRow({ asset, meta, color }: Props) {
         </div>
         <span
           className={`rounded-full px-2 py-1 text-xs font-semibold ${
-            asset.enabled ? "bg-mint/20 text-mint" : "bg-error-light text-error-dark"
+            asset.enabled ? "bg-mint/10 text-mint-dark dark:text-mint" : "bg-error-light text-error-dark"
           }`}
         >
           {asset.enabled ? "enabled" : "disabled"}

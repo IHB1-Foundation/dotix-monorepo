@@ -17,14 +17,14 @@ const config: Config = {
           dark: "#0b65b3",
         },
         mint: {
-          DEFAULT: "#20c997",
-          light: "#4dd9b0",
-          dark: "#17a67e",
+          DEFAULT: "#34d399",
+          light: "#6ee7b7",
+          dark: "#10b981",
         },
         warning: {
-          DEFAULT: "#f59f00",
-          light: "#fbbf24",
-          dark: "#d97706",
+          DEFAULT: "#fb923c",
+          light: "#fdba74",
+          dark: "#ea580c",
         },
         // Page & card surface elevation (light mode uses white/near-white, dark uses layered near-blacks)
         surface: "#F7F8FA",
@@ -36,9 +36,9 @@ const config: Config = {
         "surface-3": "#0F0F17",
         // Semantic tokens
         success: {
-          DEFAULT: "#20c997",
+          DEFAULT: "#34d399",
           light: "#d1faf0",
-          dark: "#17a67e",
+          dark: "#10b981",
         },
         error: {
           DEFAULT: "#e53e3e",
