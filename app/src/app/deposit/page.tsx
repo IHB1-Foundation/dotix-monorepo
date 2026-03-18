@@ -41,6 +41,8 @@ function asInputAmount(value: bigint, decimals = 18): string {
   return formatted.includes(".") ? formatted.replace(/\.?0+$/, "") : formatted;
 }
 
+const SLIPPAGE_PRESETS = ["0.1", "0.5", "1.0"] as const;
+
 function DepositSkeleton() {
   return (
     <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -63,13 +65,15 @@ export default function DepositPage() {
   const { isConnected } = useAccount();
   const [depositInput, setDepositInput] = useState("");
   const [redeemInput, setRedeemInput] = useState("");
-  const [slippage, setSlippage] = useState("0.5");
+  const [slippagePreset, setSlippagePreset] = useState<(typeof SLIPPAGE_PRESETS)[number] | "custom">("0.5");
+  const [customSlippage, setCustomSlippage] = useState("0.5");
   const [confirmEmergency, setConfirmEmergency] = useState(false);
+  const slippageInput = slippagePreset === "custom" ? customSlippage : slippagePreset;
 
   const slippagePct = useMemo(() => {
-    const n = Number(slippage);
+    const n = Number(slippageInput);
     return Number.isFinite(n) && n >= 0 ? n : 0.5;
-  }, [slippage]);
+  }, [slippageInput]);
 
   const deposit = useDeposit(depositInput, slippagePct);
   const redeem = useRedeem(redeemInput, slippagePct);
@@ -130,12 +134,38 @@ export default function DepositPage() {
         {depositExceedsBalance && <p className="mt-2 text-sm text-red-600">Exceeds balance</p>}
 
         <label className="mb-2 mt-3 block text-sm text-slate-600">Slippage (%)</label>
-        <input
-          className="w-full rounded-lg border border-slate-300 px-3 py-2"
-          value={slippage}
-          onChange={(e) => setSlippage(e.target.value)}
-          placeholder="0.5"
-        />
+        <div className="flex flex-wrap gap-2 text-sm">
+          {SLIPPAGE_PRESETS.map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              onClick={() => setSlippagePreset(preset)}
+              className={`rounded-lg px-3 py-2 font-medium transition ${
+                slippagePreset === preset ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+              }`}
+            >
+              {preset}%
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={() => setSlippagePreset("custom")}
+            className={`rounded-lg px-3 py-2 font-medium transition ${
+              slippagePreset === "custom" ? "bg-ocean text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+            }`}
+          >
+            Custom
+          </button>
+        </div>
+        {slippagePreset === "custom" && (
+          <input
+            className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2"
+            value={customSlippage}
+            onChange={(e) => setCustomSlippage(sanitizeAmountInput(e.target.value))}
+            placeholder="0.5"
+            inputMode="decimal"
+          />
+        )}
 
         <p className="mt-3 text-sm text-slate-600">
           Expected shares: {formatAmount(deposit.expectedShares)} / Min shares out: {formatAmount(deposit.minSharesOut)}
