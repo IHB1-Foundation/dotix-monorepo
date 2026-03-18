@@ -8,9 +8,17 @@ type Step = {
   locked?: boolean;
 };
 
+const colClass: Record<number, string> = {
+  1: "sm:grid-cols-1",
+  2: "sm:grid-cols-2",
+  3: "sm:grid-cols-3",
+  4: "sm:grid-cols-4",
+};
+
 export function Stepper({ steps }: { steps: Step[] }) {
+  const cols = colClass[steps.length] ?? "sm:grid-cols-3";
   return (
-    <ol className="card grid gap-2 p-3 sm:grid-cols-3">
+    <ol className={`card grid gap-2 p-3 ${cols}`}>
       {steps.map((step, index) => (
         <li
           key={step.label}

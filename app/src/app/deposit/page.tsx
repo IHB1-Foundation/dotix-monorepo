@@ -12,6 +12,7 @@ import { ConfirmModal } from "@/components/ConfirmModal";
 import { ToggleGroup } from "@/components/ToggleGroup";
 import { ConnectCTA } from "@/components/ConnectCTA";
 import { PageHeader } from "@/components/PageHeader";
+import { Stepper } from "@/components/Stepper";
 import { TxButton } from "@/components/TxButton";
 import { TxStatus } from "@/components/TxStatus";
 import { useDeposit } from "@/hooks/useDeposit";
@@ -252,29 +253,24 @@ export default function DepositPage() {
         )}
 
         {deposit.amountIn > 0n && (
-          <div className="mt-4 flex items-center gap-2 text-xs font-semibold">
-            <span className={`flex items-center gap-1 ${deposit.approveConfirmed || !deposit.requiresApproval ? "text-mint" : deposit.requiresApproval ? "text-ocean" : "text-slate-400"}`}>
-              {deposit.approveConfirmed || !deposit.requiresApproval ? (
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6 9 17l-5-5" /></svg>
-              ) : (
-                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-ocean text-white text-[10px]">1</span>
-              )}
-              Approve
-            </span>
-            <span className="text-slate-300 dark:text-slate-600">———</span>
-            <span className={`flex items-center gap-1 ${deposit.depositConfirmed ? "text-mint" : !deposit.requiresApproval ? "text-ocean" : "text-slate-400"}`}>
-              {deposit.depositConfirmed ? (
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6 9 17l-5-5" /></svg>
-              ) : (
-                <span className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] ${!deposit.requiresApproval ? "bg-ocean text-white" : "bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-400"}`}>2</span>
-              )}
-              Deposit
-            </span>
+          <div className="mt-4">
+            <Stepper
+              steps={[
+                {
+                  label: "Approve",
+                  detail: deposit.requiresApproval ? "Allow vault to spend your tokens." : "Already approved.",
+                  completed: deposit.approveConfirmed || !deposit.requiresApproval,
+                  active: deposit.requiresApproval && !deposit.approveConfirmed,
+                },
+                {
+                  label: "Deposit",
+                  detail: "Mint PDOT shares.",
+                  completed: deposit.depositConfirmed,
+                  active: !deposit.requiresApproval || deposit.approveConfirmed,
+                },
+              ]}
+            />
           </div>
-        )}
-
-        {deposit.approveConfirmed && deposit.requiresApproval && (
-          <p className="mt-1 text-xs text-mint">✓ Allowance set — ready to deposit</p>
         )}
 
         <div className="mt-3 flex gap-2">
