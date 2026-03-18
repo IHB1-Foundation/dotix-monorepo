@@ -109,7 +109,7 @@ export default function DashboardPage() {
       {/* Header row: title + refresh icon + last updated */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-ink dark:text-slate-100">Dashboard</h1>
+          <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink dark:text-slate-100">Dashboard</h1>
           <p className="mt-0.5 text-sm text-muted dark:text-slate-400">
             Vault overview and asset allocation.
             {freshnessSeconds !== null && (
@@ -152,8 +152,8 @@ export default function DashboardPage() {
               <Tooltip content="Net Asset Value — the total value of all assets held in the vault, denominated in PAS">NAV</Tooltip>
             </h2>
           </div>
-          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(navAnimated)}</p>
-          <p className="mt-1 text-xs text-muted">Total vault assets under management (PAS)</p>
+          <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{decimalFormatter.format(navAnimated)}</p>
+          <p className="mt-1 text-[11px] text-muted">Total vault assets under management (PAS)</p>
         </Card>
         <Card variant="elevated" as="article" className={`stagger-item transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
@@ -163,8 +163,8 @@ export default function DashboardPage() {
             </span>
             <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Price</h2>
           </div>
-          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(priceAnimated)}</p>
-          <p className="mt-1 text-xs text-muted">Current price per PDOT share (PAS)</p>
+          <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{decimalFormatter.format(priceAnimated)}</p>
+          <p className="mt-1 text-[11px] text-muted">Current price per PDOT share (PAS)</p>
         </Card>
         <Card variant="elevated" as="article" className={`stagger-item transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
@@ -176,8 +176,8 @@ export default function DashboardPage() {
               <Tooltip content="Total PDOT shares minted across all depositors. More shares = more users in the vault.">PDOT Supply</Tooltip>
             </h2>
           </div>
-          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(supplyAnimated)}</p>
-          <p className="mt-1 text-xs text-muted">Total PDOT shares in circulation</p>
+          <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{decimalFormatter.format(supplyAnimated)}</p>
+          <p className="mt-1 text-[11px] text-muted">Total PDOT shares in circulation</p>
         </Card>
       </div>
 
