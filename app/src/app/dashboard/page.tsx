@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { formatUnits } from "viem";
 import { useAccount } from "wagmi";
 
@@ -66,6 +67,7 @@ function DashboardSkeleton() {
 export default function DashboardPage() {
   const { isConnected } = useAccount();
   const vault = useVaultState();
+  const [now, setNow] = useState(() => Date.now());
   const tokens = vault.assets.map((asset) => asset.token);
   const { byToken } = useTokenMeta(tokens);
   const chartItems = vault.assets.map((asset, index) => ({
@@ -73,6 +75,15 @@ export default function DashboardPage() {
     value: Number(formatUnits(asset.valueInBase, 18)),
     color: allocationColorByIndex(index),
   }));
+  const freshnessSeconds = useMemo(() => {
+    if (vault.lastUpdatedAt <= 0) return null;
+    return Math.max(Math.floor((now - vault.lastUpdatedAt) / 1000), 0);
+  }, [now, vault.lastUpdatedAt]);
+
+  useEffect(() => {
+    const id = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(id);
+  }, []);
 
   if (!isConnected) {
     return <ConnectCTA />;
@@ -84,21 +95,34 @@ export default function DashboardPage() {
 
   return (
     <section className="space-y-4">
-      <PageHeader title="Dashboard" description="Vault overview and asset allocation." />
+      <PageHeader
+        title="Dashboard"
+        description={`Vault overview and asset allocation.${freshnessSeconds !== null ? ` Last updated ${freshnessSeconds}s ago.` : ""}`}
+        action={
+          <button
+            type="button"
+            onClick={() => void vault.refetch()}
+            disabled={vault.isRefreshing}
+            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+          >
+            {vault.isRefreshing ? "Refreshing..." : "Refresh"}
+          </button>
+        }
+      />
       <AllocationChart items={chartItems} totalLabel={formatMetric(vault.nav)} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <article className="card p-4 transition-transform duration-200 hover:scale-[1.01]">
+        <article className={`card p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">NAV</h2>
           <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.nav)}</p>
           <p className="mt-1 text-xs text-slate-500">PAS</p>
         </article>
-        <article className="card p-4 transition-transform duration-200 hover:scale-[1.01]">
+        <article className={`card p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Price</h2>
           <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.pdotPrice)}</p>
           <p className="mt-1 text-xs text-slate-500">per PDOT</p>
         </article>
-        <article className="card p-4 transition-transform duration-200 hover:scale-[1.01]">
+        <article className={`card p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Total Supply</h2>
           <p className="mt-2 text-2xl font-bold tabular-nums">{formatMetric(vault.totalSupply)}</p>
           <p className="mt-1 text-xs text-slate-500">PDOT shares</p>

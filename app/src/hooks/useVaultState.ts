@@ -28,6 +28,9 @@ export type VaultState = {
   paused: boolean;
   assets: VaultAssetState[];
   isLoading: boolean;
+  isRefreshing: boolean;
+  lastUpdatedAt: number;
+  refetch: () => Promise<void>;
 };
 
 export function useVaultState(): VaultState {
@@ -179,6 +182,15 @@ export function useVaultState(): VaultState {
   }, [assetsConfig, balancePriceReads.data, nav]);
 
   const pdotPrice = totalSupply > 0n ? (nav * 10n ** 18n) / totalSupply : 0n;
+  const lastUpdatedAt = Math.max(
+    baseReads.dataUpdatedAt ?? 0,
+    assetsConfigReads.dataUpdatedAt ?? 0,
+    balancePriceReads.dataUpdatedAt ?? 0
+  );
+
+  async function refetch(): Promise<void> {
+    await Promise.all([baseReads.refetch(), assetsConfigReads.refetch(), balancePriceReads.refetch()]);
+  }
 
   return {
     nav,
@@ -189,5 +201,8 @@ export function useVaultState(): VaultState {
     paused,
     assets,
     isLoading: baseReads.isLoading || assetsConfigReads.isLoading || balancePriceReads.isLoading,
+    isRefreshing: baseReads.isFetching || assetsConfigReads.isFetching || balancePriceReads.isFetching,
+    lastUpdatedAt,
+    refetch,
   };
 }
