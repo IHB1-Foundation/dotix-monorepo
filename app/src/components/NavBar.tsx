@@ -61,21 +61,18 @@ export function NavBar() {
   return (
     <>
       {/* Full-width sticky GNB */}
-      <header className="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/80 backdrop-blur-lg transition-colors dark:border-slate-700/80 dark:bg-slate-900/80">
+      <header className="sticky top-0 z-50 w-full bg-white/90 shadow-sm backdrop-blur-lg transition-colors dark:bg-slate-900/90">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
-          <Link href="/dashboard" className="group flex items-center gap-3">
+          <Link href="/dashboard" className="group flex items-center gap-2.5">
             <Image
               src="/dotix-logo.svg"
               alt="Dotix logo"
               width={36}
               height={36}
               priority
-              className="h-9 w-9 rounded-xl shadow-sm ring-1 ring-slate-200/80 transition-transform group-hover:scale-[1.03] dark:ring-slate-700/80"
+              className="h-9 w-9 rounded-xl shadow-sm transition-transform group-hover:scale-[1.03]"
             />
-            <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-slate-500 dark:text-slate-400">Polkadot Native</p>
-              <p className="text-base font-bold tracking-tight text-ink dark:text-slate-100">Dotix</p>
-            </div>
+            <span className="font-display text-base font-bold tracking-tight text-ink dark:text-slate-100">Dotix</span>
           </Link>
           <ConnectButton />
         </div>

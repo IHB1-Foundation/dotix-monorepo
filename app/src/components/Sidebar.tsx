@@ -79,9 +79,6 @@ function NavItem({
           : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
       }`}
     >
-      {isActive && (
-        <span className="absolute inset-y-0 left-0 w-[3px] rounded-r-full bg-gradient-to-b from-ocean to-mint" />
-      )}
       <SidebarIcon type={icon} />
       {/* Full label on lg, short/icon-only on md collapsed */}
       <span className="hidden lg:block">{label}</span>
@@ -94,7 +91,7 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="sticky top-[60px] hidden h-[calc(100vh-60px)] w-16 shrink-0 flex-col border-r border-slate-200 bg-white/80 backdrop-blur md:flex lg:w-60 dark:border-slate-700 dark:bg-slate-900/80">
+    <aside className="sticky top-[60px] hidden h-[calc(100vh-60px)] w-16 shrink-0 flex-col bg-white/80 backdrop-blur md:flex lg:w-60 dark:bg-slate-900/80">
       <nav className="flex-1 overflow-y-auto px-2 py-4">
         <ul className="space-y-1">
           {mainLinks.map((link) => (
@@ -110,10 +107,7 @@ export function Sidebar() {
         </ul>
 
         <div className="mt-6">
-          <p className="mb-1 hidden px-3 text-[10px] font-semibold uppercase tracking-widest text-slate-400 lg:block dark:text-slate-500">
-            Advanced
-          </p>
-          <div className="my-1 mx-3 h-px bg-slate-100 dark:bg-slate-800 lg:hidden" />
+          <div className="my-1 mx-3 h-px bg-slate-100 dark:bg-slate-800" />
           <ul className="space-y-1">
             {advancedLinks.map((link) => (
               <li key={link.href}>
@@ -130,19 +124,16 @@ export function Sidebar() {
         </div>
       </nav>
 
-      <div className="border-t border-slate-200 px-2 py-3 dark:border-slate-700">
+      <div className="border-t border-slate-100 px-2 py-3 dark:border-slate-800">
         <Link
           href="/settings"
           title="Settings"
-          className={`group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+          className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
             pathname?.startsWith("/settings")
               ? "bg-ocean/10 text-ocean dark:bg-ocean/20 dark:text-ocean-light"
               : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
           }`}
         >
-          {pathname?.startsWith("/settings") && (
-            <span className="absolute inset-y-0 left-0 w-[3px] rounded-r-full bg-gradient-to-b from-ocean to-mint" />
-          )}
           <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8">
             <circle cx="12" cy="12" r="3" />
             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
