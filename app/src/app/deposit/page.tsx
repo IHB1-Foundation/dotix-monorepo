@@ -167,9 +167,31 @@ export default function DepositPage() {
           />
         )}
 
-        <p className="mt-3 text-sm text-slate-600">
-          Expected shares: {formatAmount(deposit.expectedShares)} / Min shares out: {formatAmount(deposit.minSharesOut)}
-        </p>
+        {deposit.amountIn > 0n && (
+          <div className="mt-3 rounded-lg border border-ocean/30 bg-ocean/5 p-3 text-sm dark:border-ocean/40 dark:bg-ocean/10">
+            <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Transaction Preview</p>
+            <div className="space-y-1 text-slate-700 dark:text-slate-200">
+              <div className="flex justify-between">
+                <span>You deposit</span>
+                <span className="tabular-nums font-medium">{depositInput} {deposit.baseSymbol}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>You receive</span>
+                <span className="tabular-nums font-medium">~{formatAmount(deposit.expectedShares)} PDOT</span>
+              </div>
+              <div className="flex justify-between border-t border-slate-200 pt-1 dark:border-slate-700">
+                <span className="text-slate-500 dark:text-slate-400">Min received ({slippageInput}% slippage)</span>
+                <span className="tabular-nums text-slate-600 dark:text-slate-300">{formatAmount(deposit.minSharesOut)} PDOT</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500 dark:text-slate-400">Exchange rate</span>
+                <span className="tabular-nums text-slate-600 dark:text-slate-300">
+                  1 {deposit.baseSymbol} = {deposit.amountIn > 0n ? (Number(formatAmount(deposit.expectedShares)) / Number(depositInput) || 0).toFixed(4) : "—"} PDOT
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="mt-4 flex gap-2">
           {deposit.requiresApproval ? (
@@ -233,9 +255,25 @@ export default function DepositPage() {
         </div>
         {redeemExceedsBalance && <p className="mt-2 text-sm text-red-600">Exceeds balance</p>}
 
-        <p className="mt-3 text-sm text-slate-600">
-          Expected base out: {formatAmount(redeem.expectedBaseOut)} / Min base out: {formatAmount(redeem.minBaseOut)}
-        </p>
+        {redeem.sharesIn > 0n && (
+          <div className="mt-3 rounded-lg border border-warning/30 bg-warning/5 p-3 text-sm dark:border-warning/40 dark:bg-warning/10">
+            <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Transaction Preview</p>
+            <div className="space-y-1 text-slate-700 dark:text-slate-200">
+              <div className="flex justify-between">
+                <span>You burn</span>
+                <span className="tabular-nums font-medium">{redeemInput} PDOT</span>
+              </div>
+              <div className="flex justify-between">
+                <span>You receive</span>
+                <span className="tabular-nums font-medium">~{formatAmount(redeem.expectedBaseOut)} {deposit.baseSymbol}</span>
+              </div>
+              <div className="flex justify-between border-t border-slate-200 pt-1 dark:border-slate-700">
+                <span className="text-slate-500 dark:text-slate-400">Min received (0.5% slippage)</span>
+                <span className="tabular-nums text-slate-600 dark:text-slate-300">{formatAmount(redeem.minBaseOut)} {deposit.baseSymbol}</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="mt-4 flex flex-wrap gap-2">
           <TxButton
