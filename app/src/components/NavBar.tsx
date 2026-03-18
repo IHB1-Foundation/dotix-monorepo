@@ -94,19 +94,20 @@ export function NavBar() {
               key={link.href}
               href={link.href}
               aria-label={link.label}
-              className={`relative flex min-h-[44px] flex-col items-center justify-center gap-1 rounded-xl px-2 py-2 text-center text-[11px] font-semibold transition ${
+              aria-current={isActive ? "page" : undefined}
+              className={`relative flex min-h-[44px] flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-2 text-center text-[11px] font-semibold transition ${
                 isActive
-                  ? "bg-brand-gradient text-white shadow-sm"
-                  : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                  ? "text-ocean dark:text-ocean-light"
+                  : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
               }`}
             >
-              {isActive && (
-                <span className="absolute inset-x-3 top-0.5 h-0.5 rounded-full bg-white/60" />
-              )}
               <span aria-hidden="true">
                 <NavIcon type={link.icon} />
               </span>
               {link.mobileLabel}
+              {isActive && (
+                <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-ocean dark:bg-ocean-light" />
+              )}
             </Link>
           );
         })}
