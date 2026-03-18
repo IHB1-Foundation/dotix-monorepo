@@ -3,9 +3,7 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-import { Toast } from "@/components/Toast";
-
-type ToastVariant = "success" | "error";
+import { Toast, ToastVariant } from "@/components/Toast";
 
 type ToastInput = {
   variant: ToastVariant;
@@ -21,7 +19,9 @@ type ToastRecord = ToastInput & {
 };
 
 type ToastContextValue = {
-  pushToast: (toast: ToastInput) => void;
+  pushToast: (toast: ToastInput) => string;
+  updateToast: (id: string, update: Partial<ToastInput>) => void;
+  removeToast: (id: string) => void;
 };
 
 const ToastContext = createContext<ToastContextValue | null>(null);
@@ -40,13 +40,38 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const pushToast = useCallback(
-    ({ durationMs = 4000, ...toast }: ToastInput) => {
-      const id = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
-      setToasts((prev) => [...prev, { id, ...toast }]);
+  const scheduleRemoval = useCallback(
+    (id: string, durationMs: number) => {
+      if (timeoutsRef.current[id]) window.clearTimeout(timeoutsRef.current[id]);
       timeoutsRef.current[id] = window.setTimeout(() => removeToast(id), durationMs);
     },
     [removeToast]
+  );
+
+  const pushToast = useCallback(
+    ({ durationMs, ...toast }: ToastInput): string => {
+      const id = `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
+      setToasts((prev) => [...prev, { id, durationMs, ...toast }]);
+      // tx-pending stays until explicitly updated/removed
+      if (toast.variant !== "tx-pending") {
+        scheduleRemoval(id, durationMs ?? 4000);
+      }
+      return id;
+    },
+    [scheduleRemoval]
+  );
+
+  const updateToast = useCallback(
+    (id: string, update: Partial<ToastInput>) => {
+      setToasts((prev) =>
+        prev.map((t) => (t.id === id ? { ...t, ...update } : t))
+      );
+      // auto-dismiss after transition to confirmed/success/error
+      if (update.variant && update.variant !== "tx-pending") {
+        scheduleRemoval(id, update.durationMs ?? 5000);
+      }
+    },
+    [scheduleRemoval]
   );
 
   useEffect(() => {
@@ -57,7 +82,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const value = useMemo<ToastContextValue>(() => ({ pushToast }), [pushToast]);
+  const value = useMemo<ToastContextValue>(
+    () => ({ pushToast, updateToast, removeToast }),
+    [pushToast, updateToast, removeToast]
+  );
 
   return (
     <ToastContext.Provider value={value}>
