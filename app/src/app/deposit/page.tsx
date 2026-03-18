@@ -158,314 +158,301 @@ export default function DepositPage() {
       {/* Tab content with fade transition */}
       <div className="page-transition">
       {activeTab === "deposit" && (
-        <Card padding="spacious" className="relative overflow-hidden">
-        <div className="mb-3">
-          <h2 className="flex items-center gap-2 text-lg font-semibold">
-            <span aria-hidden="true" className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-ocean/10 text-ocean">
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 4v12" />
-                <path d="m7 11 5 5 5-5" />
-              </svg>
-            </span>
-            Stake
-          </h2>
-          <p className="mt-1 text-sm text-slate-600">Stake PAS, receive PDOT.</p>
-        </div>
-        <p className="mb-2 text-sm text-slate-600">Available: {formatAmount(deposit.balance, deposit.baseDecimals)} {deposit.baseSymbol}</p>
-
-        <label htmlFor="deposit-amount" className="mb-2 block text-sm text-slate-600">Amount</label>
-        <div className="relative">
-          <input
-            id="deposit-amount"
-            className={`input pr-16 ${depositExceedsBalance ? "border-error focus:border-error focus:ring-error/20" : ""}`}
-            value={depositInput}
-            onChange={(e) => setDepositInput(sanitizeAmountInput(e.target.value))}
-            placeholder="0.0"
-            inputMode="decimal"
-          />
-          <Button
-            size="xs"
-            variant="secondary"
-            onClick={() => setDepositInput(asInputAmount(deposit.balance, deposit.baseDecimals))}
-            className="absolute right-2 top-1/2 -translate-y-1/2"
-          >
-            MAX
-          </Button>
-        </div>
-        {depositExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
-
-        <div className="mt-3">
-          <button
-            type="button"
-            onClick={() => setDepositSlippageOpen((o) => !o)}
-            className="flex w-full items-center justify-between text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
-          >
-            <span>Advanced: Slippage ({slippageInput}%)</span>
-            <svg viewBox="0 0 24 24" className={`h-4 w-4 transition-transform ${depositSlippageOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
-          </button>
-          {depositSlippageOpen && (
-            <div className="mt-2">
-              <ToggleGroup
-                items={[
-                  ...SLIPPAGE_PRESETS.map((p) => ({ value: p as string, label: `${p}%` })),
-                  { value: "custom", label: "Custom" },
-                ]}
-                value={slippagePreset}
-                onChange={(v) => setSlippagePreset(v as typeof slippagePreset)}
+        <Card padding="spacious">
+          {/* Amount input — Lido style: large number, balance inside */}
+          <div className={`rounded-2xl bg-slate-50 p-4 dark:bg-slate-950 ${depositExceedsBalance ? "ring-2 ring-error/60" : "focus-within:ring-2 focus-within:ring-ocean/30"}`}>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Amount</span>
+              <button
+                type="button"
+                onClick={() => setDepositInput(asInputAmount(deposit.balance, deposit.baseDecimals))}
+                className="text-xs font-semibold text-ocean hover:text-ocean-dark dark:text-ocean-light"
+              >
+                Available: {formatAmount(deposit.balance, deposit.baseDecimals)} {deposit.baseSymbol}
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                id="deposit-amount"
+                className="min-w-0 flex-1 bg-transparent text-2xl font-bold tabular-nums text-ink placeholder:text-slate-300 focus:outline-none dark:text-slate-100 dark:placeholder:text-slate-600"
+                value={depositInput}
+                onChange={(e) => setDepositInput(sanitizeAmountInput(e.target.value))}
+                placeholder="0"
+                inputMode="decimal"
+                style={{ fontSize: "clamp(1.25rem, 4vw, 1.5rem)" }}
               />
-              {slippagePreset === "custom" && (
-                <input
-                  className="input mt-2"
-                  value={customSlippage}
-                  onChange={(e) => setCustomSlippage(sanitizeAmountInput(e.target.value))}
-                  placeholder="0.5"
-                  inputMode="decimal"
-                />
-              )}
+              <span className="shrink-0 text-sm font-semibold text-slate-500">{deposit.baseSymbol}</span>
             </div>
-          )}
-        </div>
+          </div>
+          {depositExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
 
-        {deposit.amountIn > 0n && (
-          <TxPreview
-            accent="ocean"
-            items={[
-              { label: "You deposit", value: `${depositInput} ${deposit.baseSymbol}`, highlight: true },
-              { label: "You receive", value: `~${formatAmount(deposit.expectedShares)} PDOT`, highlight: true },
-              {
-                label: `Min received (${slippageInput}% slippage)`,
-                value: `${formatAmount(deposit.minSharesOut)} PDOT`,
-                muted: true,
-              },
-              {
-                label: "Exchange rate",
-                value: `1 ${deposit.baseSymbol} = ${deposit.amountIn > 0n ? (Number(formatAmount(deposit.expectedShares)) / Number(depositInput) || 0).toFixed(4) : "—"} PDOT`,
-                muted: true,
-              },
-            ]}
-          />
-        )}
-
-        {deposit.amountIn > 0n && (
+          {/* Slippage */}
           <div className="mt-4">
-            <Stepper
-              steps={[
-                {
-                  label: "Approve",
-                  detail: deposit.requiresApproval ? "Allow vault to spend your tokens." : "Already approved.",
-                  completed: deposit.approveConfirmed || !deposit.requiresApproval,
-                  active: deposit.requiresApproval && !deposit.approveConfirmed,
-                },
-                {
-                  label: "Deposit",
-                  detail: "Mint PDOT shares.",
-                  completed: deposit.depositConfirmed,
-                  active: !deposit.requiresApproval || deposit.approveConfirmed,
-                },
-              ]}
-            />
+            <button
+              type="button"
+              onClick={() => setDepositSlippageOpen((o) => !o)}
+              className="flex w-full items-center justify-between text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+            >
+              <span>Slippage tolerance: {slippageInput}%</span>
+              <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${depositSlippageOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            {depositSlippageOpen && (
+              <div className="mt-2">
+                <ToggleGroup
+                  items={[
+                    ...SLIPPAGE_PRESETS.map((p) => ({ value: p as string, label: `${p}%` })),
+                    { value: "custom", label: "Custom" },
+                  ]}
+                  value={slippagePreset}
+                  onChange={(v) => setSlippagePreset(v as typeof slippagePreset)}
+                />
+                {slippagePreset === "custom" && (
+                  <input
+                    className="input mt-2"
+                    value={customSlippage}
+                    onChange={(e) => setCustomSlippage(sanitizeAmountInput(e.target.value))}
+                    placeholder="0.5"
+                    inputMode="decimal"
+                  />
+                )}
+              </div>
+            )}
           </div>
-        )}
 
-        <div className="mt-3 flex gap-2">
-          {deposit.requiresApproval ? (
-            <TxButton
-              label="Approve"
-              variant="secondary"
-              onClick={deposit.approve}
-              loading={deposit.approvePending}
-              disabled={!isConnected || deposit.amountIn === 0n || deposit.paused || depositExceedsBalance}
-            />
-          ) : (
-            <TxButton
-              label="Deposit"
-              onClick={deposit.deposit}
-              loading={deposit.depositPending}
-              disabled={!isConnected || deposit.amountIn === 0n || deposit.paused || depositExceedsBalance}
-            />
-          )}
-        </div>
-
-        <details className="mt-2">
-          <summary className="cursor-pointer text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">Why do I need to approve?</summary>
-          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">ERC-20 tokens require a separate approval transaction before the vault can spend your funds. This is a standard security pattern — you set an exact allowance, and the vault can never take more than that amount.</p>
-        </details>
-
-        <TxStatus
-          hash={deposit.requiresApproval ? deposit.approveTxHash : deposit.depositTxHash}
-          isPending={deposit.requiresApproval ? deposit.approvePending : deposit.depositPending}
-          isConfirmed={deposit.requiresApproval ? deposit.approveConfirmed : deposit.depositConfirmed}
-          error={deposit.error}
-        />
-
-        {deposit.depositConfirmed && deposit.depositTxHash && (
-          <div className="mt-3 rounded-lg border border-mint/30 bg-mint/10 p-4 dark:border-mint/40 dark:bg-mint/15">
-            <p className="flex items-center gap-1.5 text-sm font-semibold text-mint">
-              <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5"><path className="check-animate" d="M20 6 9 17l-5-5" /></svg>
-              Deposit successful!
-            </p>
-            <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
-              +{formatAmount(deposit.expectedShares)} PDOT added to your balance
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <a
-                href={explorerTxUrl(deposit.depositTxHash)}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
-              >
-                View on Explorer
-              </a>
-              <Link
-                href="/dashboard"
-                className="rounded-lg bg-brand-gradient px-3 py-1.5 text-xs font-semibold text-white transition hover:opacity-90"
-              >
-                Go to Dashboard
-              </Link>
+          {/* Tx preview — inline, no box */}
+          {deposit.amountIn > 0n && (
+            <div className="mt-4 space-y-2 border-t border-slate-100 pt-4 dark:border-slate-800">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-500">You will receive</span>
+                <span className="font-semibold tabular-nums">~{formatAmount(deposit.expectedShares)} PDOT</span>
+              </div>
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span>Min received ({slippageInput}% slippage)</span>
+                <span className="tabular-nums">{formatAmount(deposit.minSharesOut)} PDOT</span>
+              </div>
+              <details className="text-xs">
+                <summary className="cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">Exchange rate</summary>
+                <p className="mt-1 text-slate-400">
+                  1 {deposit.baseSymbol} = {deposit.amountIn > 0n ? (Number(formatAmount(deposit.expectedShares)) / Number(depositInput) || 0).toFixed(4) : "—"} PDOT
+                </p>
+              </details>
             </div>
+          )}
+
+          {/* Stepper */}
+          {deposit.amountIn > 0n && (
+            <div className="mt-4">
+              <Stepper
+                steps={[
+                  {
+                    label: "Approve",
+                    detail: deposit.requiresApproval ? "Allow vault to spend your tokens." : "Already approved.",
+                    completed: deposit.approveConfirmed || !deposit.requiresApproval,
+                    active: deposit.requiresApproval && !deposit.approveConfirmed,
+                  },
+                  {
+                    label: "Stake",
+                    detail: "Mint PDOT shares.",
+                    completed: deposit.depositConfirmed,
+                    active: !deposit.requiresApproval || deposit.approveConfirmed,
+                  },
+                ]}
+              />
+            </div>
+          )}
+
+          {/* CTA — full-width */}
+          <div className="mt-5">
+            {deposit.requiresApproval ? (
+              <TxButton
+                label="Approve"
+                variant="secondary"
+                fullWidth
+                onClick={deposit.approve}
+                loading={deposit.approvePending}
+                disabled={!isConnected || deposit.amountIn === 0n || deposit.paused || depositExceedsBalance}
+              />
+            ) : (
+              <TxButton
+                label="Stake"
+                fullWidth
+                onClick={deposit.deposit}
+                loading={deposit.depositPending}
+                disabled={!isConnected || deposit.amountIn === 0n || deposit.paused || depositExceedsBalance}
+              />
+            )}
           </div>
-        )}
+
+          <TxStatus
+            hash={deposit.requiresApproval ? deposit.approveTxHash : deposit.depositTxHash}
+            isPending={deposit.requiresApproval ? deposit.approvePending : deposit.depositPending}
+            isConfirmed={deposit.requiresApproval ? deposit.approveConfirmed : deposit.depositConfirmed}
+            error={deposit.error}
+          />
+
+          {deposit.depositConfirmed && deposit.depositTxHash && (
+            <div className="mt-4 rounded-2xl border border-mint/30 bg-mint/10 p-4 dark:border-mint/40 dark:bg-mint/15">
+              <p className="flex items-center gap-1.5 text-sm font-semibold text-mint">
+                <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5"><path className="check-animate" d="M20 6 9 17l-5-5" /></svg>
+                Stake successful!
+              </p>
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+                +{formatAmount(deposit.expectedShares)} PDOT added to your balance
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <a
+                  href={explorerTxUrl(deposit.depositTxHash)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                >
+                  View on Explorer
+                </a>
+                <Link
+                  href="/dashboard"
+                  className="rounded-xl bg-ocean px-3 py-1.5 text-xs font-bold text-white transition hover:bg-ocean-dark"
+                >
+                  Go to Dashboard
+                </Link>
+              </div>
+            </div>
+          )}
         </Card>
       )}
 
       {activeTab === "redeem" && (
-        <Card padding="spacious" className="relative overflow-hidden">
-        <div className="mb-3">
-          <h2 className="flex items-center gap-2 text-lg font-semibold">
-            <span aria-hidden="true" className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-warning/15 text-warning">
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M12 20V8" />
-                <path d="m17 13-5-5-5 5" />
-              </svg>
-            </span>
-            Unstake
-          </h2>
-          <p className="mt-1 text-sm text-slate-600">Unstake PDOT, receive PAS.</p>
-        </div>
-        <p className="mb-2 text-sm text-slate-600">Available: {formatAmount(redeem.pdotBalance)} PDOT</p>
-
-        <label htmlFor="redeem-amount" className="mb-2 block text-sm text-slate-600">PDOT Amount</label>
-        <div className="relative">
-          <input
-            id="redeem-amount"
-            className={`input pr-16 ${redeemExceedsBalance ? "border-error focus:border-error focus:ring-error/20" : ""}`}
-            value={redeemInput}
-            onChange={(e) => setRedeemInput(sanitizeAmountInput(e.target.value))}
-            placeholder="0.0"
-            inputMode="decimal"
-          />
-          <Button
-            size="xs"
-            variant="secondary"
-            onClick={() => setRedeemInput(asInputAmount(redeem.pdotBalance))}
-            className="absolute right-2 top-1/2 -translate-y-1/2"
-          >
-            MAX
-          </Button>
-        </div>
-        {redeemExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
-
-        <div className="mt-3">
-          <button
-            type="button"
-            onClick={() => setRedeemSlippageOpen((o) => !o)}
-            className="flex w-full items-center justify-between text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
-          >
-            <span>Advanced: Slippage ({redeemSlippageInput}%)</span>
-            <svg viewBox="0 0 24 24" className={`h-4 w-4 transition-transform ${redeemSlippageOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
-          </button>
-          {redeemSlippageOpen && (
-            <div className="mt-2">
-              <ToggleGroup
-                items={[
-                  ...SLIPPAGE_PRESETS.map((p) => ({ value: p as string, label: `${p}%` })),
-                  { value: "custom", label: "Custom" },
-                ]}
-                value={redeemSlippagePreset}
-                onChange={(v) => setRedeemSlippagePreset(v as typeof redeemSlippagePreset)}
-              />
-              {redeemSlippagePreset === "custom" && (
-                <input
-                  className="input mt-2"
-                  value={redeemCustomSlippage}
-                  onChange={(e) => setRedeemCustomSlippage(sanitizeAmountInput(e.target.value))}
-                  placeholder="0.5"
-                  inputMode="decimal"
-                />
-              )}
-            </div>
-          )}
-        </div>
-
-        {redeem.sharesIn > 0n && (
-          <TxPreview
-            accent="warning"
-            items={[
-              { label: "You burn", value: `${redeemInput} PDOT`, highlight: true },
-              { label: "You receive", value: `~${formatAmount(redeem.expectedBaseOut)} ${deposit.baseSymbol}`, highlight: true },
-              {
-                label: `Min received (${redeemSlippageInput}% slippage)`,
-                value: `${formatAmount(redeem.minBaseOut)} ${deposit.baseSymbol}`,
-                muted: true,
-              },
-            ]}
-          />
-        )}
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          <TxButton
-            label="Unstake"
-            onClick={redeem.redeem}
-            loading={redeem.redeemPending}
-            disabled={!isConnected || redeem.sharesIn === 0n || redeemExceedsBalance}
-          />
-          {redeem.paused && (
-            <TxButton
-              label="Emergency Redeem"
-              variant="danger"
-              onClick={() => setConfirmEmergency(true)}
-              loading={redeem.emergencyPending}
-              disabled={!isConnected || redeem.sharesIn === 0n || redeemExceedsBalance}
-            />
-          )}
-        </div>
-
-        <TxStatus
-          hash={redeem.emergencyTxHash ?? redeem.redeemTxHash}
-          isPending={redeem.emergencyPending || redeem.redeemPending}
-          isConfirmed={redeem.emergencyConfirmed || redeem.redeemConfirmed}
-          error={redeem.error}
-        />
-
-        {(redeem.redeemConfirmed || redeem.emergencyConfirmed) && (redeem.redeemTxHash ?? redeem.emergencyTxHash) && (
-          <div className="mt-3 rounded-lg border border-mint/30 bg-mint/10 p-4 dark:border-mint/40 dark:bg-mint/15">
-            <p className="flex items-center gap-1.5 text-sm font-semibold text-mint">
-              <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6 9 17l-5-5" /></svg>
-              Unstake successful!
-            </p>
-            <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
-              ~{formatAmount(redeem.expectedBaseOut)} {deposit.baseSymbol} returned to your wallet
-            </p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {(redeem.redeemTxHash ?? redeem.emergencyTxHash) && (
-                <a
-                  href={explorerTxUrl((redeem.redeemTxHash ?? redeem.emergencyTxHash)!)}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
-                >
-                  View on Explorer
-                </a>
-              )}
-              <Link
-                href="/dashboard"
-                className="rounded-lg bg-brand-gradient px-3 py-1.5 text-xs font-semibold text-white transition hover:opacity-90"
+        <Card padding="spacious">
+          {/* Amount input — Lido style */}
+          <div className={`rounded-2xl bg-slate-50 p-4 dark:bg-slate-950 ${redeemExceedsBalance ? "ring-2 ring-error/60" : "focus-within:ring-2 focus-within:ring-warning/30"}`}>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Amount</span>
+              <button
+                type="button"
+                onClick={() => setRedeemInput(asInputAmount(redeem.pdotBalance))}
+                className="text-xs font-semibold text-warning hover:text-warning-dark dark:text-warning-light"
               >
-                Go to Dashboard
-              </Link>
+                Available: {formatAmount(redeem.pdotBalance)} PDOT
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
+              <input
+                id="redeem-amount"
+                className="min-w-0 flex-1 bg-transparent text-2xl font-bold tabular-nums text-ink placeholder:text-slate-300 focus:outline-none dark:text-slate-100 dark:placeholder:text-slate-600"
+                value={redeemInput}
+                onChange={(e) => setRedeemInput(sanitizeAmountInput(e.target.value))}
+                placeholder="0"
+                inputMode="decimal"
+                style={{ fontSize: "clamp(1.25rem, 4vw, 1.5rem)" }}
+              />
+              <span className="shrink-0 text-sm font-semibold text-slate-500">PDOT</span>
             </div>
           </div>
-        )}
+          {redeemExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
+
+          {/* Slippage */}
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={() => setRedeemSlippageOpen((o) => !o)}
+              className="flex w-full items-center justify-between text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+            >
+              <span>Slippage tolerance: {redeemSlippageInput}%</span>
+              <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${redeemSlippageOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            {redeemSlippageOpen && (
+              <div className="mt-2">
+                <ToggleGroup
+                  items={[
+                    ...SLIPPAGE_PRESETS.map((p) => ({ value: p as string, label: `${p}%` })),
+                    { value: "custom", label: "Custom" },
+                  ]}
+                  value={redeemSlippagePreset}
+                  onChange={(v) => setRedeemSlippagePreset(v as typeof redeemSlippagePreset)}
+                />
+                {redeemSlippagePreset === "custom" && (
+                  <input
+                    className="input mt-2"
+                    value={redeemCustomSlippage}
+                    onChange={(e) => setRedeemCustomSlippage(sanitizeAmountInput(e.target.value))}
+                    placeholder="0.5"
+                    inputMode="decimal"
+                  />
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Tx preview — inline */}
+          {redeem.sharesIn > 0n && (
+            <div className="mt-4 space-y-2 border-t border-slate-100 pt-4 dark:border-slate-800">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-500">You will receive</span>
+                <span className="font-semibold tabular-nums">~{formatAmount(redeem.expectedBaseOut)} {deposit.baseSymbol}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span>Min received ({redeemSlippageInput}% slippage)</span>
+                <span className="tabular-nums">{formatAmount(redeem.minBaseOut)} {deposit.baseSymbol}</span>
+              </div>
+            </div>
+          )}
+
+          {/* CTA — full-width */}
+          <div className="mt-5 flex flex-col gap-3">
+            <TxButton
+              label="Unstake"
+              fullWidth
+              onClick={redeem.redeem}
+              loading={redeem.redeemPending}
+              disabled={!isConnected || redeem.sharesIn === 0n || redeemExceedsBalance}
+            />
+            {redeem.paused && (
+              <TxButton
+                label="Emergency Redeem"
+                variant="danger"
+                fullWidth
+                onClick={() => setConfirmEmergency(true)}
+                loading={redeem.emergencyPending}
+                disabled={!isConnected || redeem.sharesIn === 0n || redeemExceedsBalance}
+              />
+            )}
+          </div>
+
+          <TxStatus
+            hash={redeem.emergencyTxHash ?? redeem.redeemTxHash}
+            isPending={redeem.emergencyPending || redeem.redeemPending}
+            isConfirmed={redeem.emergencyConfirmed || redeem.redeemConfirmed}
+            error={redeem.error}
+          />
+
+          {(redeem.redeemConfirmed || redeem.emergencyConfirmed) && (redeem.redeemTxHash ?? redeem.emergencyTxHash) && (
+            <div className="mt-4 rounded-2xl border border-mint/30 bg-mint/10 p-4 dark:border-mint/40 dark:bg-mint/15">
+              <p className="flex items-center gap-1.5 text-sm font-semibold text-mint">
+                <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6 9 17l-5-5" /></svg>
+                Unstake successful!
+              </p>
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+                ~{formatAmount(redeem.expectedBaseOut)} {deposit.baseSymbol} returned to your wallet
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {(redeem.redeemTxHash ?? redeem.emergencyTxHash) && (
+                  <a
+                    href={explorerTxUrl((redeem.redeemTxHash ?? redeem.emergencyTxHash)!)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="rounded-xl border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                  >
+                    View on Explorer
+                  </a>
+                )}
+                <Link
+                  href="/dashboard"
+                  className="rounded-xl bg-ocean px-3 py-1.5 text-xs font-bold text-white transition hover:bg-ocean-dark"
+                >
+                  Go to Dashboard
+                </Link>
+              </div>
+            </div>
+          )}
         </Card>
       )}
       </div>
