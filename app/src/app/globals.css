@@ -13,6 +13,12 @@ html.dark {
 
 body {
   @apply bg-dotix-gradient text-ink min-h-screen transition-colors dark:bg-dotix-gradient-dark dark:text-slate-100;
+  font-family: 'DM Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6,
+.font-display {
+  font-family: 'Space Grotesk', 'DM Sans', sans-serif;
 }
 
 .card {
@@ -36,6 +42,12 @@ body {
 
 .input {
   @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 placeholder:text-slate-400 transition focus:border-ocean focus:outline-none focus:ring-2 focus:ring-ocean/20 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500;
+}
+
+/* Tabular numbers for all numeric values */
+[class*="tabular-nums"],
+.num {
+  font-variant-numeric: tabular-nums;
 }
 
 @keyframes page-fade-in {
