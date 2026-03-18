@@ -38,16 +38,15 @@ export function WeightBar({ currentBps, targetBps }: Props) {
           />
         </div>
       </div>
-      <div className="flex items-center justify-between">
-        <p className="text-xs text-slate-600 dark:text-slate-400">
-          current {currentPct.toFixed(2)}% / target {targetPct.toFixed(2)}% / <Tooltip content={`Basis points: ${deviation} bps = ${(deviation / 100).toFixed(2)}%. 100 bps = 1%. Deviation from target triggers rebalancing.`}>deviation {(deviation / 100).toFixed(2)}%</Tooltip>
-        </p>
-        <span className="flex items-center gap-1 text-[10px] text-slate-400 dark:text-slate-500">
-          <span className="h-2 w-2 rounded-full bg-mint" title="deviation ≤ 5%" />
-          <span className="h-2 w-2 rounded-full bg-warning" title="5–10%" />
-          <span className="h-2 w-2 rounded-full bg-error" title=">10%" />
-        </span>
-      </div>
+      <p className="text-xs text-slate-500 dark:text-slate-400">
+        <span className={`font-semibold ${deviationColor.replace("bg-", "text-")}`}>{currentPct.toFixed(2)}%</span>
+        {" "}current · {targetPct.toFixed(2)}% target
+        {deviation > 0 && (
+          <Tooltip content={`${deviation} bps deviation from target (${(deviation / 100).toFixed(2)}%)`}>
+            <span className="ml-1 text-muted">(Δ {(deviation / 100).toFixed(2)}%)</span>
+          </Tooltip>
+        )}
+      </p>
     </div>
   );
 }
