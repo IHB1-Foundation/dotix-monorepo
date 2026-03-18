@@ -52,7 +52,7 @@ const SLIPPAGE_PRESETS = ["0.1", "0.5", "1.0"] as const;
 
 function DepositSkeleton() {
   return (
-    <section className="mx-auto max-w-lg space-y-4">
+    <section className="mx-auto max-w-[560px] space-y-6">
       <div className="card animate-pulse p-5">
         <div className="h-6 w-28 rounded bg-slate-200 dark:bg-slate-700" />
         <div className="mt-4 h-4 w-48 rounded bg-slate-200 dark:bg-slate-700" />
@@ -118,7 +118,7 @@ export default function DepositPage() {
   }
 
   return (
-    <section className="mx-auto max-w-lg space-y-4">
+    <section className="mx-auto max-w-[560px] space-y-6">
       <PageHeader title="Stake & Unstake" description="Stake PAS, receive PDOT." />
 
       {!isConnected && <ConnectCTA variant="inline" description="Connect your wallet to stake PAS and mint PDOT shares." />}

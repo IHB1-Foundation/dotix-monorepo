@@ -105,7 +105,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <section className="space-y-4">
+    <section className="space-y-6">
       {/* Header row: title + refresh icon + last updated */}
       <div className="flex items-center justify-between">
         <div>
@@ -141,7 +141,7 @@ export default function DashboardPage() {
       </div>
 
       {/* 1. KPI Row — most important at-a-glance */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         <Card variant="elevated" as="article" className={`stagger-item ${vault.isRefreshing ? "animate-pulse" : ""}`}>
           <div className="flex items-center gap-2">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-slate-400 dark:bg-slate-700">

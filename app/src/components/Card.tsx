@@ -15,8 +15,8 @@ const variantClass: Record<CardVariant, string> = {
 const paddingClass: Record<CardPadding, string> = {
   none: "",
   compact: "p-3",
-  default: "p-4",
-  spacious: "p-5",
+  default: "p-5",
+  spacious: "p-6",
 };
 
 type CardProps = {
