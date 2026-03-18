@@ -193,7 +193,33 @@ export default function DepositPage() {
           </div>
         )}
 
-        <div className="mt-4 flex gap-2">
+        {deposit.amountIn > 0n && (
+          <div className="mt-4 flex items-center gap-2 text-xs font-semibold">
+            <span className={`flex items-center gap-1 ${deposit.approveConfirmed || !deposit.requiresApproval ? "text-mint" : deposit.requiresApproval ? "text-ocean" : "text-slate-400"}`}>
+              {deposit.approveConfirmed || !deposit.requiresApproval ? (
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6 9 17l-5-5" /></svg>
+              ) : (
+                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-ocean text-white text-[10px]">1</span>
+              )}
+              Approve
+            </span>
+            <span className="text-slate-300 dark:text-slate-600">———</span>
+            <span className={`flex items-center gap-1 ${deposit.depositConfirmed ? "text-mint" : !deposit.requiresApproval ? "text-ocean" : "text-slate-400"}`}>
+              {deposit.depositConfirmed ? (
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6 9 17l-5-5" /></svg>
+              ) : (
+                <span className={`flex h-4 w-4 items-center justify-center rounded-full text-[10px] ${!deposit.requiresApproval ? "bg-ocean text-white" : "bg-slate-200 text-slate-500 dark:bg-slate-700 dark:text-slate-400"}`}>2</span>
+              )}
+              Deposit
+            </span>
+          </div>
+        )}
+
+        {deposit.approveConfirmed && deposit.requiresApproval && (
+          <p className="mt-1 text-xs text-mint">✓ Allowance set — ready to deposit</p>
+        )}
+
+        <div className="mt-3 flex gap-2">
           {deposit.requiresApproval ? (
             <TxButton
               label="Approve"
@@ -211,6 +237,11 @@ export default function DepositPage() {
             />
           )}
         </div>
+
+        <details className="mt-2">
+          <summary className="cursor-pointer text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">Why do I need to approve?</summary>
+          <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">ERC-20 tokens require a separate approval transaction before the vault can spend your funds. This is a standard security pattern — you set an exact allowance, and the vault can never take more than that amount.</p>
+        </details>
 
         <TxStatus
           hash={deposit.requiresApproval ? deposit.approveTxHash : deposit.depositTxHash}
