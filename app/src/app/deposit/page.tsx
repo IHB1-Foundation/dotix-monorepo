@@ -50,13 +50,13 @@ function DepositSkeleton() {
     <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {Array.from({ length: 2 }).map((_, idx) => (
         <div key={`deposit-skeleton-${idx}`} className="card animate-pulse p-5">
-          <div className="h-6 w-28 rounded bg-slate-200" />
-          <div className="mt-4 h-4 w-48 rounded bg-slate-200" />
-          <div className="mt-3 h-10 w-full rounded-lg bg-slate-200" />
-          <div className="mt-4 h-4 w-28 rounded bg-slate-200" />
-          <div className="mt-2 h-10 w-full rounded-lg bg-slate-200" />
-          <div className="mt-4 h-4 w-full rounded bg-slate-200" />
-          <div className="mt-4 h-10 w-32 rounded-lg bg-slate-200" />
+          <div className="h-6 w-28 rounded bg-slate-200 dark:bg-slate-700" />
+          <div className="mt-4 h-4 w-48 rounded bg-slate-200 dark:bg-slate-700" />
+          <div className="mt-3 h-10 w-full rounded-lg bg-slate-200 dark:bg-slate-700" />
+          <div className="mt-4 h-4 w-28 rounded bg-slate-200 dark:bg-slate-700" />
+          <div className="mt-2 h-10 w-full rounded-lg bg-slate-200 dark:bg-slate-700" />
+          <div className="mt-4 h-4 w-full rounded bg-slate-200 dark:bg-slate-700" />
+          <div className="mt-4 h-10 w-32 rounded-lg bg-slate-200 dark:bg-slate-700" />
         </div>
       ))}
     </section>
