@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { formatUnits } from "viem";
-import { useAccount } from "wagmi";
+import { useAccount, useReadContract } from "wagmi";
 
 import { AllocationChart, allocationColorByIndex } from "@/components/AllocationChart";
 import { AssetRow } from "@/components/AssetRow";
@@ -11,6 +11,8 @@ import { PageHeader } from "@/components/PageHeader";
 import { RebalanceStatus } from "@/components/RebalanceStatus";
 import { useTokenMeta } from "@/hooks/useTokenMeta";
 import { useVaultState } from "@/hooks/useVaultState";
+import { PDOT_ABI, PDOT_ADDRESS } from "@/lib/contracts";
+import { POLL_FAST } from "@/lib/constants";
 
 const decimalFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 4,
@@ -65,8 +67,20 @@ function DashboardSkeleton() {
 }
 
 export default function DashboardPage() {
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
   const vault = useVaultState();
+
+  const pdotBalanceRead = useReadContract({
+    address: PDOT_ADDRESS as `0x${string}`,
+    abi: PDOT_ABI,
+    functionName: "balanceOf",
+    args: address ? [address] : undefined,
+    query: {
+      enabled: Boolean(address),
+      refetchInterval: POLL_FAST,
+    },
+  });
+  const pdotBalance = typeof pdotBalanceRead.data === "bigint" ? pdotBalanceRead.data : 0n;
   const [now, setNow] = useState(() => Date.now());
   const tokens = vault.assets.map((asset) => asset.token);
   const { byToken } = useTokenMeta(tokens);
@@ -109,6 +123,38 @@ export default function DashboardPage() {
           </button>
         }
       />
+      {address && (
+        <article className="relative overflow-hidden rounded-xl border border-ocean/30 bg-gradient-to-br from-ocean/10 via-white/80 to-mint/10 p-5 shadow-sm backdrop-blur dark:border-ocean/40 dark:from-ocean/20 dark:via-slate-900/80 dark:to-mint/10">
+          <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-ocean to-mint" />
+          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">My Position</h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            <div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">My PDOT Balance</p>
+              <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
+                {formatMetric(pdotBalance)} <span className="text-sm font-semibold text-slate-500">PDOT</span>
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">My Value</p>
+              <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
+                {vault.totalSupply > 0n
+                  ? formatMetric((pdotBalance * vault.nav) / vault.totalSupply)
+                  : "—"}{" "}
+                <span className="text-sm font-semibold text-slate-500">PAS</span>
+              </p>
+            </div>
+            <div>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Share of Vault</p>
+              <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
+                {vault.totalSupply > 0n
+                  ? `${((Number(pdotBalance) / Number(vault.totalSupply)) * 100).toFixed(2)}%`
+                  : "—"}
+              </p>
+            </div>
+          </div>
+        </article>
+      )}
+
       <AllocationChart items={chartItems} totalLabel={formatMetric(vault.nav)} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
