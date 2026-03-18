@@ -27,7 +27,7 @@ const config: Config = {
           dark: "#d97706",
         },
         surface: "#f8fbff",
-        "surface-dark": "#111827",
+        "surface-dark": "#0f0f14",
         // Semantic tokens
         success: {
           DEFAULT: "#20c997",
@@ -48,7 +48,7 @@ const config: Config = {
       },
       backgroundImage: {
         "dotix-gradient": "radial-gradient(circle at top left, #ddf4ff 0%, #f7fbff 45%, #ffffff 100%)",
-        "dotix-gradient-dark": "radial-gradient(circle at top left, #172036 0%, #0b1220 45%, #060b14 100%)",
+        "dotix-gradient-dark": "radial-gradient(circle at top left, #151520 0%, #0d0d16 45%, #0a0a12 100%)",
         "brand-gradient": "linear-gradient(135deg, #0f7ad8 0%, #20c997 100%)",
       },
       fontFamily: {
