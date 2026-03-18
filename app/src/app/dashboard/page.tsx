@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { formatUnits } from "viem";
 import { useAccount, useReadContract } from "wagmi";
 
@@ -88,7 +88,6 @@ export default function DashboardPage() {
     },
   });
   const pdotBalance = typeof pdotBalanceRead.data === "bigint" ? pdotBalanceRead.data : 0n;
-  const [now, setNow] = useState(() => Date.now());
   const tokens = vault.assets.map((asset) => asset.token);
   const { byToken } = useTokenMeta(tokens);
   const chartItems = vault.assets.map((asset, index) => ({
@@ -96,15 +95,10 @@ export default function DashboardPage() {
     value: Number(formatUnits(asset.valueInBase, 18)),
     color: allocationColorByIndex(index),
   }));
-  const freshnessSeconds = useMemo(() => {
+  const lastUpdatedTime = useMemo(() => {
     if (vault.lastUpdatedAt <= 0) return null;
-    return Math.max(Math.floor((now - vault.lastUpdatedAt) / 1000), 0);
-  }, [now, vault.lastUpdatedAt]);
-
-  useEffect(() => {
-    const id = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => window.clearInterval(id);
-  }, []);
+    return new Date(vault.lastUpdatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  }, [vault.lastUpdatedAt]);
 
   const navNum = Number(formatUnits(vault.nav, 18));
   const priceNum = Number(formatUnits(vault.pdotPrice, 18));
@@ -141,9 +135,9 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display text-2xl font-extrabold tracking-tight text-ink dark:text-slate-100">Dashboard</h1>
-          {freshnessSeconds !== null && (
-            <p className="mt-0.5 text-[11px] text-slate-400">
-              Updated {freshnessSeconds}s ago
+          {lastUpdatedTime !== null && (
+            <p className="mt-0.5 text-xs text-slate-400">
+              Updated {lastUpdatedTime}
             </p>
           )}
         </div>
