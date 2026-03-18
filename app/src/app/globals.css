@@ -22,7 +22,7 @@ h1, h2, h3, h4, h5, h6,
 }
 
 .card {
-  @apply rounded-2xl border border-slate-200/60 bg-white/80 shadow-sm backdrop-blur transition-shadow duration-200 hover:shadow-md dark:border-white/[0.06] dark:bg-slate-900/80;
+  @apply rounded-2xl border border-slate-200 bg-white shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-slate-800 dark:bg-[#16161F];
 }
 
 /* Hero card: clean white with shadow elevation — for KPI, My Position, primary stats */
@@ -37,7 +37,7 @@ h1, h2, h3, h4, h5, h6,
 
 /* Highlight card: ocean/mint border + light tint — for active states, previews */
 .card-highlight {
-  @apply rounded-xl border border-ocean/30 bg-ocean/5 backdrop-blur dark:border-ocean/40 dark:bg-ocean/10;
+  @apply rounded-xl border border-ocean/30 bg-ocean/5 dark:border-ocean/40 dark:bg-ocean/10;
 }
 
 .input {
