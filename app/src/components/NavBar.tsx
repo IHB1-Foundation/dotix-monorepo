@@ -85,20 +85,27 @@ export function NavBar() {
               <ConnectButton />
             </div>
           </div>
-          <nav className="hidden flex-wrap items-center gap-2 md:flex">
-            {links.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
-                  pathname?.startsWith(link.href)
-                    ? "bg-brand-gradient text-white shadow-sm"
-                    : "bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
+          <nav className="hidden flex-wrap items-center gap-1 md:flex">
+            {links.map((link, idx) => {
+              const isActive = pathname?.startsWith(link.href);
+              return (
+                <span key={link.href} className="flex items-center">
+                  {idx > 0 && (
+                    <span className="mr-1 text-slate-300 dark:text-slate-600 text-xs">›</span>
+                  )}
+                  <Link
+                    href={link.href}
+                    className={`relative rounded-lg px-3 py-2 text-sm font-medium transition ${
+                      isActive
+                        ? "bg-brand-gradient text-white shadow-sm"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </span>
+              );
+            })}
           </nav>
           <div className="hidden items-center gap-2 lg:flex">
             <ThemeToggle />
