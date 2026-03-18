@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/components/Card";
+import { EmptyState } from "@/components/EmptyState";
 import { useActivityLog } from "@/hooks/useActivityLog";
 import { explorerTxUrl } from "@/lib/network";
 
@@ -70,7 +71,15 @@ export function ActivityFeed() {
       )}
 
       {!loading && !error && entries.length === 0 && (
-        <p className="text-sm text-slate-500 dark:text-slate-400">No recent activity found.</p>
+        <EmptyState
+          icon={
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M12 8v4l3 3" /><circle cx="12" cy="12" r="9" />
+            </svg>
+          }
+          title="No recent activity"
+          description="Vault events will appear here."
+        />
       )}
 
       {!loading && entries.length > 0 && (
