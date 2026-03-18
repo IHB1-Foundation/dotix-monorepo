@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { formatUnits } from "viem";
 import { useAccount, useReadContract } from "wagmi";
 
+import { ActivityFeed } from "@/components/ActivityFeed";
 import { AllocationChart, allocationColorByIndex } from "@/components/AllocationChart";
 import { AssetRow } from "@/components/AssetRow";
 import { Button } from "@/components/Button";
@@ -247,6 +248,9 @@ export default function DashboardPage() {
         lastRebalanceAt={vault.lastRebalanceAt}
         paused={vault.paused}
       />
+
+      {/* 5. Activity Feed */}
+      <ActivityFeed />
     </section>
   );
 }
