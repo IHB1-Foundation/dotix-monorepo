@@ -176,34 +176,44 @@ export default function DashboardPage() {
 
       {/* 2. My Position (connected) or inline CTA */}
       {address ? (
-        <Card variant="elevated" padding="spacious" as="article">
-          <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">My Position</h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">My PDOT Balance</p>
-              <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
-                {formatToken(pdotBalance)} <span className="text-sm font-semibold text-muted">PDOT</span>
-              </p>
+        pdotBalance === 0n ? (
+          <Card variant="elevated" padding="spacious" as="article">
+            <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">My Position</h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">You have no PDOT yet.</p>
+            <Link href="/deposit" className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-ocean px-4 py-2 text-sm font-bold text-white transition hover:bg-ocean-dark">
+              Stake now
+            </Link>
+          </Card>
+        ) : (
+          <Card variant="elevated" padding="spacious" as="article">
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">My Position</h2>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div>
+                <p className="text-xs text-slate-500 dark:text-slate-400">My PDOT Balance</p>
+                <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
+                  {formatToken(pdotBalance)} <span className="text-sm font-semibold text-muted">PDOT</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 dark:text-slate-400">My Value</p>
+                <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
+                  {vault.totalSupply > 0n
+                    ? formatToken((pdotBalance * vault.nav) / vault.totalSupply)
+                    : "0"}{" "}
+                  <span className="text-sm font-semibold text-muted">PAS</span>
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Share of Vault</p>
+                <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
+                  {vault.totalSupply > 0n
+                    ? `${((Number(pdotBalance) / Number(vault.totalSupply)) * 100).toFixed(2)}%`
+                    : "0%"}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">My Value</p>
-              <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
-                {vault.totalSupply > 0n
-                  ? formatToken((pdotBalance * vault.nav) / vault.totalSupply)
-                  : "—"}{" "}
-                <span className="text-sm font-semibold text-muted">PAS</span>
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Share of Vault</p>
-              <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
-                {vault.totalSupply > 0n
-                  ? `${((Number(pdotBalance) / Number(vault.totalSupply)) * 100).toFixed(2)}%`
-                  : "—"}
-              </p>
-            </div>
-          </div>
-        </Card>
+          </Card>
+        )
       ) : (
         <ConnectCTA variant="inline" />
       )}
