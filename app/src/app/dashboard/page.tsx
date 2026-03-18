@@ -7,7 +7,6 @@ import { useAccount, useReadContract } from "wagmi";
 import { AllocationChart, allocationColorByIndex } from "@/components/AllocationChart";
 import { AssetRow } from "@/components/AssetRow";
 import { ConnectCTA } from "@/components/ConnectCTA";
-import { PageHeader } from "@/components/PageHeader";
 import { RebalanceStatus } from "@/components/RebalanceStatus";
 import { useTokenMeta } from "@/hooks/useTokenMeta";
 import { useVaultState } from "@/hooks/useVaultState";
@@ -20,7 +19,7 @@ import { formatToken, decimalFormatter } from "@/lib/format";
 function DashboardSkeleton() {
   return (
     <section className="space-y-4">
-      <PageHeader title="Dashboard" description="Vault overview and asset allocation." />
+      <div className="h-8 w-32 rounded bg-slate-200 dark:bg-slate-700 animate-pulse" />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: 3 }).map((_, idx) => (
@@ -102,20 +101,81 @@ export default function DashboardPage() {
 
   return (
     <section className="space-y-4">
-      <PageHeader
-        title="Dashboard"
-        description={`Vault overview and asset allocation.${freshnessSeconds !== null ? ` Last updated ${freshnessSeconds}s ago.` : ""}`}
-        action={
-          <button
-            type="button"
-            onClick={() => void vault.refetch()}
-            disabled={vault.isRefreshing}
-            className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:hover:bg-slate-800"
+      {/* Header row: title + refresh icon + last updated */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-ink dark:text-slate-100">Dashboard</h1>
+          <p className="mt-0.5 text-sm text-muted dark:text-slate-400">
+            Vault overview and asset allocation.
+            {freshnessSeconds !== null && (
+              <span className="ml-2 inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+                Updated {freshnessSeconds}s ago
+              </span>
+            )}
+          </p>
+        </div>
+        <button
+          type="button"
+          aria-label="Refresh vault data"
+          onClick={() => void vault.refetch()}
+          disabled={vault.isRefreshing}
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-500 transition hover:bg-slate-100 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-slate-800"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            className={`h-4 w-4 ${vault.isRefreshing ? "animate-spin" : ""}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
           >
-            {vault.isRefreshing ? "Refreshing..." : "Refresh"}
-          </button>
-        }
-      />
+            <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8" />
+            <path d="M21 3v5h-5" />
+          </svg>
+        </button>
+      </div>
+
+      {/* 1. KPI Row — most important at-a-glance */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
+          <div className="flex items-center gap-2">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ocean/15 text-ocean">
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </span>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <Tooltip content="Net Asset Value — the total value of all assets held in the vault, denominated in PAS">NAV</Tooltip>
+            </h2>
+          </div>
+          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(navAnimated)}</p>
+          <p className="mt-1 text-xs text-muted">Total vault assets under management (PAS)</p>
+        </article>
+        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
+          <div className="flex items-center gap-2">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-mint/15 text-mint">
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="8"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+            </span>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Price</h2>
+          </div>
+          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(priceAnimated)}</p>
+          <p className="mt-1 text-xs text-muted">Current price per PDOT share (PAS)</p>
+        </article>
+        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
+          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
+          <div className="flex items-center gap-2">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-warning/15 text-warning">
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </span>
+            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <Tooltip content="Total PDOT shares minted across all depositors. More shares = more users in the vault.">PDOT Supply</Tooltip>
+            </h2>
+          </div>
+          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(supplyAnimated)}</p>
+          <p className="mt-1 text-xs text-muted">Total PDOT shares in circulation</p>
+        </article>
+      </div>
+
+      {/* 2. My Position (connected) or inline CTA */}
       {address ? (
         <article className="relative overflow-hidden rounded-xl border border-ocean/30 bg-gradient-to-br from-ocean/10 via-white/80 to-mint/10 p-5 shadow-sm backdrop-blur dark:border-ocean/40 dark:from-ocean/20 dark:via-slate-900/80 dark:to-mint/10">
           <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-ocean to-mint" />
@@ -124,7 +184,7 @@ export default function DashboardPage() {
             <div>
               <p className="text-xs text-slate-500 dark:text-slate-400">My PDOT Balance</p>
               <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
-                {formatToken(pdotBalance)} <span className="text-sm font-semibold text-slate-500">PDOT</span>
+                {formatToken(pdotBalance)} <span className="text-sm font-semibold text-muted">PDOT</span>
               </p>
             </div>
             <div>
@@ -133,7 +193,7 @@ export default function DashboardPage() {
                 {vault.totalSupply > 0n
                   ? formatToken((pdotBalance * vault.nav) / vault.totalSupply)
                   : "—"}{" "}
-                <span className="text-sm font-semibold text-slate-500">PAS</span>
+                <span className="text-sm font-semibold text-muted">PAS</span>
               </p>
             </div>
             <div>
@@ -150,72 +210,36 @@ export default function DashboardPage() {
         <ConnectCTA variant="inline" />
       )}
 
-      <AllocationChart items={chartItems} totalLabel={formatToken(vault.nav)} />
+      {/* 3. Allocation Section: Chart + Asset List side by side */}
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <AllocationChart items={chartItems} totalLabel={formatToken(vault.nav)} />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
-          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
-          <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-ocean/15 text-ocean">
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            </span>
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              <Tooltip content="Net Asset Value — the total value of all assets held in the vault, denominated in PAS">NAV</Tooltip>
-            </h2>
-          </div>
-          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(navAnimated)}</p>
-          <p className="mt-1 text-xs text-slate-500">Total vault assets under management (PAS)</p>
-        </article>
-        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
-          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
-          <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-mint/15 text-mint">
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="8"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
-            </span>
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">PDOT Price</h2>
-          </div>
-          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(priceAnimated)}</p>
-          <p className="mt-1 text-xs text-slate-500">Current price per PDOT share (PAS)</p>
-        </article>
-        <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
-          <span className="absolute inset-x-0 top-0 h-0.5 bg-brand-gradient" />
-          <div className="flex items-center gap-2">
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-warning/15 text-warning">
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            </span>
-            <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-              <Tooltip content="Total PDOT shares minted across all depositors. More shares = more users in the vault.">PDOT Supply</Tooltip>
-            </h2>
-          </div>
-          <p className="mt-2 text-2xl font-bold tabular-nums">{decimalFormatter.format(supplyAnimated)}</p>
-          <p className="mt-1 text-xs text-slate-500">Total PDOT shares in circulation</p>
-        </article>
+        <div className="space-y-3">
+          {vault.assets.length === 0 ? (
+            <div className="card flex h-full flex-col items-center justify-center p-8 text-center">
+              <svg viewBox="0 0 64 64" className="mx-auto h-16 w-16 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <rect x="8" y="20" width="48" height="36" rx="4" />
+                <path d="M20 20v-4a12 12 0 0 1 24 0v4" />
+                <path d="M32 36v4" strokeLinecap="round" />
+                <circle cx="32" cy="34" r="2" fill="currentColor" />
+              </svg>
+              <p className="mt-3 text-sm font-semibold text-slate-500 dark:text-slate-400">No assets in the vault yet</p>
+              <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Assets will appear here once the vault is configured.</p>
+            </div>
+          ) : (
+            vault.assets.map((asset, idx) => (
+              <AssetRow key={asset.token} asset={asset} meta={byToken[asset.token]} color={allocationColorByIndex(idx)} />
+            ))
+          )}
+        </div>
       </div>
 
+      {/* 4. Rebalance Status — operational info */}
       <RebalanceStatus
         cooldownSeconds={vault.cooldownSeconds}
         lastRebalanceAt={vault.lastRebalanceAt}
         paused={vault.paused}
       />
-
-      <div className="space-y-3">
-        {vault.assets.length === 0 ? (
-          <div className="card p-8 text-center">
-            <svg viewBox="0 0 64 64" className="mx-auto h-16 w-16 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <rect x="8" y="20" width="48" height="36" rx="4" />
-              <path d="M20 20v-4a12 12 0 0 1 24 0v4" />
-              <path d="M32 36v4" strokeLinecap="round" />
-              <circle cx="32" cy="34" r="2" fill="currentColor" />
-            </svg>
-            <p className="mt-3 text-sm font-semibold text-slate-500 dark:text-slate-400">No assets in the vault yet</p>
-            <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Assets will appear here once the vault is configured by an admin.</p>
-          </div>
-        ) : (
-          vault.assets.map((asset, idx) => (
-            <AssetRow key={asset.token} asset={asset} meta={byToken[asset.token]} color={allocationColorByIndex(idx)} />
-          ))
-        )}
-      </div>
     </section>
   );
 }
