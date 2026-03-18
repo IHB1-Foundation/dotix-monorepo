@@ -101,10 +101,6 @@ export default function DashboardPage() {
     return () => window.clearInterval(id);
   }, []);
 
-  if (!isConnected) {
-    return <ConnectCTA />;
-  }
-
   const navNum = Number(formatUnits(vault.nav, 18));
   const priceNum = Number(formatUnits(vault.pdotPrice, 18));
   const supplyNum = Number(formatUnits(vault.totalSupply, 18));
@@ -133,7 +129,7 @@ export default function DashboardPage() {
           </button>
         }
       />
-      {address && (
+      {address ? (
         <article className="relative overflow-hidden rounded-xl border border-ocean/30 bg-gradient-to-br from-ocean/10 via-white/80 to-mint/10 p-5 shadow-sm backdrop-blur dark:border-ocean/40 dark:from-ocean/20 dark:via-slate-900/80 dark:to-mint/10">
           <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-ocean to-mint" />
           <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">My Position</h2>
@@ -163,6 +159,8 @@ export default function DashboardPage() {
             </div>
           </div>
         </article>
+      ) : (
+        <ConnectCTA variant="inline" />
       )}
 
       <AllocationChart items={chartItems} totalLabel={formatMetric(vault.nav)} />

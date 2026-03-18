@@ -69,15 +69,6 @@ export default function AutopilotPage() {
     return Object.entries(plan.newTargets);
   }, [plan]);
 
-  if (!isConnected) {
-    return (
-      <ConnectCTA
-        title="Connect your wallet to run the Autopilot strategy workflow"
-        description="Generate a plan, apply target weights, and execute rebalances from one connected control surface."
-      />
-    );
-  }
-
   if (loading && !plan) {
     return <AutopilotSkeleton />;
   }
@@ -128,6 +119,7 @@ export default function AutopilotPage() {
   return (
     <section className="space-y-4">
       <PageHeader title="Autopilot" description="Generate plans, apply targets, and execute rebalances." />
+      {!isConnected && <ConnectCTA variant="inline" description="Connect your wallet to apply targets and execute rebalances." />}
       <Stepper
         steps={[
           {

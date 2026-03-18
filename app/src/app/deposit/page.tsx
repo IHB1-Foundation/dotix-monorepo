@@ -90,15 +90,6 @@ export default function DepositPage() {
   const depositExceedsBalance = deposit.amountIn > deposit.balance;
   const redeemExceedsBalance = redeem.sharesIn > redeem.pdotBalance;
 
-  if (!isConnected) {
-    return (
-      <ConnectCTA
-        title="Connect your wallet to start depositing into the index vault"
-        description="After connecting, you can deposit base tokens, mint PDOT shares, and redeem whenever needed."
-      />
-    );
-  }
-
   if (isConnected && (deposit.isLoading || redeem.isLoading)) {
     return <DepositSkeleton />;
   }
@@ -106,6 +97,8 @@ export default function DepositPage() {
   return (
     <section className="space-y-4">
       <PageHeader title="Deposit & Redeem" description="Deposit base assets to mint PDOT shares, or burn PDOT to redeem." />
+
+      {!isConnected && <ConnectCTA variant="inline" description="Connect your wallet to deposit base tokens and mint PDOT shares." />}
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="card relative overflow-hidden p-5">
