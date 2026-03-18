@@ -167,9 +167,10 @@ export default function DepositPage() {
         </div>
         <p className="mb-2 text-sm text-slate-600">Base balance: {formatAmount(deposit.balance, deposit.baseDecimals)} {deposit.baseSymbol}</p>
 
-        <label className="mb-2 block text-sm text-slate-600">Amount</label>
+        <label htmlFor="deposit-amount" className="mb-2 block text-sm text-slate-600">Amount</label>
         <div className="relative">
           <input
+            id="deposit-amount"
             className={`input pr-16 ${depositExceedsBalance ? "border-error focus:border-error focus:ring-error/20" : ""}`}
             value={depositInput}
             onChange={(e) => setDepositInput(sanitizeAmountInput(e.target.value))}
@@ -350,9 +351,10 @@ export default function DepositPage() {
         </div>
         <p className="mb-2 text-sm text-slate-600">PDOT balance: {formatAmount(redeem.pdotBalance)}</p>
 
-        <label className="mb-2 block text-sm text-slate-600">PDOT Amount</label>
+        <label htmlFor="redeem-amount" className="mb-2 block text-sm text-slate-600">PDOT Amount</label>
         <div className="relative">
           <input
+            id="redeem-amount"
             className={`input pr-16 ${redeemExceedsBalance ? "border-error focus:border-error focus:ring-error/20" : ""}`}
             value={redeemInput}
             onChange={(e) => setRedeemInput(sanitizeAmountInput(e.target.value))}
