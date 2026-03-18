@@ -4,7 +4,7 @@ import path from "node:path";
 import { Contract, JsonRpcProvider, Wallet } from "ethers";
 import * as dotenv from "dotenv";
 
-import vaultArtifact from "../artifacts/contracts/IndexVault.sol/IndexVault.json";
+import vaultArtifact from "../shared/abi/IndexVault.json";
 import deployments from "../deployments/testnet.json";
 import { explorerTxUrl, getRpcUrl } from "../shared/config";
 

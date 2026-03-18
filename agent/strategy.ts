@@ -3,11 +3,11 @@ import path from "node:path";
 
 import { Contract, JsonRpcProvider } from "ethers";
 
-import vaultArtifact from "../artifacts/contracts/IndexVault.sol/IndexVault.json";
-import registryArtifact from "../artifacts/contracts/TokenRegistry.sol/TokenRegistry.json";
-import routerArtifact from "../artifacts/contracts/uniswap/UniswapV2Router02.sol/UniswapV2Router02.json";
-import pairArtifact from "../artifacts/contracts/uniswap/UniswapV2Pair.sol/UniswapV2Pair.json";
-import erc20Artifact from "../artifacts/contracts/test/MockERC20.sol/MockERC20.json";
+import vaultArtifact from "../shared/abi/IndexVault.json";
+import registryArtifact from "../shared/abi/TokenRegistry.json";
+import routerArtifact from "../shared/abi/UniswapV2Router02.json";
+import pairArtifact from "../shared/abi/UniswapV2Pair.json";
+import erc20Artifact from "../shared/abi/MockERC20.json";
 import deployments from "../deployments/testnet.json";
 import { getRpcUrl } from "../shared/config";
 

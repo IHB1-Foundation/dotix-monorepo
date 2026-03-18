@@ -1,36 +1,16 @@
 name: Deploy Frontend (Vercel)
 
+# Vercel Git Integration handles auto-deploy on push to main.
+# This workflow is kept for manual trigger only.
+# Vercel project "dotix" is connected to this repo via Git Integration.
+# Root directory: app/
+
 on:
-  push:
-    branches: [main]
-    paths:
-      - "app/**"
-      - "shared/**"
-      - ".github/workflows/deploy-frontend.yml"
   workflow_dispatch:
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-
 jobs:
-  deploy:
+  notify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Vercel CLI
-        run: bun add -g vercel@latest
-
-      - name: Pull Vercel Environment
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy to Production
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Info
+        run: echo "Frontend deploys automatically via Vercel Git Integration on push to main."

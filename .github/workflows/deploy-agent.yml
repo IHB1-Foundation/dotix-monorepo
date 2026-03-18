@@ -1,30 +1,15 @@
 name: Deploy Agent (Railway)
 
+# Railway deployment is done via CLI: `railway up`
+# Project: dotix-agent, Service: plan-api
+# This workflow is kept for reference only.
+
 on:
-  push:
-    branches: [main]
-    paths:
-      - "agent/**"
-      - "shared/**"
-      - "package.json"
-      - "bun.lock"
-      - ".github/workflows/deploy-agent.yml"
   workflow_dispatch:
 
 jobs:
-  deploy:
+  notify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-
-      - name: Install Railway CLI
-        run: bash <(curl -fsSL cli.new)
-
-      - name: Deploy to Railway
-        run: railway up --service=${{ secrets.RAILWAY_SERVICE_ID }}
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      - name: Info
+        run: echo "Agent deploys via 'railway up' from local CLI."
