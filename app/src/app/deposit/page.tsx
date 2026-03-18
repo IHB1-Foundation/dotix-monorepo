@@ -13,10 +13,9 @@ import { TxStatus } from "@/components/TxStatus";
 import { useDeposit } from "@/hooks/useDeposit";
 import { useRedeem } from "@/hooks/useRedeem";
 import { explorerTxUrl } from "@/lib/network";
+import { formatTokenStr } from "@/lib/format";
 
-function formatAmount(value: bigint, decimals = 18): string {
-  return Number(formatUnits(value, decimals)).toFixed(4);
-}
+const formatAmount = formatTokenStr;
 
 function sanitizeAmountInput(value: string): string {
   const normalized = value.replace(/,/g, ".");

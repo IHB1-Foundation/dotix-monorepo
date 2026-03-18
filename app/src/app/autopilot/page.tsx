@@ -17,6 +17,7 @@ import { useVaultState } from "@/hooks/useVaultState";
 import { useTokenMeta } from "@/hooks/useTokenMeta";
 import { INDEX_VAULT_ABI, VAULT_ADDRESS } from "@/lib/contracts";
 import { mapContractError } from "@/lib/errors";
+import { formatPercent } from "@/lib/format";
 
 function AutopilotSkeleton() {
   return (
@@ -198,10 +199,10 @@ export default function AutopilotPage() {
                   return (
                     <tr key={token} className="border-b border-slate-100 dark:border-slate-800">
                       <td className="py-2 font-medium text-ink dark:text-slate-100">{symbol}</td>
-                      <td className="py-2 text-right tabular-nums text-slate-600 dark:text-slate-300">{(currentBps / 100).toFixed(2)}%</td>
-                      <td className="py-2 text-right tabular-nums text-slate-600 dark:text-slate-300">{(proposedBps / 100).toFixed(2)}%</td>
+                      <td className="py-2 text-right tabular-nums text-slate-600 dark:text-slate-300">{formatPercent(currentBps)}</td>
+                      <td className="py-2 text-right tabular-nums text-slate-600 dark:text-slate-300">{formatPercent(proposedBps)}</td>
                       <td className={`py-2 text-right tabular-nums font-semibold ${delta > 0 ? "text-mint" : delta < 0 ? "text-warning" : "text-slate-400"}`}>
-                        {delta > 0 ? "+" : ""}{(delta / 100).toFixed(2)}% {delta > 0 ? "▲" : delta < 0 ? "▼" : ""}
+                        {delta > 0 ? "+" : ""}{formatPercent(Math.abs(delta))} {delta > 0 ? "▲" : delta < 0 ? "▼" : ""}
                       </td>
                     </tr>
                   );

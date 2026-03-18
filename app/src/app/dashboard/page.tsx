@@ -15,20 +15,7 @@ import { PDOT_ABI, PDOT_ADDRESS } from "@/lib/contracts";
 import { POLL_FAST } from "@/lib/constants";
 import { Tooltip } from "@/components/Tooltip";
 import { useCountUp } from "@/hooks/useCountUp";
-
-const decimalFormatter = new Intl.NumberFormat("en-US", {
-  minimumFractionDigits: 4,
-  maximumFractionDigits: 4,
-});
-
-function formatMetric(value: bigint, decimals = 18): string {
-  const parsed = Number(formatUnits(value, decimals));
-  if (!Number.isFinite(parsed) || parsed === 0) {
-    return "—";
-  }
-
-  return decimalFormatter.format(parsed);
-}
+import { formatToken, decimalFormatter } from "@/lib/format";
 
 function DashboardSkeleton() {
   return (
@@ -137,14 +124,14 @@ export default function DashboardPage() {
             <div>
               <p className="text-xs text-slate-500 dark:text-slate-400">My PDOT Balance</p>
               <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
-                {formatMetric(pdotBalance)} <span className="text-sm font-semibold text-slate-500">PDOT</span>
+                {formatToken(pdotBalance)} <span className="text-sm font-semibold text-slate-500">PDOT</span>
               </p>
             </div>
             <div>
               <p className="text-xs text-slate-500 dark:text-slate-400">My Value</p>
               <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
                 {vault.totalSupply > 0n
-                  ? formatMetric((pdotBalance * vault.nav) / vault.totalSupply)
+                  ? formatToken((pdotBalance * vault.nav) / vault.totalSupply)
                   : "—"}{" "}
                 <span className="text-sm font-semibold text-slate-500">PAS</span>
               </p>
@@ -163,7 +150,7 @@ export default function DashboardPage() {
         <ConnectCTA variant="inline" />
       )}
 
-      <AllocationChart items={chartItems} totalLabel={formatMetric(vault.nav)} />
+      <AllocationChart items={chartItems} totalLabel={formatToken(vault.nav)} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <article className={`card-hero p-4 transition-transform duration-200 hover:scale-[1.01] ${vault.isRefreshing ? "animate-pulse" : ""}`}>
