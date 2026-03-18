@@ -5,6 +5,7 @@ import { useAccount, useWaitForTransactionReceipt, useWriteContract } from "wagm
 
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ConnectCTA } from "@/components/ConnectCTA";
+import { CopyableAddress } from "@/components/CopyableAddress";
 import { ExplanationPanel } from "@/components/ExplanationPanel";
 import { SwapPlanTable } from "@/components/SwapPlanTable";
 import { TxButton } from "@/components/TxButton";
@@ -13,10 +14,6 @@ import { useAgentPlan } from "@/hooks/useAgentPlan";
 import { useVaultRoles } from "@/hooks/useVaultRoles";
 import { INDEX_VAULT_ABI, VAULT_ADDRESS } from "@/lib/contracts";
 import { mapContractError } from "@/lib/errors";
-
-function shortAddress(address: string): string {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-}
 
 function AutopilotSkeleton() {
   return (
@@ -144,7 +141,7 @@ export default function AutopilotPage() {
           <ul className="space-y-1 text-sm">
             {targetEntries.map(([token, bps]) => (
               <li key={token} className="flex justify-between">
-                <span>{shortAddress(token)}</span>
+                <CopyableAddress address={token} />
                 <span>{(bps / 100).toFixed(2)}%</span>
               </li>
             ))}

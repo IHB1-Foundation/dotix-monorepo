@@ -3,10 +3,7 @@
 import { formatUnits } from "viem";
 
 import { AgentSwap } from "@/hooks/useAgentPlan";
-
-function shortAddress(address: string): string {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
-}
+import { CopyableAddress } from "@/components/CopyableAddress";
 
 export function SwapPlanTable({ swaps }: { swaps: AgentSwap[] }) {
   if (swaps.length === 0) {
@@ -28,8 +25,12 @@ export function SwapPlanTable({ swaps }: { swaps: AgentSwap[] }) {
         <tbody>
           {swaps.map((swap, idx) => (
             <tr key={`${swap.tokenIn}-${swap.tokenOut}-${idx}`} className="border-t border-slate-200">
-              <td className="px-3 py-2">{shortAddress(swap.tokenIn)}</td>
-              <td className="px-3 py-2">{shortAddress(swap.tokenOut)}</td>
+              <td className="px-3 py-2">
+                <CopyableAddress address={swap.tokenIn} />
+              </td>
+              <td className="px-3 py-2">
+                <CopyableAddress address={swap.tokenOut} />
+              </td>
               <td className="px-3 py-2">{Number(formatUnits(BigInt(swap.amountIn), 18)).toFixed(4)}</td>
               <td className="px-3 py-2">{Number(formatUnits(BigInt(swap.minAmountOut), 18)).toFixed(4)}</td>
               <td className="px-3 py-2">{(swap.expectedSlippageBps / 100).toFixed(2)}%</td>

@@ -5,6 +5,7 @@ import { formatUnits } from "viem";
 import type { TokenMeta } from "@/hooks/useTokenMeta";
 import type { VaultAssetState } from "@/hooks/useVaultState";
 
+import { CopyableAddress } from "./CopyableAddress";
 import { WeightBar } from "./WeightBar";
 
 type Props = {
@@ -21,7 +22,7 @@ export function AssetRow({ asset, meta }: Props) {
       <div className="mb-3 flex items-center justify-between">
         <div>
           <p className="text-base font-semibold">{symbol}</p>
-          <p className="text-xs text-slate-500">{asset.token}</p>
+          <CopyableAddress address={asset.token} />
         </div>
         <span
           className={`rounded-full px-2 py-1 text-xs font-semibold ${
