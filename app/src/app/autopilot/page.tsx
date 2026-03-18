@@ -163,6 +163,7 @@ export default function AutopilotPage() {
           />
           <TxButton
             label="Execute Rebalance"
+            variant="danger"
             onClick={() => void onExecuteRebalance()}
             loading={executeReceipt.isLoading}
             disabled={!isKeeper || !plan}

@@ -89,6 +89,7 @@ export default function DepositPage() {
           {deposit.requiresApproval ? (
             <TxButton
               label="Approve"
+              variant="secondary"
               onClick={deposit.approve}
               loading={deposit.approvePending}
               disabled={!isConnected || deposit.amountIn === 0n || deposit.paused}
@@ -137,6 +138,7 @@ export default function DepositPage() {
           {redeem.paused && (
             <TxButton
               label="Emergency Redeem"
+              variant="danger"
               onClick={redeem.emergencyRedeem}
               loading={redeem.emergencyPending}
               disabled={!isConnected || redeem.sharesIn === 0n}

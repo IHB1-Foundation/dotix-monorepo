@@ -71,6 +71,7 @@ export default function XcmPage() {
         <div className="mt-4 flex flex-wrap gap-2">
           <TxButton
             label={mode === "default" ? "Weigh Default" : "Weigh Message"}
+            variant="secondary"
             onClick={() => void (mode === "default" ? xcm.weighDefault() : xcm.weighMessage())}
             disabled={Boolean(validationError)}
           />
