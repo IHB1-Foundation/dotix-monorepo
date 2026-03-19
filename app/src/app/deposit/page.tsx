@@ -468,8 +468,14 @@ export default function DepositPage() {
                   </a>
                 )}
                 <Link
-                  href="/dashboard"
+                  href={`/bridge?amount=${formatAmount(redeem.expectedBaseOut)}`}
                   className="rounded-xl bg-ocean px-3 py-1.5 text-xs font-bold text-white transition hover:bg-ocean-dark"
+                >
+                  Bridge to Parachain
+                </Link>
+                <Link
+                  href="/dashboard"
+                  className="rounded-xl bg-ocean/10 px-3 py-1.5 text-xs font-bold text-ocean transition hover:bg-ocean/20 dark:text-ocean-light"
                 >
                   Go to Dashboard
                 </Link>

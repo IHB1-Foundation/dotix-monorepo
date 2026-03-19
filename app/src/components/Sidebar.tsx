@@ -10,10 +10,7 @@ const mainLinks = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/deposit", label: "Deposit", icon: "deposit" },
   { href: "/autopilot", label: "Autopilot", icon: "autopilot" },
-] as const;
-
-const advancedLinks = [
-  { href: "/xcm", label: "Cross-Chain Messaging", shortLabel: "XCM", icon: "xcm" },
+  { href: "/bridge", label: "Bridge", icon: "xcm" },
 ] as const;
 
 function SidebarIcon({ type }: { type: string }): ReactNode {
@@ -117,22 +114,6 @@ export function Sidebar() {
           ))}
         </ul>
 
-        <div className="mt-6">
-          <div className="my-1 mx-3 h-px bg-slate-100 dark:bg-slate-800" />
-          <ul className="space-y-1">
-            {advancedLinks.map((link) => (
-              <li key={link.href}>
-                <NavItem
-                  href={link.href}
-                  label={link.label}
-                  shortLabel={link.shortLabel}
-                  icon={link.icon}
-                  isActive={!!pathname?.startsWith(link.href)}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
       </nav>
 
       <div className="border-t border-slate-100 px-2 py-3 dark:border-slate-800">

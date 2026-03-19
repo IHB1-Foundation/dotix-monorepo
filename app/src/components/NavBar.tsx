@@ -10,7 +10,7 @@ const links = [
   { href: "/dashboard", label: "Dashboard", mobileLabel: "Dashboard", icon: "dashboard" },
   { href: "/deposit", label: "Deposit", mobileLabel: "Deposit", icon: "deposit" },
   { href: "/autopilot", label: "Autopilot", mobileLabel: "Autopilot", icon: "autopilot" },
-  { href: "/xcm", label: "XCM", mobileLabel: "XCM", icon: "xcm" },
+  { href: "/bridge", label: "Bridge", mobileLabel: "Bridge", icon: "xcm" },
 ] as const;
 
 function NavIcon({ type }: { type: (typeof links)[number]["icon"] }): ReactNode {
