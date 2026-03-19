@@ -52,10 +52,10 @@ function sanitizeAmountInput(value: string): string {
 
 function CustomXcmTab() {
   const [mode, setMode] = useState<"default" | "custom">("default");
-  const [customHex, setCustomHex] = useState("0x03020100");
+  const [customHex, setCustomHex] = useState("0x05040a");
 
   const effectiveHex = useMemo(() => {
-    return mode === "default" ? ("0x03020100" as `0x${string}`) : normalizeHex(customHex);
+    return mode === "default" ? ("0x05040a" as `0x${string}`) : normalizeHex(customHex);
   }, [customHex, mode]);
 
   const validationError = mode === "custom" ? validateHex(customHex) : null;

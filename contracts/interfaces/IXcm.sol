@@ -1,15 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+/// @notice Official XCM precompile interface (Polkadot Hub).
+/// @dev See: polkadot-sdk/polkadot/xcm/pallet-xcm/precompiles/src/interface/IXcm.sol
 interface IXcm {
-    function weightMessage(bytes memory message)
+    struct Weight {
+        uint64 refTime;
+        uint64 proofSize;
+    }
+
+    function weighMessage(bytes calldata message)
         external
         view
-        returns (uint64 refTime, uint64 proofSize);
+        returns (Weight memory weight);
 
-    function execute(
-        bytes memory message,
-        uint64 maxRefTime,
-        uint64 maxProofSize
-    ) external returns (uint8 outcome);
+    function execute(bytes calldata message, Weight calldata weight) external;
+
+    function send(bytes calldata destination, bytes calldata message) external;
 }

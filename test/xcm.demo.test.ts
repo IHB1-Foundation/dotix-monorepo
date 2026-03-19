@@ -24,7 +24,7 @@ describe("XcmDemo", function () {
     return { demo, admin, keeper, outsider };
   }
 
-  it("demoWeigh proxies weightMessage", async function () {
+  it("demoWeigh proxies weighMessage", async function () {
     const { demo } = await deployFixture();
 
     const result = await demo.demoWeigh("0x0102");
@@ -46,7 +46,7 @@ describe("XcmDemo", function () {
 
     await expect(demo.connect(keeper).demoExecute("0x0102", 1000, 1000))
       .to.emit(demo, "ExecuteResult")
-      .withArgs("0x0102", 0n, keeper.address);
+      .withArgs("0x0102", keeper.address);
   });
 
   it("weighDefault uses DEFAULT_MESSAGE", async function () {

@@ -5,7 +5,7 @@ export const VAULT_ADDRESS = "0x218c6eB6e978eE183F3325f035B13A7b16cCB41d" as con
 export const PDOT_ADDRESS = "0xA125AEd53a6eA6b80a2d657417853163CAF300E7" as const;
 export const REGISTRY_ADDRESS = "0xB22cCf9434755402acC5B502fe58A03a84a8D25F" as const;
 export const ROUTER_ADDRESS = "0x904d6B1fEf300c12f843811776E4C87c78F3B08E" as const;
-export const XCM_DEMO_ADDRESS = "0x03845C53fB85f2Cf3E7F71615B243076a65DAD98" as const;
+export const XCM_DEMO_ADDRESS = "0x4FA77324c0FDcFE1Bc23C9cFA6D6E1076057a275" as const;
 
 export const INDEX_VAULT_ABI = [
   {
@@ -3017,12 +3017,6 @@ export const XCM_DEMO_ABI = [
         "internalType": "bytes",
         "name": "message",
         "type": "bytes"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "outcome",
-        "type": "uint8"
       },
       {
         "indexed": false,

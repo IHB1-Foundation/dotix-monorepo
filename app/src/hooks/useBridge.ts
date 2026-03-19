@@ -13,7 +13,7 @@ export type BridgeStep = "idle" | "weighed" | "done";
 
 export function useBridge(destination: ParachainDestination | null) {
   const { address } = useAccount();
-  const messageHex = destination?.messageHex ?? ("0x03020100" as `0x${string}`);
+  const messageHex = destination?.messageHex ?? ("0x05040a" as `0x${string}`);
   const xcm = useXcmDemo(messageHex);
   const [step, setStep] = useState<BridgeStep>("idle");
 

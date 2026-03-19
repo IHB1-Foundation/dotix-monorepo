@@ -1,20 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
+import "../interfaces/IXcm.sol";
+
 contract MockXcmPrecompile {
-    function weightMessage(bytes memory)
+    function weighMessage(bytes memory)
         external
         pure
-        returns (uint64 refTime, uint64 proofSize)
+        returns (IXcm.Weight memory weight)
     {
-        return (123456, 789);
+        return IXcm.Weight(123456, 789);
     }
 
-    function execute(
-        bytes memory,
-        uint64,
-        uint64
-    ) external pure returns (uint8 outcome) {
-        return 0;
-    }
+    function execute(bytes memory, IXcm.Weight memory) external pure {}
+
+    function send(bytes memory, bytes memory) external pure {}
 }
