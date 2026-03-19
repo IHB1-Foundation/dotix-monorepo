@@ -115,7 +115,7 @@ export function useDeposit(amount: string, slippagePct: number) {
 
   const decimals =
     (baseMetaRead.data?.[0]?.status === "success" ? Number(baseMetaRead.data[0].result) : 18) ?? 18;
-  const symbol = (baseMetaRead.data?.[1]?.status === "success" ? String(baseMetaRead.data[1].result) : "BASE") ?? "BASE";
+  const symbol = (baseMetaRead.data?.[1]?.status === "success" ? String(baseMetaRead.data[1].result) : "PAS") ?? "PAS";
   const balance =
     (baseMetaRead.data?.[2]?.status === "success" ? (baseMetaRead.data[2].result as bigint) : 0n) ?? 0n;
   const allowance =
