@@ -39,9 +39,9 @@ async function main(): Promise<void> {
   const factory = await ethers.getContractAt("UniswapV2Factory", uniswap.factory, deployer);
 
   const MockERC20 = await ethers.getContractFactory("MockERC20", deployer);
-  const baseAsset = await MockERC20.deploy("Dotix Base Asset", "BASE", DECIMALS, 0n, deployer.address);
-  const assetA = await MockERC20.deploy("Dotix Asset A", "ASTA", DECIMALS, 0n, deployer.address);
-  const assetB = await MockERC20.deploy("Dotix Asset B", "ASTB", DECIMALS, 0n, deployer.address);
+  const baseAsset = await MockERC20.deploy("USD Coin", "USDC", DECIMALS, 0n, deployer.address);
+  const assetA = await MockERC20.deploy("Polkadot", "DOT", DECIMALS, 0n, deployer.address);
+  const assetB = await MockERC20.deploy("Moonbeam", "GLMR", DECIMALS, 0n, deployer.address);
 
   await Promise.all([baseAsset.waitForDeployment(), assetA.waitForDeployment(), assetB.waitForDeployment()]);
 
