@@ -8,7 +8,7 @@ import { ReactNode } from "react";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", mobileLabel: "Dashboard", icon: "dashboard" },
-  { href: "/deposit", label: "Stake", mobileLabel: "Stake", icon: "deposit" },
+  { href: "/deposit", label: "Deposit", mobileLabel: "Deposit", icon: "deposit" },
   { href: "/autopilot", label: "Autopilot", mobileLabel: "Autopilot", icon: "autopilot" },
   { href: "/xcm", label: "XCM", mobileLabel: "XCM", icon: "xcm" },
 ] as const;

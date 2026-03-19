@@ -170,12 +170,12 @@ export default function DashboardPage() {
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </span>
             <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              <Tooltip content="Net Asset Value — the total value of all assets held in the vault, denominated in PAS">NAV</Tooltip>
+              <Tooltip content="Net Asset Value — the total value of all assets held in the vault, denominated in USDC">NAV</Tooltip>
             </h2>
           </div>
           <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{decimalFormatter.format(navAnimated)}</p>
           <div className="mt-1 flex items-center gap-2">
-            <p className="text-xs text-muted">Total vault AUM (PAS)</p>
+            <p className="text-xs text-muted">Total vault AUM (USDC)</p>
             {navDeltaPct !== null && <DeltaBadge deltaPct={navDeltaPct} />}
           </div>
         </Card>
@@ -188,7 +188,7 @@ export default function DashboardPage() {
           </div>
           <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{decimalFormatter.format(priceAnimated)}</p>
           <div className="mt-1 flex items-center gap-2">
-            <p className="text-xs text-muted">Per PDOT share (PAS)</p>
+            <p className="text-xs text-muted">Per PDOT share (USDC)</p>
             {priceDeltaPct !== null && <DeltaBadge deltaPct={priceDeltaPct} />}
           </div>
         </Card>
@@ -213,7 +213,7 @@ export default function DashboardPage() {
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">My Position</h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">You have no PDOT yet.</p>
             <Link href="/deposit" className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-ocean px-4 py-2 text-sm font-bold text-white transition hover:bg-ocean-dark">
-              Stake now
+              Deposit now
             </Link>
           </Card>
         ) : (
@@ -232,7 +232,7 @@ export default function DashboardPage() {
                   {vault.totalSupply > 0n
                     ? formatToken((pdotBalance * vault.nav) / vault.totalSupply)
                     : "0"}{" "}
-                  <span className="text-sm font-semibold text-muted">PAS</span>
+                  <span className="text-sm font-semibold text-muted">USDC</span>
                 </p>
               </div>
               <div>
@@ -266,7 +266,7 @@ export default function DashboardPage() {
               <p className="mt-3 text-sm font-semibold text-slate-500 dark:text-slate-400">No assets in the vault yet</p>
               <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">Assets will appear here once the vault is configured.</p>
               <Link href="/deposit" className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90">
-                Stake now
+                Deposit now
               </Link>
             </div>
           ) : (

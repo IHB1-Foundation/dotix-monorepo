@@ -118,9 +118,9 @@ export default function DepositPage() {
 
   return (
     <section className="mx-auto max-w-[560px] space-y-6">
-      <PageHeader title="Stake & Unstake" description="Stake PAS, receive PDOT." />
+      <PageHeader title="Deposit & Withdraw" description="Deposit USDC, receive PDOT." />
 
-      {!isConnected && <ConnectCTA variant="inline" description="Connect your wallet to stake PAS and mint PDOT shares." />}
+      {!isConnected && <ConnectCTA variant="inline" description="Connect your wallet to deposit USDC and mint PDOT shares." />}
 
       {/* Tab toggle */}
       <div className="flex rounded-xl border border-slate-200 bg-slate-100 p-1 dark:border-slate-700 dark:bg-slate-800">
@@ -136,7 +136,7 @@ export default function DepositPage() {
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 4v12" /><path d="m7 11 5 5 5-5" />
           </svg>
-          Stake
+          Deposit
         </button>
         <button
           type="button"
@@ -150,7 +150,7 @@ export default function DepositPage() {
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M12 20V8" /><path d="m17 13-5-5-5 5" />
           </svg>
-          Unstake
+          Withdraw
         </button>
       </div>
 
@@ -164,7 +164,7 @@ export default function DepositPage() {
                 <path className="check-animate" d="M20 6 9 17l-5-5" />
               </svg>
             </div>
-            <h2 className="mt-4 font-display text-xl font-bold text-ink dark:text-slate-100">Stake successful!</h2>
+            <h2 className="mt-4 font-display text-xl font-bold text-ink dark:text-slate-100">Deposit successful!</h2>
             <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
               +{formatAmount(deposit.expectedShares)} PDOT added to your balance
             </p>
@@ -182,7 +182,7 @@ export default function DepositPage() {
                 onClick={() => setDepositInput("")}
                 className="rounded-xl bg-ocean px-4 py-2 text-sm font-bold text-white transition hover:bg-ocean-dark"
               >
-                Stake More
+                Deposit More
               </button>
               <Link
                 href="/dashboard"
@@ -312,7 +312,7 @@ export default function DepositPage() {
               />
             ) : (
               <TxButton
-                label="Stake"
+                label="Deposit"
                 fullWidth
                 onClick={deposit.deposit}
                 loading={deposit.depositPending}
@@ -422,7 +422,7 @@ export default function DepositPage() {
           {/* CTA — full-width */}
           <div className="mt-5 flex flex-col gap-3">
             <TxButton
-              label="Unstake"
+              label="Withdraw"
               fullWidth
               onClick={redeem.redeem}
               loading={redeem.redeemPending}
@@ -451,7 +451,7 @@ export default function DepositPage() {
             <div className="mt-4 rounded-2xl border border-mint/30 bg-mint/10 p-4 dark:border-mint/40 dark:bg-mint/15">
               <p className="flex items-center gap-1.5 text-sm font-semibold text-mint">
                 <svg viewBox="0 0 24 24" className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M20 6 9 17l-5-5" /></svg>
-                Unstake successful!
+                Withdraw successful!
               </p>
               <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
                 ~{formatAmount(redeem.expectedBaseOut)} {deposit.baseSymbol} returned to your wallet

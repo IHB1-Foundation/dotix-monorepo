@@ -72,7 +72,7 @@ export function AssetRow({ asset, meta, color }: Props) {
             <p className="text-xs text-slate-500">Value</p>
             <p className="mt-0.5 font-semibold tabular-nums text-ink dark:text-slate-100">
               {Number(formatUnits(asset.valueInBase, 18)).toFixed(4)}{" "}
-              <span className="text-xs font-normal text-muted">PAS</span>
+              <span className="text-xs font-normal text-muted">USDC</span>
             </p>
           </div>
         </div>
