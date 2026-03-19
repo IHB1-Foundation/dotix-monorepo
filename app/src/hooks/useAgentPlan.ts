@@ -26,10 +26,18 @@ export type AgentPlanPayload = {
  * Normalize raw agent output (which uses `output.newTargetBps`, `output.swaps`,
  * `output.reasoning`) into the flat shape the UI expects.
  */
-function normalize(raw: Record<string, unknown>): AgentPlanPayload {
+function normalize(raw: Record<string, unknown> | undefined | null): AgentPlanPayload {
+  if (!raw || typeof raw !== "object") {
+    return { mode: "unknown", timestamp: new Date().toISOString(), newTargets: {}, swaps: [], explanation: [] };
+  }
+
   // Already normalized format
   if (raw.newTargets && Array.isArray(raw.swaps)) {
-    return raw as unknown as AgentPlanPayload;
+    return {
+      ...(raw as unknown as AgentPlanPayload),
+      timestamp: String(raw.timestamp ?? new Date().toISOString()),
+      explanation: Array.isArray(raw.explanation) ? raw.explanation : [],
+    };
   }
 
   // Agent dry-run / execute format: { state, output: { newTargetBps, swaps, reasoning } }
