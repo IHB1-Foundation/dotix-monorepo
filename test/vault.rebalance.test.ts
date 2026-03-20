@@ -56,7 +56,7 @@ describe("IndexVault rebalance", function () {
       deadline
     );
 
-    const PDOT = await ethers.getContractFactory("PDOTToken");
+    const PDOT = await ethers.getContractFactory("DOTIXToken");
     const pdot = await PDOT.deploy(admin.address);
     await pdot.waitForDeployment();
 

@@ -184,11 +184,11 @@ export default function DashboardPage() {
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-100 text-slate-400 dark:bg-slate-700">
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="8"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
             </span>
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500">PDOT Price</h2>
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500">DOTIX Price</h2>
           </div>
           <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{decimalFormatter.format(priceAnimated)}</p>
           <div className="mt-1 flex items-center gap-2">
-            <p className="text-xs text-muted">Per PDOT share (USDC)</p>
+            <p className="text-xs text-muted">Per DOTIX share (USDC)</p>
             {priceDeltaPct !== null && <DeltaBadge deltaPct={priceDeltaPct} />}
           </div>
         </Card>
@@ -198,11 +198,11 @@ export default function DashboardPage() {
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
             </span>
             <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-              <Tooltip content="Total PDOT shares minted across all depositors. More shares = more users in the vault.">PDOT Supply</Tooltip>
+              <Tooltip content="Total DOTIX shares minted across all depositors. More shares = more users in the vault.">DOTIX Supply</Tooltip>
             </h2>
           </div>
           <p className="mt-2 font-display text-3xl font-extrabold tabular-nums">{decimalFormatter.format(supplyAnimated)}</p>
-          <p className="mt-1 text-xs text-muted">Total PDOT shares in circulation</p>
+          <p className="mt-1 text-xs text-muted">Total DOTIX shares in circulation</p>
         </Card>
       </div>
 
@@ -211,7 +211,7 @@ export default function DashboardPage() {
         pdotBalance === 0n ? (
           <Card variant="elevated" padding="spacious" as="article">
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">My Position</h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400">You have no PDOT yet.</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">You have no DOTIX yet.</p>
             <Link href="/deposit" className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-ocean px-4 py-2 text-sm font-bold text-white transition hover:bg-ocean-dark">
               Deposit now
             </Link>
@@ -221,9 +221,9 @@ export default function DashboardPage() {
             <h2 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">My Position</h2>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <div>
-                <p className="text-xs text-slate-500 dark:text-slate-400">My PDOT Balance</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">My DOTIX Balance</p>
                 <p className="mt-1 text-xl font-bold tabular-nums text-ink dark:text-slate-100">
-                  {formatToken(pdotBalance)} <span className="text-sm font-semibold text-muted">PDOT</span>
+                  {formatToken(pdotBalance)} <span className="text-sm font-semibold text-muted">DOTIX</span>
                 </p>
               </div>
               <div>

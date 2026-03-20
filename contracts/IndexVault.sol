@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-import "./PDOTToken.sol";
+import "./DOTIXToken.sol";
 import "./TokenRegistry.sol";
 
 interface IUniswapV2RouterLike {
@@ -67,7 +67,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
     address public immutable baseAsset;
     address public immutable uniswapRouter;
     TokenRegistry public immutable registry;
-    PDOTToken public immutable pdot;
+    DOTIXToken public immutable pdot;
 
     AssetConfig[] public assets;
     mapping(address => uint256) private _assetIndexPlusOne;
@@ -110,7 +110,7 @@ contract IndexVault is AccessControl, ReentrancyGuard, Pausable {
         baseAsset = _baseAsset;
         uniswapRouter = _uniswapRouter;
         registry = TokenRegistry(_registry);
-        pdot = PDOTToken(_pdot);
+        pdot = DOTIXToken(_pdot);
 
         cooldownSeconds = 300;
         maxDeadlineSeconds = 300;

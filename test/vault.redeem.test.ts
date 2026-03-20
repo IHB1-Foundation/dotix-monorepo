@@ -10,7 +10,7 @@ describe("IndexVault redeem", function () {
     const asset = await MockERC20.deploy("Asset", "AST", 18, 0n, admin.address);
     await Promise.all([base.waitForDeployment(), asset.waitForDeployment()]);
 
-    const PDOT = await ethers.getContractFactory("PDOTToken");
+    const PDOT = await ethers.getContractFactory("DOTIXToken");
     const pdot = await PDOT.deploy(admin.address);
     await pdot.waitForDeployment();
 
@@ -80,7 +80,7 @@ describe("IndexVault redeem", function () {
       deadline
     );
 
-    const PDOT = await ethers.getContractFactory("PDOTToken");
+    const PDOT = await ethers.getContractFactory("DOTIXToken");
     const pdot = await PDOT.deploy(admin.address);
     await pdot.waitForDeployment();
 

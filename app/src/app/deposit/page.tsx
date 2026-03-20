@@ -118,9 +118,9 @@ export default function DepositPage() {
 
   return (
     <section className="mx-auto max-w-[560px] space-y-6">
-      <PageHeader title="Deposit & Withdraw" description="Deposit USDC, receive PDOT." />
+      <PageHeader title="Deposit & Withdraw" description="Deposit USDC, receive DOTIX." />
 
-      {!isConnected && <ConnectCTA variant="inline" description="Connect your wallet to deposit USDC and mint PDOT shares." />}
+      {!isConnected && <ConnectCTA variant="inline" description="Connect your wallet to deposit USDC and mint DOTIX shares." />}
 
       {/* Tab toggle */}
       <div className="flex rounded-xl border border-slate-200 bg-slate-100 p-1 dark:border-slate-700 dark:bg-slate-800">
@@ -166,7 +166,7 @@ export default function DepositPage() {
             </div>
             <h2 className="mt-4 font-display text-xl font-bold text-ink dark:text-slate-100">Deposit successful!</h2>
             <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-              +{formatAmount(deposit.expectedShares)} PDOT added to your balance
+              +{formatAmount(deposit.expectedShares)} DOTIX added to your balance
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <a
@@ -223,7 +223,7 @@ export default function DepositPage() {
           {depositExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}
           {!depositExceedsBalance && deposit.amountIn > 0n && (
             <p className="mt-1.5 text-xs text-muted">
-              ≈ {formatAmount(deposit.expectedShares)} PDOT
+              ≈ {formatAmount(deposit.expectedShares)} DOTIX
             </p>
           )}
 
@@ -272,16 +272,16 @@ export default function DepositPage() {
             <div className="mt-4 space-y-2 border-t border-slate-100 pt-4 dark:border-slate-800">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-slate-500">You will receive</span>
-                <span className="font-semibold tabular-nums">~{formatAmount(deposit.expectedShares)} PDOT</span>
+                <span className="font-semibold tabular-nums">~{formatAmount(deposit.expectedShares)} DOTIX</span>
               </div>
               <div className="flex items-center justify-between text-xs text-slate-400">
                 <span>Min received ({slippageInput}% slippage)</span>
-                <span className="tabular-nums">{formatAmount(deposit.minSharesOut)} PDOT</span>
+                <span className="tabular-nums">{formatAmount(deposit.minSharesOut)} DOTIX</span>
               </div>
               <details className="text-xs">
                 <summary className="cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">Exchange rate</summary>
                 <p className="mt-1 text-slate-400">
-                  1 {deposit.baseSymbol} = {deposit.amountIn > 0n ? (Number(formatAmount(deposit.expectedShares)) / Number(depositInput) || 0).toFixed(4) : "—"} PDOT
+                  1 {deposit.baseSymbol} = {deposit.amountIn > 0n ? (Number(formatAmount(deposit.expectedShares)) / Number(depositInput) || 0).toFixed(4) : "—"} DOTIX
                 </p>
               </details>
             </div>
@@ -342,7 +342,7 @@ export default function DepositPage() {
                 onClick={() => setRedeemInput(asInputAmount(redeem.pdotBalance))}
                 className="text-xs font-semibold text-warning hover:text-warning-dark dark:text-warning-light"
               >
-                Available: {formatAmount(redeem.pdotBalance)} PDOT
+                Available: {formatAmount(redeem.pdotBalance)} DOTIX
               </button>
             </div>
             <div className="flex items-center gap-2">
@@ -355,7 +355,7 @@ export default function DepositPage() {
                 inputMode="decimal"
                 style={{ fontSize: "clamp(1.25rem, 4vw, 1.5rem)" }}
               />
-              <span className="shrink-0 text-sm font-semibold text-slate-500">PDOT</span>
+              <span className="shrink-0 text-sm font-semibold text-slate-500">DOTIX</span>
             </div>
           </div>
           {redeemExceedsBalance && <p className="mt-2 text-sm text-error">Exceeds balance</p>}

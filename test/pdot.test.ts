@@ -1,11 +1,11 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("PDOTToken", function () {
+describe("DOTIXToken", function () {
   async function deployFixture() {
     const [admin, minter, user] = await ethers.getSigners();
-    const PDOTToken = await ethers.getContractFactory("PDOTToken");
-    const pdot = await PDOTToken.deploy(admin.address);
+    const DOTIXToken = await ethers.getContractFactory("DOTIXToken");
+    const pdot = await DOTIXToken.deploy(admin.address);
     await pdot.waitForDeployment();
 
     return { pdot, admin, minter, user };

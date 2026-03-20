@@ -62,7 +62,7 @@ export function useActivityLog(limit = 10) {
             blockNumber: log.blockNumber,
             user: log.args.user,
             amount: log.args.sharesOut
-              ? `+${Number(formatUnits(log.args.sharesOut, 18)).toFixed(4)} PDOT`
+              ? `+${Number(formatUnits(log.args.sharesOut, 18)).toFixed(4)} DOTIX`
               : undefined,
             label: `Deposit — ${log.args.baseIn ? Number(formatUnits(log.args.baseIn, 18)).toFixed(4) : "?"} base`,
           })),
@@ -74,7 +74,7 @@ export function useActivityLog(limit = 10) {
             amount: log.args.baseOut
               ? `-${Number(formatUnits(log.args.baseOut, 18)).toFixed(4)} base`
               : undefined,
-            label: `Redeem — ${log.args.sharesIn ? Number(formatUnits(log.args.sharesIn, 18)).toFixed(4) : "?"} PDOT`,
+            label: `Redeem — ${log.args.sharesIn ? Number(formatUnits(log.args.sharesIn, 18)).toFixed(4) : "?"} DOTIX`,
           })),
           ...rebalancedLogs.map((log) => ({
             type: "Rebalanced" as const,

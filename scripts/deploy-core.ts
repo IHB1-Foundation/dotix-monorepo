@@ -58,8 +58,8 @@ async function main(): Promise<void> {
   console.log(`Deployer: ${deployer.address}`);
   console.log(`Keeper: ${keeperAddress}`);
 
-  const PDOT = await ethers.getContractFactory("PDOTToken");
-  const pdot = await PDOT.deploy(deployer.address);
+  const DOTIX = await ethers.getContractFactory("DOTIXToken");
+  const pdot = await DOTIX.deploy(deployer.address);
   await pdot.waitForDeployment();
 
   const Registry = await ethers.getContractFactory("TokenRegistry");
@@ -131,14 +131,14 @@ async function main(): Promise<void> {
   const xcmTx = xcmDemo.deploymentTransaction();
 
   console.log("\n=== Core Deployment Summary ===");
-  console.log(`PDOTToken:     ${await pdot.getAddress()}`);
+  console.log(`DOTIXToken:    ${await pdot.getAddress()}`);
   console.log(`TokenRegistry: ${await registry.getAddress()}`);
   console.log(`IndexVault:    ${await vault.getAddress()}`);
   console.log(`XcmDemo:       ${await xcmDemo.getAddress()}`);
 
   if (pdotTx) {
-    console.log(`PDOT tx: ${pdotTx.hash}`);
-    console.log(`PDOT tx link: ${explorerTxUrl(pdotTx.hash)}`);
+    console.log(`DOTIX tx: ${pdotTx.hash}`);
+    console.log(`DOTIX tx link: ${explorerTxUrl(pdotTx.hash)}`);
   }
   if (registryTx) {
     console.log(`Registry tx: ${registryTx.hash}`);
@@ -153,7 +153,7 @@ async function main(): Promise<void> {
     console.log(`XcmDemo tx link: ${explorerTxUrl(xcmTx.hash)}`);
   }
 
-  console.log(`PDOT explorer: ${explorerAddressUrl(await pdot.getAddress())}`);
+  console.log(`DOTIX explorer: ${explorerAddressUrl(await pdot.getAddress())}`);
   console.log(`Registry explorer: ${explorerAddressUrl(await registry.getAddress())}`);
   console.log(`Vault explorer: ${explorerAddressUrl(await vault.getAddress())}`);
   console.log(`XcmDemo explorer: ${explorerAddressUrl(await xcmDemo.getAddress())}`);

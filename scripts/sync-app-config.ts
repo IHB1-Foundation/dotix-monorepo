@@ -60,7 +60,7 @@ function main(): void {
 
   const deployments = readJson<Deployments>("deployments/testnet.json");
   const indexVault = readJson<Artifact>("artifacts/contracts/IndexVault.sol/IndexVault.json");
-  const pdot = readJson<Artifact>("artifacts/contracts/PDOTToken.sol/PDOTToken.json");
+  const pdot = readJson<Artifact>("artifacts/contracts/DOTIXToken.sol/DOTIXToken.json");
   const registry = readJson<Artifact>("artifacts/contracts/TokenRegistry.sol/TokenRegistry.json");
   const router = readJson<Artifact>("artifacts/contracts/uniswap/UniswapV2Router02.sol/UniswapV2Router02.json");
   const xcmDemo = readJson<Artifact>("artifacts/contracts/XcmDemo.sol/XcmDemo.json");
